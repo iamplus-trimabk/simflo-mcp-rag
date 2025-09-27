@@ -1,0 +1,795 @@
+{
+  "repository": {},
+  "extraction_metadata": {
+    "extracted_at": "2025-09-28T04:05:30.413180",
+    "extractor_version": "github-cli-enhanced",
+    "total_components": 13,
+    "quality_metrics": {
+      "has_package_json": true,
+      "has_readme": true,
+      "has_tests": false,
+      "has_typescript": true,
+      "file_count": 1974,
+      "test_file_count": 0,
+      "typescript_file_count": 990,
+      "documentation_score": 75
+    },
+    "similar_repositories": []
+  },
+  "components": [
+    {
+      "name": "boxstyle",
+      "description": "",
+      "type": "component",
+      "platform": [
+        "both"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/box/styles.tsx",
+          "content": "import { tva } from '@gluestack-ui/utils/nativewind-utils';\nimport { isWeb } from '@gluestack-ui/utils/nativewind-utils';\n\nconst baseStyle = isWeb\n  ? 'flex flex-col relative z-0 box-border border-0 list-none min-w-0 min-h-0 bg-transparent items-stretch m-0 p-0 text-decoration-none'\n  : '';\n\nexport const boxStyle = tva({\n  base: baseStyle,\n});\n",
+          "language": "tsx",
+          "component_type": "component",
+          "exports": [
+            "boxStyle"
+          ],
+          "imports": [
+            "@gluestack-ui/utils/nativewind-utils"
+          ],
+          "props_info": {
+            "props": [],
+            "interface_name": null,
+            "has_children": false,
+            "is_functional": true
+          },
+          "usage_patterns": []
+        }
+      ],
+      "dependencies": [
+        "@gluestack-ui/utils/nativewind-utils"
+      ],
+      "peer_dependencies": [],
+      "dev_dependencies": [
+        "@changesets/cli",
+        "@tsconfig/react-native",
+        "concurrently",
+        "lint-staged",
+        "prettier"
+      ],
+      "examples": [],
+      "tags": [
+        "ui-component",
+        "gluestack",
+        "processed"
+      ],
+      "props_info": {
+        "props": [],
+        "interface_name": null,
+        "has_children": false,
+        "is_functional": true
+      },
+      "usage_patterns": [],
+      "source_repository": "https://github.com/gluestack/gluestack-ui",
+      "repository_metadata": {},
+      "processed_at": "2025-09-28T04:05:30.421650",
+      "processor": "Gluestack Post Processor"
+    },
+    {
+      "name": "cardstyle",
+      "description": "",
+      "type": "component",
+      "platform": [
+        "both"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/card/styles.tsx",
+          "content": "import { tva } from '@gluestack-ui/utils/nativewind-utils';\nimport { isWeb } from '@gluestack-ui/utils/nativewind-utils';\nconst baseStyle = isWeb ? 'flex flex-col relative z-0' : '';\n\nexport const cardStyle = tva({\n  base: baseStyle,\n  variants: {\n    size: {\n      sm: 'p-3 rounded',\n      md: 'p-4 rounded-md',\n      lg: 'p-6 rounded-xl',\n    },\n    variant: {\n      elevated: 'bg-background-0',\n      outline: 'border border-outline-200 ',\n      ghost: 'rounded-none',\n      filled: 'bg-background-50',\n    },\n  },\n});\n",
+          "language": "tsx",
+          "component_type": "component",
+          "exports": [
+            "cardStyle"
+          ],
+          "imports": [
+            "@gluestack-ui/utils/nativewind-utils"
+          ],
+          "props_info": {
+            "props": [],
+            "interface_name": null,
+            "has_children": false,
+            "is_functional": true
+          },
+          "usage_patterns": []
+        }
+      ],
+      "dependencies": [
+        "@gluestack-ui/utils/nativewind-utils"
+      ],
+      "peer_dependencies": [],
+      "dev_dependencies": [
+        "@changesets/cli",
+        "@tsconfig/react-native",
+        "concurrently",
+        "lint-staged",
+        "prettier"
+      ],
+      "examples": [],
+      "tags": [
+        "ui-component",
+        "gluestack",
+        "processed"
+      ],
+      "props_info": {
+        "props": [],
+        "interface_name": null,
+        "has_children": false,
+        "is_functional": true
+      },
+      "usage_patterns": [],
+      "source_repository": "https://github.com/gluestack/gluestack-ui",
+      "repository_metadata": {},
+      "processed_at": "2025-09-28T04:05:30.421652",
+      "processor": "Gluestack Post Processor"
+    },
+    {
+      "name": "skeletontextstyle",
+      "description": "",
+      "type": "component",
+      "platform": [
+        "both"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/skeleton/styles.tsx",
+          "content": "import { tva } from '@gluestack-ui/utils/nativewind-utils';\n\nexport const skeletonStyle = tva({\n  base: 'w-full h-full',\n  variants: {\n    variant: {\n      sharp: 'rounded-none',\n      circular: 'rounded-full',\n      rounded: 'rounded-md',\n    },\n    speed: {\n      1: 'duration-75',\n      2: 'duration-100',\n      3: 'duration-150',\n      4: 'duration-200',\n    },\n  },\n});\nexport const skeletonTextStyle = tva({\n  base: 'rounded-sm w-full',\n  variants: {\n    speed: {\n      1: 'duration-75',\n      2: 'duration-100',\n      3: 'duration-150',\n      4: 'duration-200',\n    },\n    gap: {\n      1: 'gap-1',\n      2: 'gap-2',\n      3: 'gap-3',\n      4: 'gap-4',\n    },\n  },\n});\n",
+          "language": "tsx",
+          "component_type": "component",
+          "exports": [
+            "skeletonTextStyle",
+            "skeletonStyle"
+          ],
+          "imports": [
+            "@gluestack-ui/utils/nativewind-utils"
+          ],
+          "props_info": {
+            "props": [],
+            "interface_name": null,
+            "has_children": false,
+            "is_functional": true
+          },
+          "usage_patterns": []
+        }
+      ],
+      "dependencies": [
+        "@gluestack-ui/utils/nativewind-utils"
+      ],
+      "peer_dependencies": [],
+      "dev_dependencies": [
+        "@changesets/cli",
+        "@tsconfig/react-native",
+        "concurrently",
+        "lint-staged",
+        "prettier"
+      ],
+      "examples": [],
+      "tags": [
+        "ui-component",
+        "gluestack",
+        "processed"
+      ],
+      "props_info": {
+        "props": [],
+        "interface_name": null,
+        "has_children": false,
+        "is_functional": true
+      },
+      "usage_patterns": [],
+      "source_repository": "https://github.com/gluestack/gluestack-ui",
+      "repository_metadata": {},
+      "processed_at": "2025-09-28T04:05:30.421653",
+      "processor": "Gluestack Post Processor"
+    },
+    {
+      "name": "centerstyle",
+      "description": "",
+      "type": "component",
+      "platform": [
+        "both"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/center/styles.tsx",
+          "content": "import { tva } from '@gluestack-ui/utils/nativewind-utils';\nimport { isWeb } from '@gluestack-ui/utils/nativewind-utils';\n\nconst baseStyle = isWeb ? 'flex flex-col relative z-0' : '';\n\nexport const centerStyle = tva({\n  base: `justify-center items-center ${baseStyle}`,\n});\n",
+          "language": "tsx",
+          "component_type": "component",
+          "exports": [
+            "centerStyle"
+          ],
+          "imports": [
+            "@gluestack-ui/utils/nativewind-utils"
+          ],
+          "props_info": {
+            "props": [],
+            "interface_name": null,
+            "has_children": false,
+            "is_functional": true
+          },
+          "usage_patterns": []
+        }
+      ],
+      "dependencies": [
+        "@gluestack-ui/utils/nativewind-utils"
+      ],
+      "peer_dependencies": [],
+      "dev_dependencies": [
+        "@changesets/cli",
+        "@tsconfig/react-native",
+        "concurrently",
+        "lint-staged",
+        "prettier"
+      ],
+      "examples": [],
+      "tags": [
+        "ui-component",
+        "gluestack",
+        "processed"
+      ],
+      "props_info": {
+        "props": [],
+        "interface_name": null,
+        "has_children": false,
+        "is_functional": true
+      },
+      "usage_patterns": [],
+      "source_repository": "https://github.com/gluestack/gluestack-ui",
+      "repository_metadata": {},
+      "processed_at": "2025-09-28T04:05:30.421654",
+      "processor": "Gluestack Post Processor"
+    },
+    {
+      "name": "headingstyle",
+      "description": "",
+      "type": "component",
+      "platform": [
+        "both"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/heading/styles.tsx",
+          "content": "import { tva } from '@gluestack-ui/utils/nativewind-utils';\nimport { isWeb } from '@gluestack-ui/utils/nativewind-utils';\nconst baseStyle = isWeb\n  ? 'font-sans tracking-sm bg-transparent border-0 box-border display-inline list-none margin-0 padding-0 position-relative text-start no-underline whitespace-pre-wrap word-wrap-break-word'\n  : '';\n\nexport const headingStyle = tva({\n  base: `text-typography-900 font-bold font-heading tracking-sm my-0 ${baseStyle}`,\n  variants: {\n    isTruncated: {\n      true: 'truncate',\n    },\n    bold: {\n      true: 'font-bold',\n    },\n    underline: {\n      true: 'underline',\n    },\n    strikeThrough: {\n      true: 'line-through',\n    },\n    sub: {\n      true: 'text-xs',\n    },\n    italic: {\n      true: 'italic',\n    },\n    highlight: {\n      true: 'bg-yellow-500',\n    },\n    size: {\n      '5xl': 'text-6xl',\n      '4xl': 'text-5xl',\n      '3xl': 'text-4xl',\n      '2xl': 'text-3xl',\n      'xl': 'text-2xl',\n      'lg': 'text-xl',\n      'md': 'text-lg',\n      'sm': 'text-base',\n      'xs': 'text-sm',\n    },\n  },\n});\n",
+          "language": "tsx",
+          "component_type": "component",
+          "exports": [
+            "headingStyle"
+          ],
+          "imports": [
+            "@gluestack-ui/utils/nativewind-utils"
+          ],
+          "props_info": {
+            "props": [],
+            "interface_name": null,
+            "has_children": false,
+            "is_functional": true
+          },
+          "usage_patterns": []
+        }
+      ],
+      "dependencies": [
+        "@gluestack-ui/utils/nativewind-utils"
+      ],
+      "peer_dependencies": [],
+      "dev_dependencies": [
+        "@changesets/cli",
+        "@tsconfig/react-native",
+        "concurrently",
+        "lint-staged",
+        "prettier"
+      ],
+      "examples": [],
+      "tags": [
+        "ui-component",
+        "gluestack",
+        "processed"
+      ],
+      "props_info": {
+        "props": [],
+        "interface_name": null,
+        "has_children": false,
+        "is_functional": true
+      },
+      "usage_patterns": [],
+      "source_repository": "https://github.com/gluestack/gluestack-ui",
+      "repository_metadata": {},
+      "processed_at": "2025-09-28T04:05:30.421655",
+      "processor": "Gluestack Post Processor"
+    },
+    {
+      "name": "hstackstyle",
+      "description": "",
+      "type": "component",
+      "platform": [
+        "both"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/hstack/styles.tsx",
+          "content": "import { isWeb } from '@gluestack-ui/utils/nativewind-utils';\nimport { tva } from '@gluestack-ui/utils/nativewind-utils';\n\nconst baseStyle = isWeb\n  ? 'flex relative z-0 box-border border-0 list-none min-w-0 min-h-0 bg-transparent items-stretch m-0 p-0 text-decoration-none'\n  : '';\n\nexport const hstackStyle = tva({\n  base: `flex-row ${baseStyle}`,\n  variants: {\n    space: {\n      'xs': 'gap-1',\n      'sm': 'gap-2',\n      'md': 'gap-3',\n      'lg': 'gap-4',\n      'xl': 'gap-5',\n      '2xl': 'gap-6',\n      '3xl': 'gap-7',\n      '4xl': 'gap-8',\n    },\n    reversed: {\n      true: 'flex-row-reverse',\n    },\n  },\n});\n",
+          "language": "tsx",
+          "component_type": "component",
+          "exports": [
+            "hstackStyle"
+          ],
+          "imports": [
+            "@gluestack-ui/utils/nativewind-utils"
+          ],
+          "props_info": {
+            "props": [],
+            "interface_name": null,
+            "has_children": false,
+            "is_functional": true
+          },
+          "usage_patterns": []
+        }
+      ],
+      "dependencies": [
+        "@gluestack-ui/utils/nativewind-utils"
+      ],
+      "peer_dependencies": [],
+      "dev_dependencies": [
+        "@changesets/cli",
+        "@tsconfig/react-native",
+        "concurrently",
+        "lint-staged",
+        "prettier"
+      ],
+      "examples": [],
+      "tags": [
+        "ui-component",
+        "gluestack",
+        "processed"
+      ],
+      "props_info": {
+        "props": [],
+        "interface_name": null,
+        "has_children": false,
+        "is_functional": true
+      },
+      "usage_patterns": [],
+      "source_repository": "https://github.com/gluestack/gluestack-ui",
+      "repository_metadata": {},
+      "processed_at": "2025-09-28T04:05:30.421655",
+      "processor": "Gluestack Post Processor"
+    },
+    {
+      "name": "tablestyle",
+      "description": "",
+      "type": "component",
+      "platform": [
+        "both"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/table/styles.tsx",
+          "content": "import { tva } from '@gluestack-ui/utils/nativewind-utils';\nimport { isWeb } from '@gluestack-ui/utils/nativewind-utils';\n\nconst captionTableStyle = isWeb ? 'caption-bottom' : '';\n\nexport const tableStyle = tva({\n  base: `table border-collapse border-collapse w-[800px]`,\n});\n\nexport const tableHeaderStyle = tva({\n  base: '',\n});\n\nexport const tableBodyStyle = tva({\n  base: '',\n});\n\nexport const tableFooterStyle = tva({\n  base: '',\n});\n\nexport const tableHeadStyle = tva({\n  base: 'flex-1 px-6 py-[14px] text-left font-bold text-[16px] leading-[22px] text-typography-800 font-roboto',\n});\n\nexport const tableRowStyleStyle = tva({\n  base: 'border-0 border-b border-solid border-outline-200 bg-background-0',\n  variants: {\n    isHeaderRow: {\n      true: '',\n    },\n    isFooterRow: {\n      true: 'border-b-0 ',\n    },\n  },\n});\n\nexport const tableDataStyle = tva({\n  base: 'flex-1 px-6 py-[14px] text-left text-[16px] font-medium leading-[22px] text-typography-800 font-roboto',\n});\n\nexport const tableCaptionStyle = tva({\n  base: `${captionTableStyle} px-6 py-[14px] text-[16px] font-normal leading-[22px] text-typography-800 bg-background-50 font-roboto`,\n});\n",
+          "language": "tsx",
+          "component_type": "component",
+          "exports": [
+            "tableStyle",
+            "tableFooterStyle",
+            "tableBodyStyle",
+            "tableHeadStyle",
+            "tableRowStyleStyle",
+            "tableDataStyle",
+            "tableHeaderStyle",
+            "tableCaptionStyle"
+          ],
+          "imports": [
+            "@gluestack-ui/utils/nativewind-utils"
+          ],
+          "props_info": {
+            "props": [],
+            "interface_name": null,
+            "has_children": false,
+            "is_functional": true
+          },
+          "usage_patterns": []
+        }
+      ],
+      "dependencies": [
+        "@gluestack-ui/utils/nativewind-utils"
+      ],
+      "peer_dependencies": [],
+      "dev_dependencies": [
+        "@changesets/cli",
+        "@tsconfig/react-native",
+        "concurrently",
+        "lint-staged",
+        "prettier"
+      ],
+      "examples": [],
+      "tags": [
+        "ui-component",
+        "gluestack",
+        "processed"
+      ],
+      "props_info": {
+        "props": [],
+        "interface_name": null,
+        "has_children": false,
+        "is_functional": true
+      },
+      "usage_patterns": [],
+      "source_repository": "https://github.com/gluestack/gluestack-ui",
+      "repository_metadata": {},
+      "processed_at": "2025-09-28T04:05:30.421656",
+      "processor": "Gluestack Post Processor"
+    },
+    {
+      "name": "textstyle",
+      "description": "",
+      "type": "component",
+      "platform": [
+        "both"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/text/styles.tsx",
+          "content": "import { tva } from '@gluestack-ui/utils/nativewind-utils';\nimport { isWeb } from '@gluestack-ui/utils/nativewind-utils';\n\nconst baseStyle = isWeb\n  ? 'font-sans tracking-sm my-0 bg-transparent border-0 box-border display-inline list-none margin-0 padding-0 position-relative text-start no-underline whitespace-pre-wrap word-wrap-break-word'\n  : '';\n\nexport const textStyle = tva({\n  base: `text-typography-700 font-body ${baseStyle}`,\n\n  variants: {\n    isTruncated: {\n      true: 'web:truncate',\n    },\n    bold: {\n      true: 'font-bold',\n    },\n    underline: {\n      true: 'underline',\n    },\n    strikeThrough: {\n      true: 'line-through',\n    },\n    size: {\n      '2xs': 'text-2xs',\n      'xs': 'text-xs',\n      'sm': 'text-sm',\n      'md': 'text-base',\n      'lg': 'text-lg',\n      'xl': 'text-xl',\n      '2xl': 'text-2xl',\n      '3xl': 'text-3xl',\n      '4xl': 'text-4xl',\n      '5xl': 'text-5xl',\n      '6xl': 'text-6xl',\n    },\n    sub: {\n      true: 'text-xs',\n    },\n    italic: {\n      true: 'italic',\n    },\n    highlight: {\n      true: 'bg-yellow-500',\n    },\n  },\n});\n",
+          "language": "tsx",
+          "component_type": "component",
+          "exports": [
+            "textStyle"
+          ],
+          "imports": [
+            "@gluestack-ui/utils/nativewind-utils"
+          ],
+          "props_info": {
+            "props": [],
+            "interface_name": null,
+            "has_children": false,
+            "is_functional": true
+          },
+          "usage_patterns": []
+        }
+      ],
+      "dependencies": [
+        "@gluestack-ui/utils/nativewind-utils"
+      ],
+      "peer_dependencies": [],
+      "dev_dependencies": [
+        "@changesets/cli",
+        "@tsconfig/react-native",
+        "concurrently",
+        "lint-staged",
+        "prettier"
+      ],
+      "examples": [],
+      "tags": [
+        "ui-component",
+        "gluestack",
+        "processed"
+      ],
+      "props_info": {
+        "props": [],
+        "interface_name": null,
+        "has_children": false,
+        "is_functional": true
+      },
+      "usage_patterns": [],
+      "source_repository": "https://github.com/gluestack/gluestack-ui",
+      "repository_metadata": {},
+      "processed_at": "2025-09-28T04:05:30.421657",
+      "processor": "Gluestack Post Processor"
+    },
+    {
+      "name": "actionsheetitemtext",
+      "description": "",
+      "type": "component",
+      "platform": [
+        "both"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/select/select-actionsheet.tsx",
+          "content": "'use client';\n\nimport { H4 } from '@expo/html-elements';\nimport { createActionsheet } from '@gluestack-ui/core/actionsheet/creator';\nimport {\n  Pressable,\n  View,\n  Text,\n  ScrollView,\n  VirtualizedList,\n  FlatList,\n  SectionList,\n  ViewStyle,\n} from 'react-native';\nimport { PrimitiveIcon, UIIcon } from '@gluestack-ui/core/icon/creator';\nimport { tva } from '@gluestack-ui/utils/nativewind-utils';\nimport type { VariantProps } from '@gluestack-ui/utils/nativewind-utils';\nimport { withStyleContext } from '@gluestack-ui/utils/nativewind-utils';\nimport { cssInterop } from 'nativewind';\nimport {\n  Motion,\n  AnimatePresence,\n  createMotionAnimatedComponent,\n  MotionComponentProps,\n} from '@legendapp/motion';\n\nimport React from 'react';\n\ntype IAnimatedPressableProps = React.ComponentProps<typeof Pressable> &\n  MotionComponentProps<typeof Pressable, ViewStyle, unknown, unknown, unknown>;\n\nconst AnimatedPressable = createMotionAnimatedComponent(\n  Pressable\n) as React.ComponentType<IAnimatedPressableProps>;\n\ntype IMotionViewProps = React.ComponentProps<typeof View> &\n  MotionComponentProps<typeof View, ViewStyle, unknown, unknown, unknown>;\n\nconst MotionView = Motion.View as React.ComponentType<IMotionViewProps>;\n\nexport const UIActionsheet = createActionsheet({\n  Root: View,\n  Content: withStyleContext(MotionView),\n  Item: withStyleContext(Pressable),\n  ItemText: Text,\n  DragIndicator: View,\n  IndicatorWrapper: View,\n  Backdrop: AnimatedPressable,\n  ScrollView: ScrollView,\n  VirtualizedList: VirtualizedList,\n  FlatList: FlatList,\n  SectionList: SectionList,\n  SectionHeaderText: H4,\n  Icon: UIIcon,\n  AnimatePresence: AnimatePresence,\n});\n\ncssInterop(UIActionsheet, { className: 'style' });\ncssInterop(UIActionsheet.Content, { className: 'style' });\ncssInterop(UIActionsheet.Item, { className: 'style' });\ncssInterop(UIActionsheet.ItemText, { className: 'style' });\ncssInterop(UIActionsheet.DragIndicator, { className: 'style' });\ncssInterop(UIActionsheet.DragIndicatorWrapper, { className: 'style' });\ncssInterop(UIActionsheet.Backdrop, { className: 'style' });\ncssInterop(UIActionsheet.ScrollView, {\n  className: 'style',\n  contentContainerClassName: 'contentContainerStyle',\n  indicatorClassName: 'indicatorStyle',\n});\ncssInterop(UIActionsheet.VirtualizedList, {\n  className: 'style',\n  ListFooterComponentClassName: 'ListFooterComponentStyle',\n  ListHeaderComponentClassName: 'ListHeaderComponentStyle',\n  contentContainerClassName: 'contentContainerStyle',\n  indicatorClassName: 'indicatorStyle',\n});\ncssInterop(UIActionsheet.FlatList, {\n  className: 'style',\n  ListFooterComponentClassName: 'ListFooterComponentStyle',\n  ListHeaderComponentClassName: 'ListHeaderComponentStyle',\n  columnWrapperClassName: 'columnWrapperStyle',\n  contentContainerClassName: 'contentContainerStyle',\n  indicatorClassName: 'indicatorStyle',\n});\ncssInterop(UIActionsheet.SectionList, { className: 'style' });\ncssInterop(UIActionsheet.SectionHeaderText, { className: 'style' });\ncssInterop(PrimitiveIcon, {\n  className: {\n    target: 'style',\n    nativeStyleToProp: {\n      height: true,\n      width: true,\n      fill: true,\n      color: 'classNameColor',\n      stroke: true,\n    },\n  },\n});\n\nconst actionsheetStyle = tva({ base: 'w-full h-full web:pointer-events-none' });\n\nconst actionsheetContentStyle = tva({\n  base: 'items-center rounded-tl-3xl rounded-tr-3xl p-2 bg-background-0 web:pointer-events-auto web:select-none shadow-lg pb-safe',\n});\n\nconst actionsheetItemStyle = tva({\n  base: 'w-full flex-row items-center p-3 rounded-sm data-[disabled=true]:opacity-40 data-[disabled=true]:web:pointer-events-auto data-[disabled=true]:web:cursor-not-allowed hover:bg-background-50 active:bg-background-100 data-[focus=true]:bg-background-100 web:data-[focus-visible=true]:bg-background-100 data-[checked=true]:bg-background-100',\n});\n\nconst actionsheetItemTextStyle = tva({\n  base: 'text-typography-700 font-normal font-body tracking-md text-left mx-2',\n  variants: {\n    isTruncated: {\n      true: '',\n    },\n    bold: {\n      true: 'font-bold',\n    },\n    underline: {\n      true: 'underline',\n    },\n    strikeThrough: {\n      true: 'line-through',\n    },\n    size: {\n      '2xs': 'text-2xs',\n      'xs': 'text-xs',\n      'sm': 'text-sm',\n      'md': 'text-base',\n      'lg': 'text-lg',\n      'xl': 'text-xl',\n      '2xl': 'text-2xl',\n      '3xl': 'text-3xl',\n      '4xl': 'text-4xl',\n      '5xl': 'text-5xl',\n      '6xl': 'text-6xl',\n    },\n  },\n  defaultVariants: {\n    size: 'md',\n  },\n});\n\nconst actionsheetDragIndicatorStyle = tva({\n  base: 'w-16 h-1 bg-background-400 rounded-full',\n});\n\nconst actionsheetDragIndicatorWrapperStyle = tva({\n  base: 'w-full py-1 items-center',\n});\n\nconst actionsheetBackdropStyle = tva({\n  base: 'absolute left-0 top-0 right-0 bottom-0 bg-background-dark web:cursor-default web:pointer-events-auto',\n});\n\nconst actionsheetScrollViewStyle = tva({\n  base: 'w-full h-auto',\n});\n\nconst actionsheetVirtualizedListStyle = tva({\n  base: 'w-full h-auto',\n});\n\nconst actionsheetFlatListStyle = tva({\n  base: 'w-full h-auto',\n});\n\nconst actionsheetSectionListStyle = tva({\n  base: 'w-full h-auto',\n});\n\nconst actionsheetSectionHeaderTextStyle = tva({\n  base: 'leading-5 font-bold font-heading my-0 text-typography-500 p-3 uppercase',\n  variants: {\n    isTruncated: {\n      true: '',\n    },\n    bold: {\n      true: 'font-bold',\n    },\n    underline: {\n      true: 'underline',\n    },\n    strikeThrough: {\n      true: 'line-through',\n    },\n    size: {\n      '5xl': 'text-5xl',\n      '4xl': 'text-4xl',\n      '3xl': 'text-3xl',\n      '2xl': 'text-2xl',\n      'xl': 'text-xl',\n      'lg': 'text-lg',\n      'md': 'text-base',\n      'sm': 'text-sm',\n      'xs': 'text-xs',\n    },\n\n    sub: {\n      true: 'text-xs',\n    },\n    italic: {\n      true: 'italic',\n    },\n    highlight: {\n      true: 'bg-yellow500',\n    },\n  },\n  defaultVariants: {\n    size: 'xs',\n  },\n});\n\nconst actionsheetIconStyle = tva({\n  base: 'text-typography-900',\n  variants: {\n    size: {\n      '2xs': 'h-3 w-3',\n      'xs': 'h-3.5 w-3.5',\n      'sm': 'h-4 w-4',\n      'md': 'w-4 h-4',\n      'lg': 'h-5 w-5',\n      'xl': 'h-6 w-6',\n    },\n  },\n});\n\ntype IActionsheetProps = VariantProps<typeof actionsheetStyle> &\n  React.ComponentProps<typeof UIActionsheet> & { className?: string };\n\ntype IActionsheetContentProps = VariantProps<typeof actionsheetContentStyle> &\n  React.ComponentProps<typeof UIActionsheet.Content> & { className?: string };\n\ntype IActionsheetItemProps = VariantProps<typeof actionsheetItemStyle> &\n  React.ComponentProps<typeof UIActionsheet.Item> & { className?: string };\n\ntype IActionsheetItemTextProps = VariantProps<typeof actionsheetItemTextStyle> &\n  React.ComponentProps<typeof UIActionsheet.ItemText> & { className?: string };\n\ntype IActionsheetDragIndicatorProps = VariantProps<\n  typeof actionsheetDragIndicatorStyle\n> &\n  React.ComponentProps<typeof UIActionsheet.DragIndicator> & {\n    className?: string;\n  };\n\ntype IActionsheetDragIndicatorWrapperProps = VariantProps<\n  typeof actionsheetDragIndicatorWrapperStyle\n> &\n  React.ComponentProps<typeof UIActionsheet.DragIndicatorWrapper> & {\n    className?: string;\n  };\n\ntype IActionsheetBackdropProps = VariantProps<typeof actionsheetBackdropStyle> &\n  React.ComponentProps<typeof UIActionsheet.Backdrop> & {\n    className?: string;\n  };\n\ntype IActionsheetScrollViewProps = VariantProps<\n  typeof actionsheetScrollViewStyle\n> &\n  React.ComponentProps<typeof UIActionsheet.ScrollView> & {\n    className?: string;\n  };\n\ntype IActionsheetVirtualizedListProps = VariantProps<\n  typeof actionsheetVirtualizedListStyle\n> &\n  React.ComponentProps<typeof UIActionsheet.VirtualizedList> & {\n    className?: string;\n  };\n\ntype IActionsheetFlatListProps = VariantProps<typeof actionsheetFlatListStyle> &\n  React.ComponentProps<typeof UIActionsheet.FlatList> & {\n    className?: string;\n  };\n\ntype IActionsheetSectionListProps = VariantProps<\n  typeof actionsheetSectionListStyle\n> &\n  React.ComponentProps<typeof UIActionsheet.SectionList> & {\n    className?: string;\n  };\n\ntype IActionsheetSectionHeaderTextProps = VariantProps<\n  typeof actionsheetSectionHeaderTextStyle\n> &\n  React.ComponentProps<typeof UIActionsheet.SectionHeaderText> & {\n    className?: string;\n  };\n\ntype IActionsheetIconProps = VariantProps<typeof actionsheetIconStyle> &\n  React.ComponentProps<typeof UIActionsheet.Icon> & {\n    className?: string;\n    as?: React.ElementType;\n  };\n\nconst Actionsheet = React.forwardRef<\n  React.ComponentRef<typeof UIActionsheet>,\n  IActionsheetProps\n>(function Actionsheet({ className, ...props }, ref) {\n  return (\n    <UIActionsheet\n      className={actionsheetStyle({\n        class: className,\n      })}\n      ref={ref}\n      {...props}\n    />\n  );\n});\n\nconst ActionsheetContent = React.forwardRef<\n  React.ComponentRef<typeof UIActionsheet.Content>,\n  IActionsheetContentProps & { className?: string }\n>(function ActionsheetContent({ className, ...props }, ref) {\n  return (\n    <UIActionsheet.Content\n      className={actionsheetContentStyle({\n        class: className,\n      })}\n      ref={ref}\n      {...props}\n    />\n  );\n});\n\nconst ActionsheetItem = React.forwardRef<\n  React.ComponentRef<typeof UIActionsheet.Item>,\n  IActionsheetItemProps\n>(function ActionsheetItem({ className, ...props }, ref) {\n  return (\n    <UIActionsheet.Item\n      className={actionsheetItemStyle({\n        class: className,\n      })}\n      ref={ref}\n      {...props}\n    />\n  );\n});\n\nconst ActionsheetItemText = React.forwardRef<\n  React.ComponentRef<typeof UIActionsheet.ItemText>,\n  IActionsheetItemTextProps\n>(function ActionsheetItemText(\n  { className, isTruncated, bold, underline, strikeThrough, size, ...props },\n  ref\n) {\n  return (\n    <UIActionsheet.ItemText\n      className={actionsheetItemTextStyle({\n        class: className,\n        isTruncated: isTruncated as boolean,\n        bold: bold as boolean,\n        underline: underline as boolean,\n        strikeThrough: strikeThrough as boolean,\n        size,\n      })}\n      ref={ref}\n      {...props}\n    />\n  );\n});\n\nconst ActionsheetDragIndicator = React.forwardRef<\n  React.ComponentRef<typeof UIActionsheet.DragIndicator>,\n  IActionsheetDragIndicatorProps\n>(function ActionsheetDragIndicator({ className, ...props }, ref) {\n  return (\n    <UIActionsheet.DragIndicator\n      className={actionsheetDragIndicatorStyle({\n        class: className,\n      })}\n      ref={ref}\n      {...props}\n    />\n  );\n});\n\nconst ActionsheetDragIndicatorWrapper = React.forwardRef<\n  React.ComponentRef<typeof UIActionsheet.DragIndicatorWrapper>,\n  IActionsheetDragIndicatorWrapperProps\n>(function ActionsheetDragIndicatorWrapper({ className, ...props }, ref) {\n  return (\n    <UIActionsheet.DragIndicatorWrapper\n      className={actionsheetDragIndicatorWrapperStyle({\n        class: className,\n      })}\n      ref={ref}\n      {...props}\n    />\n  );\n});\n\nconst ActionsheetBackdrop = React.forwardRef<\n  React.ComponentRef<typeof UIActionsheet.Backdrop>,\n  IActionsheetBackdropProps\n>(function ActionsheetBackdrop({ className, ...props }, ref) {\n  return (\n    <UIActionsheet.Backdrop\n      initial={{\n        opacity: 0,\n      }}\n      animate={{\n        opacity: 0.5,\n      }}\n      exit={{\n        opacity: 0,\n      }}\n      {...props}\n      className={actionsheetBackdropStyle({\n        class: className,\n      })}\n      ref={ref}\n    />\n  );\n});\n\nconst ActionsheetScrollView = React.forwardRef<\n  React.ComponentRef<typeof UIActionsheet.ScrollView>,\n  IActionsheetScrollViewProps\n>(function ActionsheetScrollView({ className, ...props }, ref) {\n  return (\n    <UIActionsheet.ScrollView\n      className={actionsheetScrollViewStyle({\n        class: className,\n      })}\n      ref={ref}\n      {...props}\n    />\n  );\n});\n\nconst ActionsheetVirtualizedList = React.forwardRef<\n  React.ComponentRef<typeof UIActionsheet.VirtualizedList>,\n  IActionsheetVirtualizedListProps\n>(function ActionsheetVirtualizedList({ className, ...props }, ref) {\n  return (\n    <UIActionsheet.VirtualizedList\n      className={actionsheetVirtualizedListStyle({\n        class: className,\n      })}\n      ref={ref}\n      {...props}\n    />\n  );\n});\n\nconst ActionsheetFlatList = React.forwardRef<\n  React.ComponentRef<typeof UIActionsheet.FlatList>,\n  IActionsheetFlatListProps\n>(function ActionsheetFlatList({ className, ...props }, ref) {\n  return (\n    <UIActionsheet.FlatList\n      className={actionsheetFlatListStyle({\n        class: className,\n      })}\n      ref={ref}\n      {...props}\n    />\n  );\n});\n\nconst ActionsheetSectionList = React.forwardRef<\n  React.ComponentRef<typeof UIActionsheet.SectionList>,\n  IActionsheetSectionListProps\n>(function ActionsheetSectionList({ className, ...props }, ref) {\n  return (\n    <UIActionsheet.SectionList\n      className={actionsheetSectionListStyle({\n        class: className,\n      })}\n      ref={ref}\n      {...props}\n    />\n  );\n});\n\nconst ActionsheetSectionHeaderText = React.forwardRef<\n  React.ComponentRef<typeof UIActionsheet.SectionHeaderText>,\n  IActionsheetSectionHeaderTextProps\n>(function ActionsheetSectionHeaderText(\n  {\n    className,\n    isTruncated,\n    bold,\n    underline,\n    strikeThrough,\n    size,\n    sub,\n    italic,\n    highlight,\n    ...props\n  },\n  ref\n) {\n  return (\n    <UIActionsheet.SectionHeaderText\n      className={actionsheetSectionHeaderTextStyle({\n        class: className,\n        isTruncated: isTruncated as boolean,\n        bold: bold as boolean,\n        underline: underline as boolean,\n        strikeThrough: strikeThrough as boolean,\n        size,\n        sub: sub as boolean,\n        italic: italic as boolean,\n        highlight: highlight as boolean,\n      })}\n      ref={ref}\n      {...props}\n    />\n  );\n});\n\nconst ActionsheetIcon = React.forwardRef<\n  React.ComponentRef<typeof UIActionsheet.Icon>,\n  IActionsheetIconProps\n>(function ActionsheetIcon(\n  { className, as: AsComp, size = 'sm', ...props },\n  ref\n) {\n  if (AsComp) {\n    return (\n      <AsComp\n        className={actionsheetIconStyle({\n          class: className,\n          size,\n        })}\n        ref={ref}\n        {...props}\n      />\n    );\n  }\n  return (\n    <UIActionsheet.Icon\n      className={actionsheetIconStyle({\n        class: className,\n        size,\n      })}\n      ref={ref}\n      {...props}\n    />\n  );\n});\n\nexport {\n  Actionsheet,\n  ActionsheetContent,\n  ActionsheetItem,\n  ActionsheetItemText,\n  ActionsheetDragIndicator,\n  ActionsheetDragIndicatorWrapper,\n  ActionsheetBackdrop,\n  ActionsheetScrollView,\n  ActionsheetVirtualizedList,\n  ActionsheetFlatList,\n  ActionsheetSectionList,\n  ActionsheetSectionHeaderText,\n  ActionsheetIcon,\n};\n",
+          "language": "tsx",
+          "component_type": "component",
+          "exports": [
+            "ActionsheetItemText",
+            "ActionsheetDragIndicatorWrapper",
+            "ActionsheetBackdrop",
+            "ActionsheetVirtualizedList",
+            "ActionsheetFlatList",
+            "ActionsheetSectionList",
+            "ActionsheetDragIndicator",
+            "ActionsheetContent",
+            "Actionsheet",
+            "ActionsheetItem",
+            "ActionsheetScrollView",
+            "ActionsheetSectionHeaderText",
+            "ActionsheetIcon",
+            "UIActionsheet"
+          ],
+          "imports": [
+            "@gluestack-ui/core/actionsheet/creator",
+            "@gluestack-ui/core/icon/creator",
+            "@gluestack-ui/utils/nativewind-utils",
+            "nativewind",
+            "@expo/html-elements",
+            "react"
+          ],
+          "props_info": {
+            "props": [],
+            "interface_name": null,
+            "has_children": false,
+            "is_functional": true
+          },
+          "usage_patterns": [
+            "ActionsheetItemText(\n  { className, isTruncated, bold, underline, strikeThrough, size, ...props },\n  ref\n)"
+          ]
+        }
+      ],
+      "dependencies": [
+        "@gluestack-ui/core/actionsheet/creator",
+        "@gluestack-ui/core/icon/creator",
+        "@gluestack-ui/utils/nativewind-utils",
+        "nativewind",
+        "@expo/html-elements",
+        "react"
+      ],
+      "peer_dependencies": [],
+      "dev_dependencies": [
+        "@changesets/cli",
+        "@tsconfig/react-native",
+        "concurrently",
+        "lint-staged",
+        "prettier"
+      ],
+      "examples": [],
+      "tags": [
+        "ui-component",
+        "react",
+        "gluestack",
+        "processed"
+      ],
+      "props_info": {
+        "props": [],
+        "interface_name": null,
+        "has_children": false,
+        "is_functional": true
+      },
+      "usage_patterns": [
+        "ActionsheetItemText(\n  { className, isTruncated, bold, underline, strikeThrough, size, ...props },\n  ref\n)"
+      ],
+      "source_repository": "https://github.com/gluestack/gluestack-ui",
+      "repository_metadata": {},
+      "processed_at": "2025-09-28T04:05:30.421657",
+      "processor": "Gluestack Post Processor"
+    },
+    {
+      "name": "vstackstyle",
+      "description": "",
+      "type": "component",
+      "platform": [
+        "both"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/vstack/styles.tsx",
+          "content": "import { isWeb } from '@gluestack-ui/utils/nativewind-utils';\nimport { tva } from '@gluestack-ui/utils/nativewind-utils';\n\nconst baseStyle = isWeb\n  ? 'flex flex-col relative z-0 box-border border-0 list-none min-w-0 min-h-0 bg-transparent items-stretch m-0 p-0 text-decoration-none'\n  : '';\n\nexport const vstackStyle = tva({\n  base: `flex-col ${baseStyle}`,\n  variants: {\n    space: {\n      'xs': 'gap-1',\n      'sm': 'gap-2',\n      'md': 'gap-3',\n      'lg': 'gap-4',\n      'xl': 'gap-5',\n      '2xl': 'gap-6',\n      '3xl': 'gap-7',\n      '4xl': 'gap-8',\n    },\n    reversed: {\n      true: 'flex-col-reverse',\n    },\n  },\n});\n",
+          "language": "tsx",
+          "component_type": "component",
+          "exports": [
+            "vstackStyle"
+          ],
+          "imports": [
+            "@gluestack-ui/utils/nativewind-utils"
+          ],
+          "props_info": {
+            "props": [],
+            "interface_name": null,
+            "has_children": false,
+            "is_functional": true
+          },
+          "usage_patterns": []
+        }
+      ],
+      "dependencies": [
+        "@gluestack-ui/utils/nativewind-utils"
+      ],
+      "peer_dependencies": [],
+      "dev_dependencies": [
+        "@changesets/cli",
+        "@tsconfig/react-native",
+        "concurrently",
+        "lint-staged",
+        "prettier"
+      ],
+      "examples": [],
+      "tags": [
+        "ui-component",
+        "gluestack",
+        "processed"
+      ],
+      "props_info": {
+        "props": [],
+        "interface_name": null,
+        "has_children": false,
+        "is_functional": true
+      },
+      "usage_patterns": [],
+      "source_repository": "https://github.com/gluestack/gluestack-ui",
+      "repository_metadata": {},
+      "processed_at": "2025-09-28T04:05:30.421658",
+      "processor": "Gluestack Post Processor"
+    },
+    {
+      "name": "griditemstyle",
+      "description": "",
+      "type": "component",
+      "platform": [
+        "both"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/grid/styles.tsx",
+          "content": "import { tva } from '@gluestack-ui/utils/nativewind-utils';\nimport { isWeb } from '@gluestack-ui/utils/nativewind-utils';\n\nconst gridBaseStyle = isWeb\n  ? 'grid grid-cols-12'\n  : 'box-border flex-row flex-wrap justify-start';\nconst gridItemBaseStyle = isWeb ? 'w-auto col-span-1' : '';\n\nexport const gridStyle = tva({\n  base: `w-full ${gridBaseStyle}`,\n});\n\nexport const gridItemStyle = tva({\n  base: `w-full ${gridItemBaseStyle}`,\n});\n",
+          "language": "tsx",
+          "component_type": "component",
+          "exports": [
+            "gridItemStyle",
+            "gridStyle"
+          ],
+          "imports": [
+            "@gluestack-ui/utils/nativewind-utils"
+          ],
+          "props_info": {
+            "props": [],
+            "interface_name": null,
+            "has_children": false,
+            "is_functional": true
+          },
+          "usage_patterns": []
+        }
+      ],
+      "dependencies": [
+        "@gluestack-ui/utils/nativewind-utils"
+      ],
+      "peer_dependencies": [],
+      "dev_dependencies": [
+        "@changesets/cli",
+        "@tsconfig/react-native",
+        "concurrently",
+        "lint-staged",
+        "prettier"
+      ],
+      "examples": [],
+      "tags": [
+        "ui-component",
+        "gluestack",
+        "processed"
+      ],
+      "props_info": {
+        "props": [],
+        "interface_name": null,
+        "has_children": false,
+        "is_functional": true
+      },
+      "usage_patterns": [],
+      "source_repository": "https://github.com/gluestack/gluestack-ui",
+      "repository_metadata": {},
+      "processed_at": "2025-09-28T04:05:30.421659",
+      "processor": "Gluestack Post Processor"
+    },
+    {
+      "name": "script",
+      "description": "",
+      "type": "component",
+      "platform": [
+        "both"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/gluestack-ui-provider/script.ts",
+          "content": "export const script = (mode: string) => {\n  const documentElement = document.documentElement;\n\n  function getSystemColorMode() {\n    return window.matchMedia('(prefers-color-scheme: dark)').matches\n      ? 'dark'\n      : 'light';\n  }\n\n  try {\n    const isSystem = mode === 'system';\n    const theme = isSystem ? getSystemColorMode() : mode;\n    documentElement.classList.remove(theme === 'light' ? 'dark' : 'light');\n    documentElement.classList.add(theme);\n    documentElement.style.colorScheme = theme;\n  } catch (e) {\n    console.error(e);\n  }\n};\n",
+          "language": "typescript",
+          "component_type": "component",
+          "exports": [
+            "script"
+          ],
+          "imports": [],
+          "props_info": {
+            "props": [],
+            "interface_name": null,
+            "has_children": false,
+            "is_functional": true
+          },
+          "usage_patterns": []
+        }
+      ],
+      "dependencies": [],
+      "peer_dependencies": [],
+      "dev_dependencies": [
+        "@changesets/cli",
+        "@tsconfig/react-native",
+        "concurrently",
+        "lint-staged",
+        "prettier"
+      ],
+      "examples": [],
+      "tags": [
+        "ui-component",
+        "gluestack",
+        "processed"
+      ],
+      "props_info": {
+        "props": [],
+        "interface_name": null,
+        "has_children": false,
+        "is_functional": true
+      },
+      "usage_patterns": [],
+      "source_repository": "https://github.com/gluestack/gluestack-ui",
+      "repository_metadata": {},
+      "processed_at": "2025-09-28T04:05:30.421659",
+      "processor": "Gluestack Post Processor"
+    },
+    {
+      "name": "config",
+      "description": "",
+      "type": "component",
+      "platform": [
+        "both"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/gluestack-ui-provider/config.ts",
+          "content": "'use client';\nimport { vars } from 'nativewind';\n\nexport const config = {\n  light: vars({\n    '--color-primary-0': '179 179 179',\n    '--color-primary-50': '153 153 153',\n    '--color-primary-100': '128 128 128',\n    '--color-primary-200': '115 115 115',\n    '--color-primary-300': '102 102 102',\n    '--color-primary-400': '82 82 82',\n    '--color-primary-500': '51 51 51',\n    '--color-primary-600': '41 41 41',\n    '--color-primary-700': '31 31 31',\n    '--color-primary-800': '13 13 13',\n    '--color-primary-900': '10 10 10',\n    '--color-primary-950': '8 8 8',\n\n    /* Secondary  */\n    '--color-secondary-0': '253 253 253',\n    '--color-secondary-50': '251 251 251',\n    '--color-secondary-100': '246 246 246',\n    '--color-secondary-200': '242 242 242',\n    '--color-secondary-300': '237 237 237',\n    '--color-secondary-400': '230 230 231',\n    '--color-secondary-500': '217 217 219',\n    '--color-secondary-600': '198 199 199',\n    '--color-secondary-700': '189 189 189',\n    '--color-secondary-800': '177 177 177',\n    '--color-secondary-900': '165 164 164',\n    '--color-secondary-950': '157 157 157',\n\n    /* Tertiary */\n    '--color-tertiary-0': '255 250 245',\n    '--color-tertiary-50': '255 242 229',\n    '--color-tertiary-100': '255 233 213',\n    '--color-tertiary-200': '254 209 170',\n    '--color-tertiary-300': '253 180 116',\n    '--color-tertiary-400': '251 157 75',\n    '--color-tertiary-500': '231 129 40',\n    '--color-tertiary-600': '215 117 31',\n    '--color-tertiary-700': '180 98 26',\n    '--color-tertiary-800': '130 73 23',\n    '--color-tertiary-900': '108 61 19',\n    '--color-tertiary-950': '84 49 18',\n\n    /* Error */\n    '--color-error-0': '254 233 233',\n    '--color-error-50': '254 226 226',\n    '--color-error-100': '254 202 202',\n    '--color-error-200': '252 165 165',\n    '--color-error-300': '248 113 113',\n    '--color-error-400': '239 68 68',\n    '--color-error-500': '230 53 53',\n    '--color-error-600': '220 38 38',\n    '--color-error-700': '185 28 28',\n    '--color-error-800': '153 27 27',\n    '--color-error-900': '127 29 29',\n    '--color-error-950': '83 19 19',\n\n    /* Success */\n    '--color-success-0': '228 255 244',\n    '--color-success-50': '202 255 232',\n    '--color-success-100': '162 241 192',\n    '--color-success-200': '132 211 162',\n    '--color-success-300': '102 181 132',\n    '--color-success-400': '72 151 102',\n    '--color-success-500': '52 131 82',\n    '--color-success-600': '42 121 72',\n    '--color-success-700': '32 111 62',\n    '--color-success-800': '22 101 52',\n    '--color-success-900': '20 83 45',\n    '--color-success-950': '27 50 36',\n\n    /* Warning */\n    '--color-warning-0': '255 249 245',\n    '--color-warning-50': '255 244 236',\n    '--color-warning-100': '255 231 213',\n    '--color-warning-200': '254 205 170',\n    '--color-warning-300': '253 173 116',\n    '--color-warning-400': '251 149 75',\n    '--color-warning-500': '231 120 40',\n    '--color-warning-600': '215 108 31',\n    '--color-warning-700': '180 90 26',\n    '--color-warning-800': '130 68 23',\n    '--color-warning-900': '108 56 19',\n    '--color-warning-950': '84 45 18',\n\n    /* Info */\n    '--color-info-0': '236 248 254',\n    '--color-info-50': '199 235 252',\n    '--color-info-100': '162 221 250',\n    '--color-info-200': '124 207 248',\n    '--color-info-300': '87 194 246',\n    '--color-info-400': '50 180 244',\n    '--color-info-500': '13 166 242',\n    '--color-info-600': '11 141 205',\n    '--color-info-700': '9 115 168',\n    '--color-info-800': '7 90 131',\n    '--color-info-900': '5 64 93',\n    '--color-info-950': '3 38 56',\n\n    /* Typography */\n    '--color-typography-0': '254 254 255',\n    '--color-typography-50': '245 245 245',\n    '--color-typography-100': '229 229 229',\n    '--color-typography-200': '219 219 220',\n    '--color-typography-300': '212 212 212',\n    '--color-typography-400': '163 163 163',\n    '--color-typography-500': '140 140 140',\n    '--color-typography-600': '115 115 115',\n    '--color-typography-700': '82 82 82',\n    '--color-typography-800': '64 64 64',\n    '--color-typography-900': '38 38 39',\n    '--color-typography-950': '23 23 23',\n\n    /* Outline */\n    '--color-outline-0': '253 254 254',\n    '--color-outline-50': '243 243 243',\n    '--color-outline-100': '230 230 230',\n    '--color-outline-200': '221 220 219',\n    '--color-outline-300': '211 211 211',\n    '--color-outline-400': '165 163 163',\n    '--color-outline-500': '140 141 141',\n    '--color-outline-600': '115 116 116',\n    '--color-outline-700': '83 82 82',\n    '--color-outline-800': '65 65 65',\n    '--color-outline-900': '39 38 36',\n    '--color-outline-950': '26 23 23',\n\n    /* Background */\n    '--color-background-0': '255 255 255',\n    '--color-background-50': '246 246 246',\n    '--color-background-100': '242 241 241',\n    '--color-background-200': '220 219 219',\n    '--color-background-300': '213 212 212',\n    '--color-background-400': '162 163 163',\n    '--color-background-500': '142 142 142',\n    '--color-background-600': '116 116 116',\n    '--color-background-700': '83 82 82',\n    '--color-background-800': '65 64 64',\n    '--color-background-900': '39 38 37',\n    '--color-background-950': '18 18 18',\n\n    /* Background Special */\n    '--color-background-error': '254 241 241',\n    '--color-background-warning': '255 243 234',\n    '--color-background-success': '237 252 242',\n    '--color-background-muted': '247 248 247',\n    '--color-background-info': '235 248 254',\n\n    /* Focus Ring Indicator  */\n    '--color-indicator-primary': '55 55 55',\n    '--color-indicator-info': '83 153 236',\n    '--color-indicator-error': '185 28 28',\n  }),\n  dark: vars({\n    '--color-primary-0': '166 166 166',\n    '--color-primary-50': '175 175 175',\n    '--color-primary-100': '186 186 186',\n    '--color-primary-200': '197 197 197',\n    '--color-primary-300': '212 212 212',\n    '--color-primary-400': '221 221 221',\n    '--color-primary-500': '230 230 230',\n    '--color-primary-600': '240 240 240',\n    '--color-primary-700': '250 250 250',\n    '--color-primary-800': '253 253 253',\n    '--color-primary-900': '254 249 249',\n    '--color-primary-950': '253 252 252',\n\n    /* Secondary  */\n    '--color-secondary-0': '20 20 20',\n    '--color-secondary-50': '23 23 23',\n    '--color-secondary-100': '31 31 31',\n    '--color-secondary-200': '39 39 39',\n    '--color-secondary-300': '44 44 44',\n    '--color-secondary-400': '56 57 57',\n    '--color-secondary-500': '63 64 64',\n    '--color-secondary-600': '86 86 86',\n    '--color-secondary-700': '110 110 110',\n    '--color-secondary-800': '135 135 135',\n    '--color-secondary-900': '150 150 150',\n    '--color-secondary-950': '164 164 164',\n\n    /* Tertiary */\n    '--color-tertiary-0': '84 49 18',\n    '--color-tertiary-50': '108 61 19',\n    '--color-tertiary-100': '130 73 23',\n    '--color-tertiary-200': '180 98 26',\n    '--color-tertiary-300': '215 117 31',\n    '--color-tertiary-400': '231 129 40',\n    '--color-tertiary-500': '251 157 75',\n    '--color-tertiary-600': '253 180 116',\n    '--color-tertiary-700': '254 209 170',\n    '--color-tertiary-800': '255 233 213',\n    '--color-tertiary-900': '255 242 229',\n    '--color-tertiary-950': '255 250 245',\n\n    /* Error */\n    '--color-error-0': '83 19 19',\n    '--color-error-50': '127 29 29',\n    '--color-error-100': '153 27 27',\n    '--color-error-200': '185 28 28',\n    '--color-error-300': '220 38 38',\n    '--color-error-400': '230 53 53',\n    '--color-error-500': '239 68 68',\n    '--color-error-600': '249 97 96',\n    '--color-error-700': '229 91 90',\n    '--color-error-800': '254 202 202',\n    '--color-error-900': '254 226 226',\n    '--color-error-950': '254 233 233',\n\n    /* Success */\n    '--color-success-0': '27 50 36',\n    '--color-success-50': '20 83 45',\n    '--color-success-100': '22 101 52',\n    '--color-success-200': '32 111 62',\n    '--color-success-300': '42 121 72',\n    '--color-success-400': '52 131 82',\n    '--color-success-500': '72 151 102',\n    '--color-success-600': '102 181 132',\n    '--color-success-700': '132 211 162',\n    '--color-success-800': '162 241 192',\n    '--color-success-900': '202 255 232',\n    '--color-success-950': '228 255 244',\n\n    /* Warning */\n    '--color-warning-0': '84 45 18',\n    '--color-warning-50': '108 56 19',\n    '--color-warning-100': '130 68 23',\n    '--color-warning-200': '180 90 26',\n    '--color-warning-300': '215 108 31',\n    '--color-warning-400': '231 120 40',\n    '--color-warning-500': '251 149 75',\n    '--color-warning-600': '253 173 116',\n    '--color-warning-700': '254 205 170',\n    '--color-warning-800': '255 231 213',\n    '--color-warning-900': '255 244 237',\n    '--color-warning-950': '255 249 245',\n\n    /* Info */\n    '--color-info-0': '3 38 56',\n    '--color-info-50': '5 64 93',\n    '--color-info-100': '7 90 131',\n    '--color-info-200': '9 115 168',\n    '--color-info-300': '11 141 205',\n    '--color-info-400': '13 166 242',\n    '--color-info-500': '50 180 244',\n    '--color-info-600': '87 194 246',\n    '--color-info-700': '124 207 248',\n    '--color-info-800': '162 221 250',\n    '--color-info-900': '199 235 252',\n    '--color-info-950': '236 248 254',\n\n    /* Typography */\n    '--color-typography-0': '23 23 23',\n    '--color-typography-50': '38 38 39',\n    '--color-typography-100': '64 64 64',\n    '--color-typography-200': '82 82 82',\n    '--color-typography-300': '115 115 115',\n    '--color-typography-400': '140 140 140',\n    '--color-typography-500': '163 163 163',\n    '--color-typography-600': '212 212 212',\n    '--color-typography-700': '219 219 220',\n    '--color-typography-800': '229 229 229',\n    '--color-typography-900': '245 245 245',\n    '--color-typography-950': '254 254 255',\n\n    /* Outline */\n    '--color-outline-0': '26 23 23',\n    '--color-outline-50': '39 38 36',\n    '--color-outline-100': '65 65 65',\n    '--color-outline-200': '83 82 82',\n    '--color-outline-300': '115 116 116',\n    '--color-outline-400': '140 141 141',\n    '--color-outline-500': '165 163 163',\n    '--color-outline-600': '211 211 211',\n    '--color-outline-700': '221 220 219',\n    '--color-outline-800': '230 230 230',\n    '--color-outline-900': '243 243 243',\n    '--color-outline-950': '253 254 254',\n\n    /* Background */\n    '--color-background-0': '18 18 18',\n    '--color-background-50': '39 38 37',\n    '--color-background-100': '65 64 64',\n    '--color-background-200': '83 82 82',\n    '--color-background-300': '116 116 116',\n    '--color-background-400': '142 142 142',\n    '--color-background-500': '162 163 163',\n    '--color-background-600': '213 212 212',\n    '--color-background-700': '229 228 228',\n    '--color-background-800': '242 241 241',\n    '--color-background-900': '246 246 246',\n    '--color-background-950': '255 255 255',\n\n    /* Background Special */\n    '--color-background-error': '66 43 43',\n    '--color-background-warning': '65 47 35',\n    '--color-background-success': '28 43 33',\n    '--color-background-muted': '51 51 51',\n    '--color-background-info': '26 40 46',\n\n    /* Focus Ring Indicator  */\n    '--color-indicator-primary': '247 247 247',\n    '--color-indicator-info': '161 199 245',\n    '--color-indicator-error': '232 70 69',\n  }),\n};\n",
+          "language": "typescript",
+          "component_type": "component",
+          "exports": [
+            "config"
+          ],
+          "imports": [
+            "nativewind"
+          ],
+          "props_info": {
+            "props": [],
+            "interface_name": null,
+            "has_children": false,
+            "is_functional": true
+          },
+          "usage_patterns": []
+        }
+      ],
+      "dependencies": [
+        "nativewind"
+      ],
+      "peer_dependencies": [],
+      "dev_dependencies": [
+        "@changesets/cli",
+        "@tsconfig/react-native",
+        "concurrently",
+        "lint-staged",
+        "prettier"
+      ],
+      "examples": [],
+      "tags": [
+        "ui-component",
+        "gluestack",
+        "processed"
+      ],
+      "props_info": {
+        "props": [],
+        "interface_name": null,
+        "has_children": false,
+        "is_functional": true
+      },
+      "usage_patterns": [],
+      "source_repository": "https://github.com/gluestack/gluestack-ui",
+      "repository_metadata": {},
+      "processed_at": "2025-09-28T04:05:30.421660",
+      "processor": "Gluestack Post Processor"
+    }
+  ]
+}

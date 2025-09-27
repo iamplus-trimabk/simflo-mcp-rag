@@ -43,6 +43,11 @@ cd simflo-mcp-rag
 # Install Python dependencies
 pip install -r requirements.txt
 
+# Setup data pipeline
+cd data-pipeline
+python3 extract.py check
+cd ..
+
 # Setup MCP server
 cd mcp-server
 npm install
@@ -53,20 +58,25 @@ cd ..
 ### 2. Initialize the RAG Database
 
 ```bash
-# Parse shadcn registry files (one-time operation)
-python3 parse_registry.py
+# Extract components using data pipeline (or use existing extracted data)
+python3 extract.py run gluestack  # Extract gluestack components
+python3 extract.py run shadcn     # Extract shadcn components
+python3 extract.py run radix_ui   # Extract radix-ui components
 
 # Index components in vector database (one-time operation)
+cd data-pipeline
 python3 vector_store.py --stats
 
 # Verify the setup
 python3 rag_cli.py stats
+cd ..
 ```
 
 ### 3. Test the System
 
 ```bash
 # Start the Python API server
+cd data-pipeline
 python3 api_server.py &
 
 # Test the API endpoints
@@ -146,6 +156,78 @@ The MCP server provides these tools:
 - `get_component_details` - Detailed component information
 - `get_component_installation` - Installation guides and dependencies
 - `list_components` - Browse components by type
+
+## Data Pipeline Usage
+
+The SimFlo MCP RAG system includes a comprehensive data pipeline for extracting components from various sources. This pipeline handles repository discovery, component extraction, and post-processing.
+
+### Pipeline Features
+
+- **Multiple Extractors**: GitHub CLI enhanced and basic git extractors
+- **Repository Metadata**: Stars, contributors, activity analysis, quality metrics
+- **Component Analysis**: TypeScript/JavaScript parsing, dependency tracking
+- **Post-Processing**: Platform detection, categorization, metadata enhancement
+- **Concurrent Processing**: Multiple extractions running simultaneously
+- **Quality Control**: Documentation scoring, type safety analysis
+
+### Available Extraction Profiles
+
+```bash
+# List all available extraction profiles
+python3 extract.py list-profiles
+
+# Check pipeline prerequisites
+python3 extract.py check
+
+# View pipeline status
+python3 extract.py status
+```
+
+### Running Extractions
+
+```bash
+# Extract single library
+python3 extract.py run gluestack --verbose
+python3 extract.py run shadcn --verbose
+python3 extract.py run radix_ui --verbose
+
+# Extract multiple libraries concurrently
+python3 extract.py run-multiple gluestack shadcn radix_ui --verbose
+
+# Run with metadata only (for repository analysis)
+python3 extract.py run gluestack --metadata-only
+```
+
+### Pipeline Architecture
+
+The data pipeline is organized as follows:
+
+```
+data-pipeline/
+├── github-extractor/          # GitHub-based extraction methods
+│   ├── github_extractor.py     # Basic git-based extractor
+│   └── github_cli_extractor.py # Enhanced CLI-based extractor
+├── config/
+│   └── pipeline_config.json    # Pipeline configuration
+├── rag_databases/             # Extracted component databases
+├── extract.py                 # Main pipeline entry point
+└── orchestrator.py            # Pipeline orchestration system
+```
+
+### Adding New Libraries
+
+1. **Create a new extraction profile** in `config/pipeline_config.json`
+2. **Test the profile** with `python3 extract.py validate <profile>`
+3. **Run extraction** with `python3 extract.py run <profile>`
+
+### Repository Discovery
+
+```bash
+# Discover new repositories by topic
+python3 extract.py discover react components --limit 10
+python3 extract.py discover react-native ui --limit 5
+python3 extract.py discover design-system --limit 8
+```
 
 ## Troubleshooting
 
