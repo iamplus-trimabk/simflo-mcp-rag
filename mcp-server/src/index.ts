@@ -16,19 +16,39 @@ const API_BASE_URL = process.env.API_BASE_URL || 'http://127.0.0.1:8000';
 const SearchComponentsSchema = z.object({
   query: z.string().min(1, "Search query is required"),
   limit: z.number().min(1).max(50).optional().default(10),
+  platform: z.enum(['reactjs', 'reactnative', 'auto', 'none']).optional(),
 });
 
 const GetComponentDetailsSchema = z.object({
   name: z.string().min(1, "Component name is required"),
+  registry: z.string().optional(),
 });
 
 const GetComponentInstallationSchema = z.object({
   name: z.string().min(1, "Component name is required"),
+  registry: z.string().optional(),
 });
 
 const ListComponentsSchema = z.object({
   type: z.enum(['ui', 'block', 'hook']).optional(),
   limit: z.number().min(1).max(100).optional().default(20),
+  platform: z.enum(['reactjs', 'reactnative', 'auto', 'none']).optional(),
+  registry: z.string().optional(),
+});
+
+const SetPlatformContextSchema = z.object({
+  platform: z.enum(['reactjs', 'reactnative', 'auto', 'none']),
+  session_id: z.string().optional(),
+  user_agent: z.string().optional(),
+  project_type: z.string().optional(),
+});
+
+const GetPlatformContextSchema = z.object({
+  session_id: z.string().optional(),
+});
+
+const ListRegistriesSchema = z.object({
+  platform: z.enum(['reactjs', 'reactnative', 'auto', 'none']).optional(),
 });
 
 // API client
@@ -39,35 +59,74 @@ class RAGAPIClient {
     this.baseUrl = baseUrl;
   }
 
-  async searchComponents(query: string, limit: number = 10) {
-    const response = await axios.get(`${this.baseUrl}/api/v1/components/search`, {
-      params: { q: query, limit },
-    });
+  async searchComponents(query: string, limit: number = 10, platform?: string) {
+    const params: any = { q: query, limit };
+    if (platform) params.platform = platform;
+
+    const response = await axios.get(`${this.baseUrl}/api/v2/components/search`, { params });
     return response.data;
   }
 
-  async getComponentDetails(name: string) {
-    const response = await axios.get(`${this.baseUrl}/api/v1/components/${name}`);
+  async getComponentDetails(name: string, registry?: string) {
+    const params: any = {};
+    if (registry) params.registry = registry;
+
+    const response = await axios.get(`${this.baseUrl}/api/v2/components/${name}`, { params });
     return response.data;
   }
 
-  async getComponentInstallation(name: string) {
-    const response = await axios.get(`${this.baseUrl}/api/v1/components/${name}/installation`);
+  async getComponentInstallation(name: string, registry?: string) {
+    const params: any = {};
+    if (registry) params.registry = registry;
+
+    const response = await axios.get(`${this.baseUrl}/api/v2/components/${name}/installation`, { params });
     return response.data;
   }
 
-  async listComponents(type?: string, limit: number = 20) {
+  async listComponents(type?: string, limit: number = 20, platform?: string, registry?: string) {
     const params: any = { limit };
     if (type) params.type = type;
+    if (platform) params.platform = platform;
+    if (registry) params.registry = registry;
 
-    const response = await axios.get(`${this.baseUrl}/api/v1/components`, {
-      params,
-    });
+    const response = await axios.get(`${this.baseUrl}/api/v2/components`, { params });
     return response.data;
   }
 
   async getStats() {
     const response = await axios.get(`${this.baseUrl}/api/v1/stats`);
+    return response.data;
+  }
+
+  // Context management APIs
+  async setPlatformContext(platform: string, sessionId?: string, userAgent?: string, projectType?: string) {
+    const response = await axios.post(`${this.baseUrl}/api/v2/context/set`, {
+      platform,
+      session_id: sessionId,
+      user_agent: userAgent,
+      project_type: projectType,
+    });
+    return response.data;
+  }
+
+  async getPlatformContext(sessionId?: string) {
+    const params: any = {};
+    if (sessionId) params.session_id = sessionId;
+
+    const response = await axios.get(`${this.baseUrl}/api/v2/context`, { params });
+    return response.data;
+  }
+
+  async listRegistries(platform?: string) {
+    const params: any = {};
+    if (platform) params.platform = platform;
+
+    const response = await axios.get(`${this.baseUrl}/api/v2/registries`, { params });
+    return response.data;
+  }
+
+  async getContextStats() {
+    const response = await axios.get(`${this.baseUrl}/api/v2/context/stats`);
     return response.data;
   }
 }
@@ -170,7 +229,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     switch (name) {
       case 'search_components': {
         const validated = SearchComponentsSchema.parse(args);
-        const result = await apiClient.searchComponents(validated.query, validated.limit);
+        const result = await apiClient.searchComponents(validated.query, validated.limit, validated.platform);
 
         if (!result.success) {
           throw new Error(result.error || 'Search failed');
@@ -180,11 +239,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           content: [
             {
               type: 'text',
-              text: `Found ${result.data.length} components matching "${validated.query}":\n\n${result.data.map((comp: any, index: number) =>
-                `${index + 1}. **${comp.name}** (${comp.type})\n` +
-                `   Relevance: ${(comp.relevanceScore * 100).toFixed(1)}%\n` +
-                `   Install: \`${comp.installCommand}\`\n` +
-                (comp.description ? `   Description: ${comp.description}\n` : '')
+              text: `Found ${result.data.length} components matching "${validated.query}"${validated.platform ? ` for ${validated.platform}` : ''}:\n\n${result.data.map((comp: any, index: number) =>
+                `${index + 1}. **${comp.name}** (${comp.type || 'component'})\n` +
+                `   Registry: ${comp.registry || 'unknown'}\n` +
+                `   Platform: ${comp.platform ? (Array.isArray(comp.platform) ? comp.platform.join(', ') : comp.platform) : 'any'}\n` +
+                `   Relevance: ${(comp.relevance_score || comp.relevanceScore || 0 * 100).toFixed(1)}%\n` +
+                (comp.description ? `   Description: ${comp.description}\n` : '') +
+                (comp.installation ? `   Install: \`${comp.installation}\`\n` : '')
               ).join('\n')}`,
             },
           ],
@@ -193,7 +254,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case 'get_component_details': {
         const validated = GetComponentDetailsSchema.parse(args);
-        const result = await apiClient.getComponentDetails(validated.name);
+        const result = await apiClient.getComponentDetails(validated.name, validated.registry);
 
         if (!result.success) {
           throw new Error(result.error || `Failed to get component details for "${validated.name}"`);
@@ -204,16 +265,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           content: [
             {
               type: 'text',
-              text: `**${comp.name}** (${comp.type})\n\n` +
+              text: `**${comp.name}** (${comp.type || 'component'})\n\n` +
                 (comp.description ? `**Description:** ${comp.description}\n\n` : '') +
-                `**Installation:** \`${comp.installCommand}\`\n` +
-                `**Location:** ${comp.fileLocation}\n\n` +
+                `**Registry:** ${comp.registry || 'unknown'}\n` +
+                `**Platform:** ${comp.platform ? (Array.isArray(comp.platform) ? comp.platform.join(', ') : comp.platform) : 'any'}\n` +
+                (comp.installation ? `**Installation:** \`${comp.installation}\`\n` : '') +
                 (comp.dependencies && comp.dependencies.length > 0 ?
                   `**Dependencies:** ${comp.dependencies.join(', ')}\n` : '') +
-                (comp.registryDependencies && comp.registryDependencies.length > 0 ?
-                  `**Registry Dependencies:** ${comp.registryDependencies.join(', ')}\n` : '') +
-                (comp.categories && comp.categories.length > 0 ?
-                  `**Categories:** ${comp.categories.join(', ')}\n` : ''),
+                (comp.files && comp.files.length > 0 ?
+                  `**Files:** ${comp.files.length} file(s)\n` : '') +
+                (comp.usage_examples && comp.usage_examples.length > 0 ?
+                  `**Usage Examples:**\n${comp.usage_examples.map((ex: string, i: number) => `  ${i + 1}. ${ex}`).join('\n')}\n` : ''),
             },
           ],
         };
@@ -221,7 +283,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case 'get_component_installation': {
         const validated = GetComponentInstallationSchema.parse(args);
-        const result = await apiClient.getComponentInstallation(validated.name);
+        const result = await apiClient.getComponentInstallation(validated.name, validated.registry);
 
         if (!result.success) {
           throw new Error(result.error || `Failed to get installation info for "${validated.name}"`);
@@ -233,12 +295,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             {
               type: 'text',
               text: `**Installation for ${validated.name}:**\n\n` +
-                `**Command:** \`${install.command}\`\n\n` +
+                `**Registry:** ${install.registry || 'unknown'}\n` +
+                (install.command ? `**Command:** \`${install.command}\`\n\n` : '') +
                 (install.dependencies && install.dependencies.length > 0 ?
                   `**Dependencies:** ${install.dependencies.join(', ')}\n\n` : '') +
-                (install.registryDependencies && install.registryDependencies.length > 0 ?
-                  `**Registry Dependencies:** ${install.registryDependencies.join(', ')}\n\n` : '') +
-                `**Setup Notes:** ${install.setupNotes}`,
+                (install.setup_notes ? `**Setup Notes:** ${install.setup_notes}` : ''),
             },
           ],
         };
@@ -246,7 +307,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case 'list_components': {
         const validated = ListComponentsSchema.parse(args);
-        const result = await apiClient.listComponents(validated.type, validated.limit);
+        const result = await apiClient.listComponents(validated.type, validated.limit, validated.platform, validated.registry);
 
         if (!result.success) {
           throw new Error(result.error || 'Failed to list components');
@@ -256,10 +317,93 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           content: [
             {
               type: 'text',
-              text: `Available components${validated.type ? ` of type "${validated.type}"` : ''}:\n\n${result.data.map((comp: any, index: number) =>
-                `${index + 1}. **${comp.name}** (${comp.type})\n` +
-                `   Install: \`${comp.installCommand}\`\n` +
+              text: `Available components${validated.type ? ` of type "${validated.type}"` : ''}${validated.platform ? ` for ${validated.platform}` : ''}${validated.registry ? ` from ${validated.registry}` : ''}:\n\n${result.data.map((comp: any, index: number) =>
+                `${index + 1}. **${comp.name}** (${comp.type || 'component'})\n` +
+                `   Registry: ${comp.registry || 'unknown'}\n` +
+                `   Platform: ${comp.platform ? (Array.isArray(comp.platform) ? comp.platform.join(', ') : comp.platform) : 'any'}\n` +
+                (comp.installation ? `   Install: \`${comp.installation}\`\n` : '') +
                 (comp.description ? `   Description: ${comp.description}\n` : '')
+              ).join('\n')}`,
+            },
+          ],
+        };
+      }
+
+      case 'set_platform_context': {
+        const validated = SetPlatformContextSchema.parse(args);
+        const result = await apiClient.setPlatformContext(
+          validated.platform,
+          validated.session_id,
+          validated.user_agent,
+          validated.project_type
+        );
+
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to set platform context');
+        }
+
+        const context = result.data;
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `**Platform context set to ${context.platform}**\n\n` +
+                `**Session ID:** ${context.session_id}\n` +
+                `**Timestamp:** ${new Date(context.timestamp * 1000).toISOString()}\n` +
+                (context.user_agent ? `**User Agent:** ${context.user_agent}\n` : '') +
+                (context.project_type ? `**Project Type:** ${context.project_type}\n` : '') +
+                `**Confidence:** ${(context.confidence * 100).toFixed(1)}%\n\n` +
+                `The system will now prioritize components for ${context.platform} in search results.`,
+            },
+          ],
+        };
+      }
+
+      case 'get_platform_context': {
+        const validated = GetPlatformContextSchema.parse(args);
+        const result = await apiClient.getPlatformContext(validated.session_id);
+
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to get platform context');
+        }
+
+        const context = result.data;
+        return {
+          content: [
+            {
+              type: 'text',
+              text: context ?
+                `**Current Platform Context:** ${context.platform}\n\n` +
+                `**Session ID:** ${context.session_id}\n` +
+                `**Timestamp:** ${new Date(context.timestamp * 1000).toISOString()}\n` +
+                (context.user_agent ? `**User Agent:** ${context.user_agent}\n` : '') +
+                (context.project_type ? `**Project Type:** ${context.project_type}\n` : '') +
+                `**Confidence:** ${(context.confidence * 100).toFixed(1)}%` :
+                'No platform context is currently set. Use set_platform_context to establish context.',
+            },
+          ],
+        };
+      }
+
+      case 'list_registries': {
+        const validated = ListRegistriesSchema.parse(args);
+        const result = await apiClient.listRegistries(validated.platform);
+
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to list registries');
+        }
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Available component registries${validated.platform ? ` for ${validated.platform}` : ''}:\n\n${result.data.map((reg: any, index: number) =>
+                `${index + 1}. **${reg.name}**\n` +
+                `   Components: ${reg.component_count || 0}\n` +
+                `   Platform: ${reg.platform ? (Array.isArray(reg.platform) ? reg.platform.join(', ') : reg.platform) : 'any'}\n` +
+                `   Status: ${reg.is_active ? 'Active' : 'Inactive'}\n` +
+                `   Last Updated: ${reg.last_updated ? new Date(reg.last_updated * 1000).toISOString() : 'unknown'}\n` +
+                (reg.description ? `   Description: ${reg.description}\n` : '')
               ).join('\n')}`,
             },
           ],
