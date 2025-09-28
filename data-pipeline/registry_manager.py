@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple, Union
 from dataclasses import dataclass, asdict
 import chromadb
+import chromadb.errors
 from chromadb.config import Settings
 import threading
 import time
@@ -29,6 +30,7 @@ class RegistryInfo:
     component_count: int = 0
     last_updated: float = 0
     is_active: bool = True
+    registry_type: str = "component"  # "component" or "documentation"
 
 
 @dataclass
@@ -70,37 +72,79 @@ class RegistryManager:
 
             # Look for registry directories
             for registry_dir in self.base_path.iterdir():
-                if registry_dir.is_dir() and registry_dir.name.endswith("_db"):
+                if registry_dir.is_dir():
                     registry_name = registry_dir.name
-                    components_file = registry_dir / "components.json"
 
-                    if components_file.exists():
-                        # Load registry info
-                        try:
-                            with open(components_file, 'r') as f:
-                                data = json.load(f)
+                    # Handle component registries (ending with _db)
+                    if registry_name.endswith("_db"):
+                        components_file = registry_dir / "components.json"
+                        config_file = registry_dir / "config.json"
 
-                            # Determine platform support
-                            platforms = self._extract_platforms_from_data(data)
+                        if components_file.exists():
+                            self._discover_component_registry(registry_dir, components_file)
+                        elif config_file.exists():
+                            self._discover_documentation_registry(registry_dir, config_file)
 
-                            registry_info = RegistryInfo(
-                                name=registry_name,
-                                path=str(registry_dir),
-                                platform=platforms,
-                                description=f"Registry for {registry_name.replace('_db', '')}",
-                                component_count=len(data) if isinstance(data, list) else len(data.get("components", [])),
-                                last_updated=components_file.stat().st_mtime,
-                                is_active=True
-                            )
-
-                            self.registries[registry_name] = registry_info
-                            self.logger.info(f"Discovered registry: {registry_name} with {registry_info.component_count} components")
-
-                        except Exception as e:
-                            self.logger.error(f"Failed to load registry {registry_name}: {e}")
+                    # Handle documentation registries (ending with _docs)
+                    elif registry_name.endswith("_docs"):
+                        config_file = registry_dir / "config.json"
+                        if config_file.exists():
+                            self._discover_documentation_registry(registry_dir, config_file)
 
         except Exception as e:
             self.logger.error(f"Failed to discover registries: {e}")
+
+    def _discover_component_registry(self, registry_dir: Path, components_file: Path):
+        """Discover a component registry"""
+        try:
+            with open(components_file, 'r') as f:
+                data = json.load(f)
+
+            # Determine platform support
+            platforms = self._extract_platforms_from_data(data)
+
+            registry_info = RegistryInfo(
+                name=registry_dir.name,
+                path=str(registry_dir),
+                platform=platforms,
+                description=f"Component registry for {registry_dir.name.replace('_db', '')}",
+                component_count=len(data) if isinstance(data, list) else len(data.get("components", [])),
+                last_updated=components_file.stat().st_mtime,
+                is_active=True,
+                registry_type="component"
+            )
+
+            self.registries[registry_dir.name] = registry_info
+            self.logger.info(f"Discovered component registry: {registry_dir.name} with {registry_info.component_count} components")
+
+        except Exception as e:
+            self.logger.error(f"Failed to load component registry {registry_dir.name}: {e}")
+
+    def _discover_documentation_registry(self, registry_dir: Path, config_file: Path):
+        """Discover a documentation registry"""
+        try:
+            with open(config_file, 'r') as f:
+                config = json.load(f)
+
+            # Documentation registries support all platforms by default
+            platforms = ["web", "reactjs", "reactnative", "docs"]
+
+            registry_info = RegistryInfo(
+                name=registry_dir.name,
+                path=str(registry_dir),
+                platform=platforms,
+                description=f"Documentation registry for {config.get('name', registry_dir.name)}",
+                component_count=config.get("pages_extracted", 0),
+                last_updated=config_file.stat().st_mtime,
+                is_active=True,
+                registry_type="documentation"
+            )
+
+            self.registries[registry_dir.name] = registry_info
+            self.logger.info(f"Discovered documentation registry: {registry_dir.name} with {registry_info.component_count} pages")
+
+        except Exception as e:
+            self.logger.error(f"Failed to load documentation registry {registry_dir.name}: {e}")
 
     def _extract_platforms_from_data(self, data: Union[Dict[str, Any], List[Any]]) -> List[str]:
         """Extract platform information from registry data"""
@@ -133,18 +177,22 @@ class RegistryManager:
                     settings=Settings(anonymized_telemetry=False)
                 )
 
-                # Get or create collection
-                collection_name = f"components_{registry_name.replace('_db', '')}"
+                # Get or create collection with appropriate name
+                if registry_info.registry_type == "component":
+                    collection_name = f"components_{registry_name.replace('_db', '')}"
+                else:  # documentation
+                    collection_name = f"documentation_{registry_name.replace('_docs', '').replace('_db', '')}"
+
                 try:
                     collection = client.get_collection(name=collection_name)
-                except ValueError:
+                except (ValueError, chromadb.errors.NotFoundError):
                     # Collection doesn't exist, create it
                     collection = client.create_collection(name=collection_name)
 
                 self.clients[registry_name] = client
                 self.collections[registry_name] = collection
 
-                self.logger.info(f"Initialized ChromaDB client for {registry_name}")
+                self.logger.info(f"Initialized ChromaDB client for {registry_name} ({registry_info.registry_type})")
 
             except Exception as e:
                 self.logger.error(f"Failed to initialize client for {registry_name}: {e}")
@@ -215,43 +263,42 @@ class RegistryManager:
                 query_texts=[query],
                 n_results=limit
             )
-
-            search_results: List[SearchResult] = []
-
-            if results and results['documents']:
-                documents = results['documents'][0]
-                metadatas = results['metadatas'][0] or [{}] * len(documents)
-                distances = results['distances'][0] if 'distances' in results else [None] * len(documents)
-
-                for i, (doc, metadata, distance) in enumerate(zip(documents, metadatas, distances)):
-                    # Parse document back to component data
-                    try:
-                        component = json.loads(doc) if isinstance(doc, str) else doc
-
-                        # Calculate relevance scores
-                        relevance_score = self._calculate_relevance_score(query, component, metadata)
-                        platform_relevance = self._calculate_platform_relevance(registry_name, component)
-                        context_match = self._is_context_match(registry_name, component)
-
-                        search_result = SearchResult(
-                            registry=registry_name,
-                            component=component,
-                            relevance_score=relevance_score,
-                            context_match=context_match,
-                            platform_relevance=platform_relevance,
-                            distance=distance
-                        )
-
-                        search_results.append(search_result)
-
-                    except Exception as e:
-                        self.logger.warning(f"Failed to parse search result {i}: {e}")
-
-            return search_results
-
-        except Exception as e:
-            self.logger.error(f"Vector search failed for {registry_name}: {e}")
+        except (ValueError, chromadb.errors.NotFoundError) as e:
+            self.logger.warning(f"Vector search failed for {registry_name}: {e}")
             return []
+
+        search_results: List[SearchResult] = []
+
+        if results and results['documents']:
+            documents = results['documents'][0]
+            metadatas = results['metadatas'][0] or [{}] * len(documents)
+            distances = results['distances'][0] if 'distances' in results else [None] * len(documents)
+
+            for i, (doc, metadata, distance) in enumerate(zip(documents, metadatas, distances)):
+                # Parse document back to component data
+                try:
+                    component = json.loads(doc) if isinstance(doc, str) else doc
+
+                    # Calculate relevance scores
+                    relevance_score = self._calculate_relevance_score(query, component, metadata)
+                    platform_relevance = self._calculate_platform_relevance(registry_name, component)
+                    context_match = self._is_context_match(registry_name, component)
+
+                    search_result = SearchResult(
+                        registry=registry_name,
+                        component=component,
+                        relevance_score=relevance_score,
+                        context_match=context_match,
+                        platform_relevance=platform_relevance,
+                        distance=distance
+                    )
+
+                    search_results.append(search_result)
+
+                except Exception as e:
+                    self.logger.warning(f"Failed to parse search result {i}: {e}")
+
+        return search_results
 
     def _calculate_relevance_score(self, query: str, component: Dict[str, Any], metadata: Dict[str, Any]) -> float:
         """Calculate relevance score for a component"""
@@ -334,26 +381,25 @@ class RegistryManager:
                 query_texts=[component_name],
                 n_results=1
             )
-
-            if results and results['documents'] and results['documents'][0]:
-                # Find exact match
-                for doc, metadata in zip(results['documents'][0], results['metadatas'][0] or [{}]):
-                    try:
-                        component = json.loads(doc) if isinstance(doc, str) else doc
-                        if component.get('name') == component_name:
-                            return {
-                                **component,
-                                'registry': registry_name,
-                                'found_in_registry': registry_name
-                            }
-                    except:
-                        continue
-
+        except (ValueError, chromadb.errors.NotFoundError) as e:
+            self.logger.warning(f"Collection query failed for {registry_name}: {e}")
             return None
 
-        except Exception as e:
-            self.logger.error(f"Failed to get component {component_name} from {registry_name}: {e}")
-            return None
+        if results and results['documents'] and results['documents'][0]:
+            # Find exact match
+            for doc, metadata in zip(results['documents'][0], results['metadatas'][0] or [{}]):
+                try:
+                    component = json.loads(doc) if isinstance(doc, str) else doc
+                    if component.get('name') == component_name:
+                        return {
+                            **component,
+                            'registry': registry_name,
+                            'found_in_registry': registry_name
+                        }
+                except:
+                    continue
+
+        return None
 
     def list_components(
         self,
@@ -434,6 +480,141 @@ class RegistryManager:
         except Exception as e:
             self.logger.error(f"Failed to add component to {registry_name}: {e}")
             return False
+
+    def add_documentation_pages(self, registry_name: str, pages: List[Dict[str, Any]]) -> bool:
+        """Add documentation pages to a registry"""
+        if registry_name not in self.registries:
+            self.logger.error(f"Registry {registry_name} not found")
+            return False
+
+        if self.registries[registry_name].registry_type != "documentation":
+            self.logger.error(f"Registry {registry_name} is not a documentation registry")
+            return False
+
+        collection = self.collections.get(registry_name)
+        if not collection:
+            self.logger.error(f"Collection not found for {registry_name}")
+            return False
+
+        try:
+            # Prepare documents and metadata
+            documents = []
+            metadatas = []
+            ids = []
+
+            for i, page in enumerate(pages):
+                # Create document content
+                doc_content = json.dumps(page)
+
+                # Create metadata
+                metadata = {
+                    "name": page.get("name", f"page_{i}"),
+                    "type": page.get("type", "documentation"),
+                    "category": page.get("category", "documentation"),
+                    "url": page.get("metadata", {}).get("url", ""),
+                    "page_type": page.get("metadata", {}).get("page_type", "reference"),
+                    "source_site": page.get("metadata", {}).get("source_site", "unknown"),
+                    "content_length": page.get("metadata", {}).get("content_length", 0),
+                    "code_examples_count": page.get("metadata", {}).get("code_examples_count", 0),
+                    "registry_type": "documentation",
+                    "registry": registry_name
+                }
+
+                # Add to batch
+                documents.append(doc_content)
+                metadatas.append(metadata)
+                ids.append(f"{registry_name}_{page.get('name', f'page_{i}')}")
+
+            # Add to collection in batch
+            if documents:
+                collection.add(
+                    documents=documents,
+                    metadatas=metadatas,
+                    ids=ids
+                )
+
+            self.logger.info(f"Added {len(pages)} documentation pages to {registry_name}")
+            return True
+
+        except Exception as e:
+            self.logger.error(f"Failed to add documentation pages to {registry_name}: {e}")
+            return False
+
+    def create_documentation_registry(self, registry_name: str, config: Dict[str, Any]) -> bool:
+        """Create a new documentation registry"""
+        try:
+            # Create registry directory
+            registry_path = self.base_path / registry_name
+            registry_path.mkdir(parents=True, exist_ok=True)
+
+            # Create config file
+            config_file = registry_path / "config.json"
+            with open(config_file, 'w') as f:
+                json.dump(config, f, indent=2)
+
+            # Create ChromaDB directory
+            chroma_path = registry_path / "chroma_db"
+            chroma_path.mkdir(parents=True, exist_ok=True)
+
+            # Rediscover registries to pick up the new one
+            self.discover_registries()
+            self.initialize_clients()
+
+            self.logger.info(f"Created documentation registry: {registry_name}")
+            return True
+
+        except Exception as e:
+            self.logger.error(f"Failed to create documentation registry {registry_name}: {e}")
+            return False
+
+    def search_documentation(self, query: str, limit: int = 10) -> List[SearchResult]:
+        """Search documentation across all documentation registries"""
+        all_results = []
+
+        # Find documentation registries
+        doc_registries = [
+            name for name, info in self.registries.items()
+            if info.registry_type == "documentation"
+        ]
+
+        for registry_name in doc_registries:
+            if registry_name in self.collections:
+                try:
+                    results = self._search_single_registry(registry_name, query, limit)
+                    all_results.extend(results)
+                except Exception as e:
+                    self.logger.error(f"Documentation search failed for {registry_name}: {e}")
+
+        # Sort by relevance score
+        all_results.sort(key=lambda x: (-x.relevance_score, x.distance or float('inf')))
+
+        return all_results[:limit]
+
+    def get_documentation_stats(self) -> Dict[str, Any]:
+        """Get statistics for documentation registries"""
+        doc_stats = {
+            "total_registries": 0,
+            "total_pages": 0,
+            "registries": {}
+        }
+
+        for name, info in self.registries.items():
+            if info.registry_type == "documentation":
+                doc_stats["total_registries"] += 1
+                doc_stats["total_pages"] += info.component_count
+
+                collection = self.collections.get(name)
+                page_count = collection.count() if collection else 0
+
+                doc_stats["registries"][name] = {
+                    "component_count": info.component_count,
+                    "actual_pages": page_count,
+                    "description": info.description,
+                    "platforms": info.platform,
+                    "last_updated": info.last_updated
+                }
+
+        return doc_stats
 
 
 # Global registry manager instance

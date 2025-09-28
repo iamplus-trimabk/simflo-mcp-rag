@@ -1,0 +1,25 @@
+# Core dependencies for SimFlo MCP RAG
+fastapi==0.104.1
+uvicorn==0.24.0
+pydantic==2.5.0
+python-dotenv==1.0.0
+
+# Vector database
+chromadb==0.4.18
+
+# HTTP client for web requests
+aiohttp==3.9.1
+requests==2.31.0
+
+# Web scraping and content extraction
+beautifulsoup4==4.12.2
+lxml==4.9.3
+
+# Data processing
+python-dateutil==2.8.2
+
+# Logging and monitoring
+colorlog==6.8.0
+
+# Type checking
+typing-extensions==4.8.0

@@ -32,7 +32,8 @@ class ExtractorFactory:
             "gluestack_hooks": ["github"],
             "gluestack_blocks": ["github"],
             "npm_hooks": ["npm"],
-            "community": ["github", "api", "local"]
+            "community": ["github", "api", "local"],
+            "documentation": ["web", "docs"]
         }
 
         for extractor_name, source_types in builtin_extractors.items():
@@ -160,6 +161,8 @@ class ExtractorFactory:
             return self._validate_api_source(source_config, extractor_name)
         elif source_type == "local":
             return self._validate_local_source(source_config, extractor_name)
+        elif source_type in ["web", "docs"]:
+            return self._validate_web_source(source_config, extractor_name)
 
         return True
 
@@ -214,6 +217,31 @@ class ExtractorFactory:
         if not source_config.get("registry_file"):
             logger.error("Local source missing required field: registry_file")
             return False
+
+        return True
+
+    def _validate_web_source(self, source_config: Dict[str, Any], extractor_name: str) -> bool:
+        """Validate web documentation source configuration"""
+        required_fields = ["name", "base_url", "start_urls", "allowed_domains", "selectors"]
+
+        for field in required_fields:
+            if not source_config.get(field):
+                logger.error(f"Web documentation source missing required field: {field}")
+                return False
+
+        # Validate URL format
+        base_url = source_config.get("base_url", "")
+        if not (base_url.startswith("http://") or base_url.startswith("https://")):
+            logger.error(f"Invalid base URL: {base_url}")
+            return False
+
+        # Validate selectors
+        selectors = source_config.get("selectors", {})
+        required_selectors = ["content", "title", "navigation"]
+        for selector in required_selectors:
+            if selector not in selectors:
+                logger.error(f"Missing required selector: {selector}")
+                return False
 
         return True
 
