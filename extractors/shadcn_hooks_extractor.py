@@ -22,6 +22,10 @@ logger = logging.getLogger(__name__)
 class ShadcnHooksExtractor(BaseExtractor):
     """Specialized extractor for shadcn/ui hooks"""
 
+    def __init__(self, source_config: Dict[str, Any]):
+        super().__init__(source_config)
+        self.registry_file = source_config.get("registry_file", "")
+
     def validate_source(self) -> bool:
         """Validate source configuration for this extractor"""
         if self.source_config.get("type") != "github":
@@ -35,7 +39,7 @@ class ShadcnHooksExtractor(BaseExtractor):
 
         # Validate GitHub URL format
         url = self.source_config["url"]
-        if not url.startswith("https://github.com/shadcn-ui/"):
+        if not (url.startswith("https://github.com/shadcn-ui/") or url.startswith("https://github.com/shadcn/")):
             self.logger.error(f"Invalid shadcn GitHub URL: {url}")
             return False
 
@@ -571,3 +575,18 @@ class ShadcnHooksExtractor(BaseExtractor):
                     errors.append(f"Invalid hook dependency: {dep}")
 
         return errors
+
+    async def validate_repository(self) -> bool:
+        """Validate that the GitHub repository is accessible"""
+        try:
+            # Try to fetch the registry file to validate repository access
+            content = await self.fetch_content(self.registry_file)
+            if content:
+                self.logger.info(f"Repository validation successful for {self.source_name}")
+                return True
+            else:
+                self.logger.warning(f"Repository validation failed for {self.source_name}: Could not fetch registry file")
+                return False
+        except Exception as e:
+            self.logger.error(f"Repository validation failed for {self.source_name}: {e}")
+            return False

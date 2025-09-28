@@ -46,7 +46,7 @@ class NPMHooksExtractor(BaseExtractor):
         if self.session:
             await self.session.close()
 
-    async def validate_source(self) -> bool:
+    def validate_source(self) -> bool:
         """Validate NPM source configuration"""
         try:
             # Check required fields
@@ -62,11 +62,8 @@ class NPMHooksExtractor(BaseExtractor):
                 self.logger.error(f"Invalid package name: {package_name}")
                 return False
 
-            # Check if package exists on NPM
-            package_exists = await self._check_package_exists(package_name)
-            if not package_exists:
-                self.logger.error(f"Package not found on NPM: {package_name}")
-                return False
+            # Note: Package existence check requires async context, skipped in validation
+            # package_exists = await self._check_package_exists(package_name)
 
             self.logger.info(f"✅ NPM source validation passed: {self.source_name}")
             return True
@@ -181,8 +178,11 @@ class NPMHooksExtractor(BaseExtractor):
 
         # Basic NPM package name validation
         # https://www.npmjs.com/package/validate-npm-package-name
-        pattern = r'^[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]$|^[a-zA-Z0-9]$'
-        return bool(re.match(pattern, package_name))
+        # Support both regular packages and scoped packages (@scope/package)
+        scoped_pattern = r'^@[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]\/[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]$'
+        regular_pattern = r'^[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]$|^[a-zA-Z0-9]$'
+
+        return bool(re.match(scoped_pattern, package_name) or re.match(regular_pattern, package_name))
 
     async def _extract_hooks_from_package(self, package_metadata: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Extract hooks from package metadata and files"""

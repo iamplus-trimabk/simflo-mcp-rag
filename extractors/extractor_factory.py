@@ -24,14 +24,14 @@ class ExtractorFactory:
         """Register all built-in extractors"""
         # Define available extractors and their source types
         builtin_extractors = {
-            "shadcn": ["github", "gitlab", "bitbucket"],
-            "shadcn_hooks": ["github", "gitlab", "bitbucket"],
-            "shadcn_blocks": ["github", "gitlab", "bitbucket"],
-            "gluestack": ["github", "gitlab", "bitbucket"],
-            "gluestack_hooks": ["github", "gitlab", "bitbucket"],
-            "gluestack_blocks": ["github", "gitlab", "bitbucket"],
+            "shadcn": ["github"],
+            "shadcn_hooks": ["github"],
+            "shadcn_blocks": ["github"],
+            "gluestack": ["github"],
+            "gluestack_hooks": ["github"],
+            "gluestack_blocks": ["github"],
             "npm_hooks": ["npm"],
-            "community": ["github", "gitlab", "bitbucket", "api", "local"]
+            "community": ["github", "api", "local"]
         }
 
         for extractor_name, source_types in builtin_extractors.items():
@@ -172,7 +172,8 @@ class ExtractorFactory:
 
         # Validate URL format
         url = source_config["url"]
-        if not url.startswith("https://github.com/"):
+        if not (url.startswith("https://github.com/") or url.startswith("http://github.com/") or
+                url.startswith("https://www.github.com/") or url.startswith("http://www.github.com/")):
             logger.error(f"Invalid GitHub URL: {url}")
             return False
 

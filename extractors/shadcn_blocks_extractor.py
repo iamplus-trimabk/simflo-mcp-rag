@@ -33,7 +33,7 @@ class ShadcnBlocksExtractor(BaseExtractor):
         """Get supported component types"""
         return self.supported_types
 
-    async def validate_source(self) -> bool:
+    def validate_source(self) -> bool:
         """Validate block source configuration"""
         try:
             # Check required fields
