@@ -14,8 +14,8 @@
           "type": "github",
           "url": "https://github.com/shadcn-ui/ui",
           "branch": "main",
-          "registry_file": "apps/www/registry/registry-ui.ts",
-          "extractor": "shadcn_hooks",
+          "registry_file": "apps/www/__registry__/index.tsx",
+          "extractor": "shadcn_components",
           "priority": 1,
           "update_frequency": "weekly"
         }
@@ -29,7 +29,7 @@
           "type": "github",
           "url": "https://github.com/shadcn-ui/ui",
           "branch": "main",
-          "registry_file": "apps/www/registry/registry-hooks.ts",
+          "registry_file": "apps/www/__registry__/index.tsx",
           "extractor": "shadcn_hooks",
           "priority": 1,
           "update_frequency": "weekly"
@@ -44,7 +44,7 @@
           "type": "github",
           "url": "https://github.com/shadcn-ui/ui",
           "branch": "main",
-          "registry_file": "apps/www/registry/registry-blocks.ts",
+          "registry_file": "apps/www/__registry__/index.tsx",
           "extractor": "shadcn_blocks",
           "priority": 1,
           "update_frequency": "weekly"

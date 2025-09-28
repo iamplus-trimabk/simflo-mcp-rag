@@ -1,1 +1,2688 @@
-[]
+[
+  {
+    "name": "alert",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI alert component",
+    "dependencies": [
+      "react",
+      "class-variance-authority",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react class-variance-authority @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/alert.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.208362",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "alert-dialog",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI alert-dialog component",
+    "dependencies": [
+      "react",
+      "@/registry/new-york/ui/button",
+      "@/lib/utils",
+      "@radix-ui/react-alert-dialog"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/registry/new-york/ui/button @/lib/utils @radix-ui/react-alert-dialog",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/alert-dialog.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.208499",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "aspect-ratio",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI aspect-ratio component",
+    "dependencies": [
+      "@radix-ui/react-aspect-ratio"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install @radix-ui/react-aspect-ratio",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/aspect-ratio.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.208608",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "avatar",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI avatar component",
+    "dependencies": [
+      "react",
+      "@/lib/utils",
+      "@radix-ui/react-avatar"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/lib/utils @radix-ui/react-avatar",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/avatar.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.208709",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "badge",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI badge component",
+    "dependencies": [
+      "react",
+      "class-variance-authority",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react class-variance-authority @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/badge.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.208803",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "breadcrumb",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI breadcrumb component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-slot",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-slot @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/breadcrumb.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.208904",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "button",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI button component",
+    "dependencies": [
+      "react",
+      "class-variance-authority",
+      "@radix-ui/react-slot",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react class-variance-authority @radix-ui/react-slot @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/button.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.209001",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "calendar",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI calendar component",
+    "dependencies": [
+      "react",
+      "@/registry/new-york/ui/button",
+      "react-day-picker",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/registry/new-york/ui/button react-day-picker @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/calendar.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.209118",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "carousel",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI carousel component",
+    "dependencies": [
+      "react",
+      "@/registry/new-york/ui/button",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/registry/new-york/ui/button @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/carousel.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.209231",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "checkbox",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI checkbox component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-checkbox",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-checkbox @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/checkbox.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.209326",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "command",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI command component",
+    "dependencies": [
+      "@radix-ui/react-dialog",
+      "@/registry/new-york/ui/dialog",
+      "lucide-react",
+      "@/lib/utils",
+      "react",
+      "cmdk"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install @radix-ui/react-dialog @/registry/new-york/ui/dialog lucide-react @/lib/utils react cmdk",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/command.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.209437",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "context-menu",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI context-menu component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-context-menu",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-context-menu @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/context-menu.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.209559",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "dialog",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI dialog component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-dialog",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-dialog @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/dialog.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.209666",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "dropdown-menu",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI dropdown-menu component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-dropdown-menu",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-dropdown-menu @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/dropdown-menu.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.209784",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "form",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI form component",
+    "dependencies": [
+      "@radix-ui/react-slot",
+      "@radix-ui/react-label",
+      "@/registry/new-york/ui/label",
+      "@/lib/utils",
+      "react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install @radix-ui/react-slot @radix-ui/react-label @/registry/new-york/ui/label @/lib/utils react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/form.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.209897",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "input",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI input component",
+    "dependencies": [
+      "react",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/input.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.209988",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "input-otp",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI input-otp component",
+    "dependencies": [
+      "react",
+      "input-otp",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react input-otp @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/input-otp.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.210085",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "label",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI label component",
+    "dependencies": [
+      "react",
+      "class-variance-authority",
+      "@/lib/utils",
+      "@radix-ui/react-label"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react class-variance-authority @/lib/utils @radix-ui/react-label",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/label.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.210177",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "menubar",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI menubar component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-menubar",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-menubar @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/menubar.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.210294",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "navigation-menu",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI navigation-menu component",
+    "dependencies": [
+      "@radix-ui/react-navigation-menu",
+      "lucide-react",
+      "@/lib/utils",
+      "react",
+      "class-variance-authority"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install @radix-ui/react-navigation-menu lucide-react @/lib/utils react class-variance-authority",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/navigation-menu.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.210403",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "pagination",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI pagination component",
+    "dependencies": [
+      "react",
+      "@/registry/new-york/ui/button",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/registry/new-york/ui/button @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/pagination.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.210507",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "popover",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI popover component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-popover",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-popover @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/popover.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.210599",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "progress",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI progress component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-progress",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-progress @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/progress.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.210692",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "radio-group",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI radio-group component",
+    "dependencies": [
+      "react",
+      "@/lib/utils",
+      "@radix-ui/react-radio-group",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/lib/utils @radix-ui/react-radio-group lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/radio-group.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.210786",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "resizable",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI resizable component",
+    "dependencies": [
+      "@/lib/utils",
+      "react-resizable-panels",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install @/lib/utils react-resizable-panels lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/resizable.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.210885",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "scroll-area",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI scroll-area component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-scroll-area",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-scroll-area @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/scroll-area.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.210977",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "select",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI select component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-select",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-select @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/select.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.211087",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "separator",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI separator component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-separator",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-separator @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/separator.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.211176",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "sheet",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI sheet component",
+    "dependencies": [
+      "@radix-ui/react-dialog",
+      "lucide-react",
+      "@/lib/utils",
+      "react",
+      "class-variance-authority"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install @radix-ui/react-dialog lucide-react @/lib/utils react class-variance-authority",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/sheet.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.211282",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "skeleton",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI skeleton component",
+    "dependencies": [
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/skeleton.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.211370",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "slider",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI slider component",
+    "dependencies": [
+      "react",
+      "@/lib/utils",
+      "@radix-ui/react-slider"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/lib/utils @radix-ui/react-slider",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/slider.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.211461",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "switch",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI switch component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-switch",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-switch @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/switch.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.211551",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "table",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI table component",
+    "dependencies": [
+      "react",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/table.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.211646",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "tabs",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI tabs component",
+    "dependencies": [
+      "react",
+      "@/lib/utils",
+      "@radix-ui/react-tabs"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/lib/utils @radix-ui/react-tabs",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/tabs.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.211740",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "textarea",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI textarea component",
+    "dependencies": [
+      "react",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/textarea.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.211828",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "toggle",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI toggle component",
+    "dependencies": [
+      "react",
+      "class-variance-authority",
+      "@/lib/utils",
+      "@radix-ui/react-toggle"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react class-variance-authority @/lib/utils @radix-ui/react-toggle",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/toggle.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.211921",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "toggle-group",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI toggle-group component",
+    "dependencies": [
+      "@/registry/new-york/ui/toggle",
+      "@/lib/utils",
+      "react",
+      "class-variance-authority",
+      "@radix-ui/react-toggle-group"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install @/registry/new-york/ui/toggle @/lib/utils react class-variance-authority @radix-ui/react-toggle-group",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/toggle-group.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.212016",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "tooltip",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI tooltip component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-tooltip",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-tooltip @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/ui/tooltip.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.212109",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "alert",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI alert component",
+    "dependencies": [
+      "react",
+      "class-variance-authority",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react class-variance-authority @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/alert.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.212202",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "alert-dialog",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI alert-dialog component",
+    "dependencies": [
+      "react",
+      "@/registry/default/ui/button",
+      "@/lib/utils",
+      "@radix-ui/react-alert-dialog"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/registry/default/ui/button @/lib/utils @radix-ui/react-alert-dialog",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/alert-dialog.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.212304",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "aspect-ratio",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI aspect-ratio component",
+    "dependencies": [
+      "@radix-ui/react-aspect-ratio"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install @radix-ui/react-aspect-ratio",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/aspect-ratio.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.212390",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "avatar",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI avatar component",
+    "dependencies": [
+      "react",
+      "@/lib/utils",
+      "@radix-ui/react-avatar"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/lib/utils @radix-ui/react-avatar",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/avatar.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.212480",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "badge",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI badge component",
+    "dependencies": [
+      "react",
+      "class-variance-authority",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react class-variance-authority @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/badge.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.212572",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "breadcrumb",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI breadcrumb component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-slot",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-slot @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/breadcrumb.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.212667",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "button",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI button component",
+    "dependencies": [
+      "react",
+      "class-variance-authority",
+      "@radix-ui/react-slot",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react class-variance-authority @radix-ui/react-slot @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/button.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.212763",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "calendar",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI calendar component",
+    "dependencies": [
+      "react",
+      "@/registry/new-york/ui/button",
+      "react-day-picker",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/registry/new-york/ui/button react-day-picker @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/calendar.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.212875",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "carousel",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI carousel component",
+    "dependencies": [
+      "react",
+      "@/registry/default/ui/button",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/registry/default/ui/button @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/carousel.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.212991",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "checkbox",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI checkbox component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-checkbox",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-checkbox @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/checkbox.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.213083",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "command",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI command component",
+    "dependencies": [
+      "@radix-ui/react-dialog",
+      "@/registry/default/ui/dialog",
+      "lucide-react",
+      "@/lib/utils",
+      "react",
+      "cmdk"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install @radix-ui/react-dialog @/registry/default/ui/dialog lucide-react @/lib/utils react cmdk",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/command.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.213188",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "context-menu",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI context-menu component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-context-menu",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-context-menu @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/context-menu.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.213299",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "dialog",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI dialog component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-dialog",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-dialog @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/dialog.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.213399",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "dropdown-menu",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI dropdown-menu component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-dropdown-menu",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-dropdown-menu @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/dropdown-menu.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.213521",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "form",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI form component",
+    "dependencies": [
+      "@radix-ui/react-slot",
+      "@/registry/default/ui/label",
+      "@radix-ui/react-label",
+      "@/lib/utils",
+      "react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install @radix-ui/react-slot @/registry/default/ui/label @radix-ui/react-label @/lib/utils react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/form.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.213627",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "input",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI input component",
+    "dependencies": [
+      "react",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/input.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.213719",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "input-otp",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI input-otp component",
+    "dependencies": [
+      "react",
+      "input-otp",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react input-otp @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/input-otp.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.213814",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "label",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI label component",
+    "dependencies": [
+      "react",
+      "class-variance-authority",
+      "@/lib/utils",
+      "@radix-ui/react-label"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react class-variance-authority @/lib/utils @radix-ui/react-label",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/label.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.213905",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "menubar",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI menubar component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-menubar",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-menubar @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/menubar.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.214020",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "navigation-menu",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI navigation-menu component",
+    "dependencies": [
+      "@radix-ui/react-navigation-menu",
+      "lucide-react",
+      "@/lib/utils",
+      "react",
+      "class-variance-authority"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install @radix-ui/react-navigation-menu lucide-react @/lib/utils react class-variance-authority",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/navigation-menu.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.214126",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "pagination",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI pagination component",
+    "dependencies": [
+      "react",
+      "@/registry/default/ui/button",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/registry/default/ui/button @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/pagination.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.214225",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "popover",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI popover component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-popover",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-popover @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/popover.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.214317",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "progress",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI progress component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-progress",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-progress @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/progress.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.214407",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "radio-group",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI radio-group component",
+    "dependencies": [
+      "react",
+      "@/lib/utils",
+      "@radix-ui/react-radio-group",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/lib/utils @radix-ui/react-radio-group lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/radio-group.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.214501",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "resizable",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI resizable component",
+    "dependencies": [
+      "@/lib/utils",
+      "react-resizable-panels",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install @/lib/utils react-resizable-panels lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/resizable.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.214596",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "scroll-area",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI scroll-area component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-scroll-area",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-scroll-area @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/scroll-area.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.214689",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "select",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI select component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-select",
+      "@/lib/utils",
+      "lucide-react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-select @/lib/utils lucide-react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/select.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.214799",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "separator",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI separator component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-separator",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-separator @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/separator.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.214889",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "sheet",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI sheet component",
+    "dependencies": [
+      "@radix-ui/react-dialog",
+      "lucide-react",
+      "@/lib/utils",
+      "react",
+      "class-variance-authority"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install @radix-ui/react-dialog lucide-react @/lib/utils react class-variance-authority",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/sheet.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.214991",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "skeleton",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI skeleton component",
+    "dependencies": [
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/skeleton.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.215081",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "slider",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI slider component",
+    "dependencies": [
+      "react",
+      "@/lib/utils",
+      "@radix-ui/react-slider"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/lib/utils @radix-ui/react-slider",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/slider.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.215174",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "switch",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI switch component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-switch",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-switch @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/switch.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.215266",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "table",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI table component",
+    "dependencies": [
+      "react",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/table.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.215363",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "tabs",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI tabs component",
+    "dependencies": [
+      "react",
+      "@/lib/utils",
+      "@radix-ui/react-tabs"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/lib/utils @radix-ui/react-tabs",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/tabs.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.215462",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "textarea",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI textarea component",
+    "dependencies": [
+      "react",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/textarea.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.215554",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "toggle",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI toggle component",
+    "dependencies": [
+      "react",
+      "class-variance-authority",
+      "@/lib/utils",
+      "@radix-ui/react-toggle"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react class-variance-authority @/lib/utils @radix-ui/react-toggle",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/toggle.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.215650",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "toggle-group",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI toggle-group component",
+    "dependencies": [
+      "@/registry/default/ui/toggle",
+      "@/lib/utils",
+      "react",
+      "class-variance-authority",
+      "@radix-ui/react-toggle-group"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install @/registry/default/ui/toggle @/lib/utils react class-variance-authority @radix-ui/react-toggle-group",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/toggle-group.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.215747",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "tooltip",
+    "category": "components",
+    "type": "component",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "Shadcn UI tooltip component",
+    "dependencies": [
+      "react",
+      "@radix-ui/react-tooltip",
+      "@/lib/utils"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react @radix-ui/react-tooltip @/lib/utils",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/ui/tooltip.tsx"
+      ],
+      "component_type": "ui",
+      "repository": {},
+      "exports": [],
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.8,
+    "last_updated": "2025-09-29T00:59:08.215840",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "use-mobile",
+    "category": "hooks",
+    "type": "hook",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "React hook: use-mobile",
+    "dependencies": [
+      "react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/hooks/use-mobile.tsx"
+      ],
+      "signature": {
+        "parameters": [],
+        "return_type": "unknown",
+        "generics": [],
+        "implementation_found": true
+      },
+      "repository": {},
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.7,
+    "last_updated": "2025-09-29T00:59:13.920066",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "use-toast",
+    "category": "hooks",
+    "type": "hook",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "React hook: use-toast",
+    "dependencies": [
+      "react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/new-york/hooks/use-toast.ts"
+      ],
+      "signature": {
+        "parameters": [],
+        "return_type": "unknown",
+        "generics": []
+      },
+      "repository": {},
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.7,
+    "last_updated": "2025-09-29T00:59:13.920172",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "use-mobile",
+    "category": "hooks",
+    "type": "hook",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "React hook: use-mobile",
+    "dependencies": [
+      "react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/hooks/use-mobile.tsx"
+      ],
+      "signature": {
+        "parameters": [],
+        "return_type": "unknown",
+        "generics": [],
+        "implementation_found": true
+      },
+      "repository": {},
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.7,
+    "last_updated": "2025-09-29T00:59:13.920256",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  },
+  {
+    "name": "use-toast",
+    "category": "hooks",
+    "type": "hook",
+    "sources": [
+      "https://github.com/shadcn-ui/ui"
+    ],
+    "priority_source": "https://github.com/shadcn-ui/ui",
+    "description": "React hook: use-toast",
+    "dependencies": [
+      "react"
+    ],
+    "peer_dependencies": [],
+    "installation": "npm install react",
+    "usage_examples": [],
+    "metadata": {
+      "files": [
+        "apps/www/registry/default/hooks/use-toast.ts"
+      ],
+      "signature": {
+        "parameters": [],
+        "return_type": "unknown",
+        "generics": []
+      },
+      "repository": {},
+      "registry_file": "apps/www/__registry__/index.tsx"
+    },
+    "quality_score": 0.7,
+    "last_updated": "2025-09-29T00:59:13.920333",
+    "platform": [
+      "reactjs"
+    ],
+    "registry": "shadcn"
+  }
+]

@@ -26,6 +26,7 @@ class ExtractorFactory:
         builtin_extractors = {
             "shadcn": ["github"],
             "shadcn_hooks": ["github"],
+            "shadcn_components": ["github"],
             "shadcn_blocks": ["github"],
             "gluestack": ["github"],
             "gluestack_hooks": ["github"],

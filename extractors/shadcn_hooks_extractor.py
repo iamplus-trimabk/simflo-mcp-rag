@@ -148,30 +148,21 @@ class ShadcnHooksExtractor(GitHubCLIBaseExtractor):
         """Parse TypeScript registry file format"""
         hooks = []
 
-        # Look for hook entries in various formats
-        patterns = [
-            # Format: { name: "use-form", ... }
-            r'\{\s*name:\s*["\']([^"\']+)["\']',
-            # Format: export const hooks = [ ... ]
-            r'export\s+const\s+hooks\s*=\s*\[([^\]]+)\]',
-            # Format: export const useSomething = ...
-            r'export\s+(?:const|function|async\s+function)\s+(use[A-Z][a-zA-Z0-9]*)'
-        ]
+        # Parse shadcn registry format: "use-mobile": { name: "use-mobile", type: "registry:hook", files: [...] }
+        hook_pattern = r'"([^"]+)":\s*\{\s*name:\s*["\'][^"\']*["\'][^}]*type:\s*["\']registry:hook["\'][^}]*files:\s*\[\s*\{\s*path:\s*["\']([^"\']+)["\'][^}]*\}\s*\]'
 
-        for pattern in patterns:
-            matches = re.finditer(pattern, content, re.MULTILINE | re.DOTALL)
-            for match in matches:
-                if match.group(1):
-                    hook_name = match.group(1)
-                    if self._is_hook_name(hook_name):
-                        # Extract additional context around the match
-                        start_pos = max(0, match.start() - 500)
-                        end_pos = min(len(content), match.end() + 500)
-                        context = content[start_pos:end_pos]
+        matches = re.finditer(hook_pattern, content, re.MULTILINE | re.DOTALL)
+        for match in matches:
+            hook_name = match.group(1)
+            if self._is_hook_name(hook_name):
+                file_path = match.group(2)
 
-                        hook_config = self._extract_hook_from_context(hook_name, context)
-                        if hook_config:
-                            hooks.append(hook_config)
+                hook_config = {
+                    "name": hook_name,
+                    "files": [file_path],
+                    "type": "registry:hook"
+                }
+                hooks.append(hook_config)
 
         return hooks
 
@@ -219,8 +210,23 @@ class ShadcnHooksExtractor(GitHubCLIBaseExtractor):
             if not hook_name:
                 return None
 
-            # Find hook implementation files
-            hook_files = self._find_hook_files(hook_name)
+            # Get file paths from hook config and convert to full paths
+            registry_files = hook_config.get("files", [])
+            hook_files = []
+
+            for file_path in registry_files:
+                # Convert relative path from registry to full path
+                full_paths = [
+                    f"apps/www/{file_path}",
+                    f"apps/v4/{file_path}",
+                    file_path  # Try as-is
+                ]
+
+                for full_path in full_paths:
+                    if self._read_local_file(full_path):
+                        hook_files.append(full_path)
+                        break
+
             if not hook_files:
                 self.logger.warning(f"No implementation files found for hook: {hook_name}")
                 return None
@@ -265,14 +271,14 @@ class ShadcnHooksExtractor(GitHubCLIBaseExtractor):
     def _find_hook_files(self, hook_name: str) -> List[str]:
         """Find implementation files for a hook"""
         possible_paths = [
-            f"hooks/{hook_name}.tsx",
-            f"hooks/{hook_name}.ts",
-            f"src/hooks/{hook_name}.tsx",
-            f"src/hooks/{hook_name}.ts",
-            f"components/ui/hooks/{hook_name}.tsx",
-            f"components/ui/hooks/{hook_name}.ts",
-            f"app/registry/hooks/{hook_name}.tsx",
-            f"app/registry/hooks/{hook_name}.ts",
+            f"apps/www/registry/default/hooks/{hook_name}.tsx",
+            f"apps/www/registry/new-york/hooks/{hook_name}.tsx",
+            f"apps/v4/registry/default/hooks/{hook_name}.tsx",
+            f"apps/v4/registry/new-york-v4/hooks/{hook_name}.tsx",
+            f"apps/www/hooks/{hook_name}.tsx",
+            f"apps/www/hooks/{hook_name}.ts",
+            f"apps/v4/hooks/{hook_name}.tsx",
+            f"apps/v4/hooks/{hook_name}.ts",
         ]
 
         found_files = []

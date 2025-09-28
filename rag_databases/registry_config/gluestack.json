@@ -1,8 +1,8 @@
 {
   "registry_name": "gluestack",
   "display_name": "Gluestack UI",
-  "description": "Universal React component library for web and native",
-  "platforms": ["reactjs", "reactnative"],
+  "description": "Universal UI library for React and React Native",
+  "platforms": ["reactjs", "react-native"],
   "database_path": "rag_databases/gluestack_db",
   "status": "active",
   "categories": {
@@ -14,38 +14,8 @@
           "type": "github",
           "url": "https://github.com/gluestack/gluestack-ui",
           "branch": "main",
-          "registry_file": "packages/core/components/registry.ts",
+          "registry_file": "packages/gluestack-core/src/index.tsx",
           "extractor": "gluestack",
-          "priority": 1,
-          "update_frequency": "weekly"
-        }
-      ]
-    },
-    "hooks": {
-      "enabled": true,
-      "sources": [
-        {
-          "name": "gluestack_hooks_main",
-          "type": "github",
-          "url": "https://github.com/gluestack/gluestack-ui",
-          "branch": "main",
-          "registry_file": "packages/core/hooks/registry.ts",
-          "extractor": "gluestack_hooks",
-          "priority": 1,
-          "update_frequency": "weekly"
-        }
-      ]
-    },
-    "blocks": {
-      "enabled": true,
-      "sources": [
-        {
-          "name": "gluestack_blocks_main",
-          "type": "github",
-          "url": "https://github.com/gluestack/gluestack-ui",
-          "branch": "main",
-          "registry_file": "packages/core/blocks/registry.ts",
-          "extractor": "gluestack_blocks",
           "priority": 1,
           "update_frequency": "weekly"
         }
@@ -56,9 +26,7 @@
     "cross_category_search": true,
     "default_category": "components",
     "category_weights": {
-      "components": 0.7,
-      "hooks": 0.2,
-      "blocks": 0.1
+      "components": 1.0
     },
     "source_boosting": {
       "official": 1.2,
@@ -71,6 +39,6 @@
     "maintainer": "gluestack",
     "license": "MIT",
     "last_updated": "2024-01-01T00:00:00Z",
-    "component_count": 13
+    "component_count": 25
   }
 }
