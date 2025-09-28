@@ -45,7 +45,7 @@ class SearchResult:
 class RegistryManager:
     """Manages multiple vector databases for component libraries"""
 
-    def __init__(self, base_path: str = "../rag_databases"):
+    def __init__(self, base_path: str = "./rag_databases"):
         """Initialize registry manager"""
         self.base_path = Path(base_path)
         self.registries: Dict[str, RegistryInfo] = {}
@@ -88,7 +88,7 @@ class RegistryManager:
                                 path=str(registry_dir),
                                 platform=platforms,
                                 description=f"Registry for {registry_name.replace('_db', '')}",
-                                component_count=len(data.get("components", [])),
+                                component_count=len(data) if isinstance(data, list) else len(data.get("components", [])),
                                 last_updated=components_file.stat().st_mtime,
                                 is_active=True
                             )
@@ -102,11 +102,12 @@ class RegistryManager:
         except Exception as e:
             self.logger.error(f"Failed to discover registries: {e}")
 
-    def _extract_platforms_from_data(self, data: Dict[str, Any]) -> List[str]:
+    def _extract_platforms_from_data(self, data: Union[Dict[str, Any], List[Any]]) -> List[str]:
         """Extract platform information from registry data"""
         platforms = set()
 
-        for component in data.get("components", []):
+        components = data if isinstance(data, list) else data.get("components", [])
+        for component in components:
             if "platform" in component:
                 if isinstance(component["platform"], list):
                     platforms.update(component["platform"])

@@ -7,6 +7,8 @@ HTTP API server for RAG database queries that the TypeScript MCP server can use.
 
 import json
 import uvicorn
+import logging
+from datetime import datetime
 from fastapi import FastAPI, HTTPException, Query, Form
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -37,6 +39,11 @@ class SearchResultResponse(BaseModel):
     description: Optional[str] = None
     relevanceScore: float
     installCommand: str
+    registry: Optional[str] = None
+    platform: Optional[List[str]] = None
+    categories: Optional[List[str]] = None
+    dependencies: Optional[List[str]] = None
+    registryDependencies: Optional[List[str]] = None
 
 
 class InstallationInfoResponse(BaseModel):
@@ -87,12 +94,14 @@ class RAGAPIServer:
         self.vector_store = VectorStore(str(self.persist_dir))
         self.context_manager = get_context_manager()
         self.registry_manager = get_registry_manager()
+        self.logger = logging.getLogger(__name__)
 
         # Load components cache if needed
         if self.vector_store.collection.count() > 0 and not self.vector_store.components_cache:
             self._load_components_to_cache()
 
         self._setup_routes()
+        self._setup_exception_handlers()
 
     def _load_components_to_cache(self):
         """Load components from JSON file into cache"""
@@ -144,31 +153,127 @@ class RAGAPIServer:
 
         @self.app.get("/health")
         async def health_check():
-            """Health check endpoint"""
-            return {
-                "status": "healthy",
-                "components_count": len(self.vector_store.components_cache),
-                "vector_store_count": self.vector_store.collection.count()
-            }
+            """Enhanced health check endpoint with system status"""
+            try:
+                # Check registry manager status
+                registry_status = {}
+                for name, registry in self.registry_manager.registries.items():
+                    try:
+                        collection = self.registry_manager.collections.get(name)
+                        count = collection.count() if collection else 0
+                        registry_status[name] = {
+                            "status": "healthy" if count > 0 else "empty",
+                            "component_count": count,
+                            "platforms": registry.platforms if hasattr(registry, 'platforms') else []
+                        }
+                    except Exception as e:
+                        registry_status[name] = {
+                            "status": "error",
+                            "error": str(e)
+                        }
+
+                # Overall system health
+                total_components = sum(status.get("component_count", 0) for status in registry_status.values())
+                healthy_registries = sum(1 for status in registry_status.values() if status.get("status") == "healthy")
+
+                return {
+                    "status": "healthy" if healthy_registries > 0 else "degraded",
+                    "timestamp": datetime.utcnow().isoformat(),
+                    "version": "2.0.0",
+                    "registries": registry_status,
+                    "summary": {
+                        "total_registries": len(registry_status),
+                        "healthy_registries": healthy_registries,
+                        "total_components": total_components,
+                        "cache_size": len(self.vector_store.components_cache)
+                    }
+                }
+            except Exception as e:
+                self.logger.error(f"Health check failed: {e}")
+                return {
+                    "status": "unhealthy",
+                    "error": str(e),
+                    "timestamp": datetime.utcnow().isoformat()
+                }
 
         @self.app.get("/api/v1/components/search", response_model=APIResponse)
         async def search_components(
             q: str = Query(..., description="Search query"),
-            limit: int = Query(10, description="Maximum number of results")
+            limit: int = Query(10, description="Maximum number of results"),
+            registry: Optional[str] = Query(None, description="Specific registry to search"),
+            platform: Optional[str] = Query(None, description="Platform filter (reactjs, reactnative)")
         ):
-            """Search for components using natural language"""
+            """Search for components using natural language with registry and platform filtering"""
             try:
-                results = self.vector_store.search(q, limit)
-
                 search_results = []
-                for result in results:
-                    search_results.append(SearchResultResponse(
-                        name=result.component.name,
-                        type=result.component.type,
-                        description=result.component.description,
-                        relevanceScore=result.relevance_score,
-                        installCommand=result.component.installCommand
-                    ))
+
+                # Determine which registries to search
+                target_registries = []
+                if registry:
+                    # Search specific registry
+                    if registry in self.registry_manager.collections:
+                        target_registries = [(registry, self.registry_manager.collections[registry])]
+                    else:
+                        return APIResponse(
+                            success=False,
+                            data=[],
+                            error=f"Registry '{registry}' not found"
+                        )
+                else:
+                    # Search all available registries
+                    target_registries = list(self.registry_manager.collections.items())
+
+                # Search each registry and combine results
+                for registry_name, collection in target_registries:
+                    try:
+                        # Perform vector search
+                        results = collection.query(
+                            query_texts=[q],
+                            n_results=min(limit, 20)  # Get more results for better ranking
+                        )
+
+                        if results and results.get('ids') and results['ids'][0]:
+                            for i, component_id in enumerate(results['ids'][0]):
+                                metadata = results['metadatas'][0][i] if results.get('metadatas') else {}
+                                distance = results['distances'][0][i] if results.get('distances') else 1.0
+
+                                # Get platform information
+                                component_platform = metadata.get('platform', '')
+                                if isinstance(component_platform, str):
+                                    component_platform = [component_platform]
+
+                                # Apply platform filter if specified
+                                if platform and platform not in component_platform:
+                                    continue
+
+                                # Convert distance to relevance score (lower distance = higher relevance)
+                                relevance_score = max(0.0, 1.0 - distance)
+
+                                # Parse additional metadata
+                                categories = metadata.get('categories', '').split(',') if metadata.get('categories') else []
+                                dependencies = metadata.get('dependencies', '').split(',') if metadata.get('dependencies') else []
+                                registry_deps = metadata.get('registry_dependencies', '').split(',') if metadata.get('registry_dependencies') else []
+
+                                search_results.append(SearchResultResponse(
+                                    name=metadata.get('name', 'Unknown'),
+                                    type=metadata.get('type', 'ui'),
+                                    description=metadata.get('description', ''),
+                                    relevanceScore=relevance_score,
+                                    installCommand=metadata.get('install_command', ''),
+                                    registry=metadata.get('registry', registry_name),
+                                    platform=component_platform,
+                                    categories=categories,
+                                    dependencies=dependencies,
+                                    registryDependencies=registry_deps
+                                ))
+
+                    except Exception as e:
+                        self.logger.warning(f"Search failed for registry {registry_name}: {e}")
+                        continue
+
+                # Sort by relevance score and limit results
+                search_results.sort(key=lambda x: x.relevanceScore, reverse=True)
+                search_results = search_results[:limit]
 
                 return APIResponse(
                     success=True,
@@ -749,9 +854,9 @@ class RAGAPIServer:
             """List available registries for extraction"""
             try:
                 import sys
-import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from services.registry_config_manager import RegistryConfigManager
+                import os
+                sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+                from services.registry_config_manager import RegistryConfigManager
                 manager = RegistryConfigManager("rag_databases/registry_config")
                 registries = manager.list_registries()
 
@@ -803,7 +908,7 @@ from services.registry_config_manager import RegistryConfigManager
             """Run extraction pipeline"""
             try:
                 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from scripts.run_extraction import run_test_mode, run_real_mode
+                from scripts.run_extraction import run_test_mode, run_real_mode
 
                 if mode == "test":
                     success = await run_test_mode()
@@ -1048,9 +1153,9 @@ from scripts.run_extraction import run_test_mode, run_real_mode
             """List sources for a specific registry"""
             try:
                 import sys
-import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from services.registry_config_manager import RegistryConfigManager
+                import os
+                sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+                from services.registry_config_manager import RegistryConfigManager
 
                 manager = RegistryConfigManager("rag_databases/registry_config")
                 config = manager.load_registry_config(registry)
@@ -1145,6 +1250,45 @@ from services.registry_config_manager import RegistryConfigManager
                         error=f"Failed to clear extraction data: {str(e)}"
                     ).dict()
                 )
+
+    def _setup_exception_handlers(self):
+        """Setup global exception handlers"""
+
+        @self.app.exception_handler(ValueError)
+        async def value_error_exception_handler(request, exc: ValueError):
+            """Handle validation errors"""
+            self.logger.warning(f"Validation error: {exc}")
+            return JSONResponse(
+                status_code=400,
+                content=APIResponse(
+                    success=False,
+                    error=f"Validation error: {str(exc)}"
+                ).dict()
+            )
+
+        @self.app.exception_handler(KeyError)
+        async def key_error_exception_handler(request, exc: KeyError):
+            """Handle missing key errors"""
+            self.logger.warning(f"Key error: {exc}")
+            return JSONResponse(
+                status_code=404,
+                content=APIResponse(
+                    success=False,
+                    error=f"Resource not found: {str(exc)}"
+                ).dict()
+            )
+
+        @self.app.exception_handler(Exception)
+        async def general_exception_handler(request, exc: Exception):
+            """Handle all other exceptions"""
+            self.logger.error(f"Unexpected error: {exc}", exc_info=True)
+            return JSONResponse(
+                status_code=500,
+                content=APIResponse(
+                    success=False,
+                    error="Internal server error. Please try again later."
+                ).dict()
+            )
 
     def run(self, host: str = "127.0.0.1", port: int = 8000):
         """Run the API server"""
