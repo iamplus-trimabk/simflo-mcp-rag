@@ -1,7 +1,7 @@
 {
   "repository": {},
   "extraction_metadata": {
-    "extracted_at": "2025-09-28T04:05:30.413180",
+    "extracted_at": "2025-09-28T23:30:19.873740",
     "extractor_version": "github-cli-enhanced",
     "total_components": 13,
     "quality_metrics": {
@@ -71,7 +71,7 @@
       "usage_patterns": [],
       "source_repository": "https://github.com/gluestack/gluestack-ui",
       "repository_metadata": {},
-      "processed_at": "2025-09-28T04:05:30.421650",
+      "processed_at": "2025-09-28T23:30:19.879714",
       "processor": "Gluestack Post Processor"
     },
     {
@@ -128,7 +128,7 @@
       "usage_patterns": [],
       "source_repository": "https://github.com/gluestack/gluestack-ui",
       "repository_metadata": {},
-      "processed_at": "2025-09-28T04:05:30.421652",
+      "processed_at": "2025-09-28T23:30:19.879716",
       "processor": "Gluestack Post Processor"
     },
     {
@@ -186,7 +186,7 @@
       "usage_patterns": [],
       "source_repository": "https://github.com/gluestack/gluestack-ui",
       "repository_metadata": {},
-      "processed_at": "2025-09-28T04:05:30.421653",
+      "processed_at": "2025-09-28T23:30:19.879717",
       "processor": "Gluestack Post Processor"
     },
     {
@@ -243,7 +243,7 @@
       "usage_patterns": [],
       "source_repository": "https://github.com/gluestack/gluestack-ui",
       "repository_metadata": {},
-      "processed_at": "2025-09-28T04:05:30.421654",
+      "processed_at": "2025-09-28T23:30:19.879718",
       "processor": "Gluestack Post Processor"
     },
     {
@@ -300,7 +300,7 @@
       "usage_patterns": [],
       "source_repository": "https://github.com/gluestack/gluestack-ui",
       "repository_metadata": {},
-      "processed_at": "2025-09-28T04:05:30.421655",
+      "processed_at": "2025-09-28T23:30:19.879719",
       "processor": "Gluestack Post Processor"
     },
     {
@@ -357,11 +357,11 @@
       "usage_patterns": [],
       "source_repository": "https://github.com/gluestack/gluestack-ui",
       "repository_metadata": {},
-      "processed_at": "2025-09-28T04:05:30.421655",
+      "processed_at": "2025-09-28T23:30:19.879719",
       "processor": "Gluestack Post Processor"
     },
     {
-      "name": "tablestyle",
+      "name": "tablefooterstyle",
       "description": "",
       "type": "component",
       "platform": [
@@ -374,14 +374,14 @@
           "language": "tsx",
           "component_type": "component",
           "exports": [
-            "tableStyle",
             "tableFooterStyle",
-            "tableBodyStyle",
             "tableHeadStyle",
+            "tableCaptionStyle",
             "tableRowStyleStyle",
+            "tableStyle",
+            "tableBodyStyle",
             "tableDataStyle",
-            "tableHeaderStyle",
-            "tableCaptionStyle"
+            "tableHeaderStyle"
           ],
           "imports": [
             "@gluestack-ui/utils/nativewind-utils"
@@ -421,7 +421,7 @@
       "usage_patterns": [],
       "source_repository": "https://github.com/gluestack/gluestack-ui",
       "repository_metadata": {},
-      "processed_at": "2025-09-28T04:05:30.421656",
+      "processed_at": "2025-09-28T23:30:19.879720",
       "processor": "Gluestack Post Processor"
     },
     {
@@ -478,11 +478,11 @@
       "usage_patterns": [],
       "source_repository": "https://github.com/gluestack/gluestack-ui",
       "repository_metadata": {},
-      "processed_at": "2025-09-28T04:05:30.421657",
+      "processed_at": "2025-09-28T23:30:19.879721",
       "processor": "Gluestack Post Processor"
     },
     {
-      "name": "actionsheetitemtext",
+      "name": "actionsheet",
       "description": "",
       "type": "component",
       "platform": [
@@ -495,27 +495,27 @@
           "language": "tsx",
           "component_type": "component",
           "exports": [
-            "ActionsheetItemText",
-            "ActionsheetDragIndicatorWrapper",
-            "ActionsheetBackdrop",
-            "ActionsheetVirtualizedList",
-            "ActionsheetFlatList",
-            "ActionsheetSectionList",
+            "Actionsheet",
+            "ActionsheetScrollView",
+            "ActionsheetItem",
             "ActionsheetDragIndicator",
             "ActionsheetContent",
-            "Actionsheet",
-            "ActionsheetItem",
-            "ActionsheetScrollView",
+            "UIActionsheet",
             "ActionsheetSectionHeaderText",
-            "ActionsheetIcon",
-            "UIActionsheet"
+            "ActionsheetVirtualizedList",
+            "ActionsheetSectionList",
+            "ActionsheetDragIndicatorWrapper",
+            "ActionsheetItemText",
+            "ActionsheetFlatList",
+            "ActionsheetBackdrop",
+            "ActionsheetIcon"
           ],
           "imports": [
-            "@gluestack-ui/core/actionsheet/creator",
-            "@gluestack-ui/core/icon/creator",
-            "@gluestack-ui/utils/nativewind-utils",
             "nativewind",
+            "@gluestack-ui/utils/nativewind-utils",
+            "@gluestack-ui/core/icon/creator",
             "@expo/html-elements",
+            "@gluestack-ui/core/actionsheet/creator",
             "react"
           ],
           "props_info": {
@@ -525,16 +525,17 @@
             "is_functional": true
           },
           "usage_patterns": [
-            "ActionsheetItemText(\n  { className, isTruncated, bold, underline, strikeThrough, size, ...props },\n  ref\n)"
+            "Actionsheet({\n  Root: View,\n  Content: withStyleContext(MotionView)",
+            "Actionsheet({ className, ...props }, ref)"
           ]
         }
       ],
       "dependencies": [
-        "@gluestack-ui/core/actionsheet/creator",
-        "@gluestack-ui/core/icon/creator",
         "@gluestack-ui/utils/nativewind-utils",
         "nativewind",
+        "@gluestack-ui/core/icon/creator",
         "@expo/html-elements",
+        "@gluestack-ui/core/actionsheet/creator",
         "react"
       ],
       "peer_dependencies": [],
@@ -559,11 +560,12 @@
         "is_functional": true
       },
       "usage_patterns": [
-        "ActionsheetItemText(\n  { className, isTruncated, bold, underline, strikeThrough, size, ...props },\n  ref\n)"
+        "Actionsheet({\n  Root: View,\n  Content: withStyleContext(MotionView)",
+        "Actionsheet({ className, ...props }, ref)"
       ],
       "source_repository": "https://github.com/gluestack/gluestack-ui",
       "repository_metadata": {},
-      "processed_at": "2025-09-28T04:05:30.421657",
+      "processed_at": "2025-09-28T23:30:19.879721",
       "processor": "Gluestack Post Processor"
     },
     {
@@ -620,7 +622,7 @@
       "usage_patterns": [],
       "source_repository": "https://github.com/gluestack/gluestack-ui",
       "repository_metadata": {},
-      "processed_at": "2025-09-28T04:05:30.421658",
+      "processed_at": "2025-09-28T23:30:19.879722",
       "processor": "Gluestack Post Processor"
     },
     {
@@ -678,7 +680,7 @@
       "usage_patterns": [],
       "source_repository": "https://github.com/gluestack/gluestack-ui",
       "repository_metadata": {},
-      "processed_at": "2025-09-28T04:05:30.421659",
+      "processed_at": "2025-09-28T23:30:19.879723",
       "processor": "Gluestack Post Processor"
     },
     {
@@ -731,7 +733,7 @@
       "usage_patterns": [],
       "source_repository": "https://github.com/gluestack/gluestack-ui",
       "repository_metadata": {},
-      "processed_at": "2025-09-28T04:05:30.421659",
+      "processed_at": "2025-09-28T23:30:19.879723",
       "processor": "Gluestack Post Processor"
     },
     {
@@ -788,7 +790,7 @@
       "usage_patterns": [],
       "source_repository": "https://github.com/gluestack/gluestack-ui",
       "repository_metadata": {},
-      "processed_at": "2025-09-28T04:05:30.421660",
+      "processed_at": "2025-09-28T23:30:19.879724",
       "processor": "Gluestack Post Processor"
     }
   ]

@@ -15,7 +15,7 @@
           "url": "https://github.com/shadcn-ui/ui",
           "branch": "main",
           "registry_file": "apps/www/registry/registry-ui.ts",
-          "extractor": "shadcn",
+          "extractor": "shadcn_hooks",
           "priority": 1,
           "update_frequency": "weekly"
         }

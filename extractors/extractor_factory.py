@@ -101,7 +101,8 @@ class ExtractorFactory:
 
             # Find extractor class in module
             for name, obj in inspect.getmembers(module, inspect.isclass):
-                if (issubclass(obj, BaseExtractor) and
+                if ((issubclass(obj, BaseExtractor) or
+                     (hasattr(obj, '__bases__') and any(issubclass(base, BaseExtractor) for base in obj.__bases__))) and
                     obj != BaseExtractor and
                     obj.__module__ == module.__name__):
                     self._extractors[extractor_name] = obj

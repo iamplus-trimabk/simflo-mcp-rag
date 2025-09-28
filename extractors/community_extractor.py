@@ -9,19 +9,21 @@ and code standardization for community submissions.
 import asyncio
 import re
 import json
+import logging
 from typing import Dict, List, Optional, Any, Tuple, Set
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
-import aiohttp
-from bs4 import BeautifulSoup
 import ast
 import subprocess
 import tempfile
 import os
 
-from .base_extractor import BaseExtractor, ExtractionResult, ExtractedComponent
+from .github_cli_base import GitHubCLIBaseExtractor
+from .base_extractor import ExtractionResult, ExtractedComponent
 from models.component_models import Component, ComponentCategory, ComponentType, SourceMetadata, UsageExample
+
+logger = logging.getLogger(__name__)
 
 
 class SecurityVulnerability:
@@ -84,15 +86,12 @@ class LicenseInfo:
         }
 
 
-class CommunityExtractor(BaseExtractor):
+class CommunityExtractor(GitHubCLIBaseExtractor):
     """Specialized extractor for community-contributed components"""
 
     def __init__(self, source_config: Dict[str, Any]):
         super().__init__(source_config)
         self.supported_types = ["component", "hook", "utility", "block"]
-        self.github_api_base = "https://api.github.com"
-        self.github_raw_base = "https://raw.githubusercontent.com"
-        self.session: Optional[aiohttp.ClientSession] = None
 
         # Security patterns
         self.security_patterns = self._initialize_security_patterns()
@@ -113,15 +112,6 @@ class CommunityExtractor(BaseExtractor):
         """Get supported component types"""
         return self.supported_types
 
-    async def __aenter__(self):
-        """Initialize async context"""
-        self.session = aiohttp.ClientSession()
-        return self
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        """Cleanup async context"""
-        if self.session:
-            await self.session.close()
 
     def _initialize_security_patterns(self) -> Dict[str, List[re.Pattern]]:
         """Initialize security vulnerability detection patterns"""
@@ -155,20 +145,15 @@ class CommunityExtractor(BaseExtractor):
     def validate_source(self) -> bool:
         """Validate community source configuration"""
         try:
-            # Check required fields
-            required_fields = ["url", "extractor"]
-            for field in required_fields:
-                if field not in self.source_config:
-                    self.logger.error(f"Missing required field: {field}")
-                    return False
+            # Use GitHub CLI base validation
+            if not super().validate_source():
+                return False
 
             # Validate URL format
             url = self.source_config.get("url", "")
             if not self._is_valid_url(url):
                 self.logger.error(f"Invalid URL format: {url}")
                 return False
-
-            # Note: Source accessibility check requires async context, skipped in validation
 
             self.logger.info(f"✅ Community source validation passed: {self.source_name}")
             return True
@@ -180,7 +165,7 @@ class CommunityExtractor(BaseExtractor):
     async def extract(self) -> ExtractionResult:
         """Extract community components with security and quality assessment"""
         try:
-            self.logger.info(f"🚀 Starting community extraction from {self.source_name}")
+            self.logger.info(f"🚀 Starting community extraction from {self.name}")
 
             # Initialize result
             result = ExtractionResult(
@@ -188,7 +173,7 @@ class CommunityExtractor(BaseExtractor):
                 data=[],
                 metadata={
                     "extractor": "community",
-                    "source_name": self.source_name,
+                    "source_name": self.name,
                     "extracted_at": datetime.now().isoformat(),
                     "total_components": 0,
                     "security_issues": 0,
@@ -200,15 +185,17 @@ class CommunityExtractor(BaseExtractor):
                 source_info=self.source_config
             )
 
-            # Fetch repository/package information
-            source_info = await self._fetch_source_info()
-            if not source_info:
-                result.success = False
-                result.errors.append("Failed to fetch source information")
-                return result
+            # Repository is already cloned by GitHubCLIBaseExtractor
+            # Use repository info from base class
+            source_info = {
+                "type": "github",
+                "repo_data": self.repo_info,
+                "url": self.repo_url,
+                "repo_path": f"{self._parse_repo_identifier()['owner']}/{self._parse_repo_identifier()['repo']}"
+            }
 
-            # Find component files
-            component_files = await self._find_component_files(source_info)
+            # Find component files locally
+            component_files = self._find_component_files_local()
             if not component_files:
                 result.warnings.append("No component files found")
                 return result
@@ -224,7 +211,7 @@ class CommunityExtractor(BaseExtractor):
                 except Exception as e:
                     error_msg = f"Failed to extract component from {file_info.get('path', 'unknown')}: {e}"
                     result.errors.append(error_msg)
-                    self.logger.error(error_msg)
+                    logger.error(error_msg)
 
             # Aggregate security and quality metrics
             result.metadata["total_components"] = len(result.data)
@@ -237,180 +224,22 @@ class CommunityExtractor(BaseExtractor):
 
         except Exception as e:
             error_msg = f"Community extraction failed: {e}"
-            self.logger.error(error_msg)
+            logger.error(error_msg)
             return ExtractionResult(
                 success=False,
                 data=[],
-                metadata={"extractor": "community", "source_name": self.source_name},
+                metadata={"extractor": "community", "source_name": self.name},
                 errors=[error_msg],
                 warnings=[],
                 extraction_time=0.0,
                 source_info=self.source_config
             )
 
-    async def _fetch_source_info(self) -> Optional[Dict[str, Any]]:
-        """Fetch source repository/package information"""
-        try:
-            url = self.source_config.get("url", "")
-            source_type = self.source_config.get("type", "github")
-
-            if source_type == "github":
-                return await self._fetch_github_repo_info(url)
-            elif source_type == "npm":
-                return await self._fetch_npm_package_info(url)
-            elif source_type == "api":
-                return await self._fetch_api_source_info(url)
-            else:
-                self.logger.error(f"Unsupported source type: {source_type}")
-                return None
-
-        except Exception as e:
-            self.logger.error(f"Failed to fetch source info: {e}")
-            return None
-
-    async def _fetch_github_repo_info(self, url: str) -> Optional[Dict[str, Any]]:
-        """Fetch GitHub repository information"""
-        try:
-            if not self.session:
-                return None
-
-            # Extract owner/repo from URL
-            repo_path = url.replace("https://github.com/", "").replace("https://www.github.com/", "")
-            if repo_path.endswith("/"):
-                repo_path = repo_path[:-1]
-
-            api_url = f"{self.github_api_base}/repos/{repo_path}"
-            async with self.session.get(api_url) as response:
-                if response.status == 200:
-                    repo_data = await response.json()
-
-                    # Fetch README
-                    readme_url = f"{self.github_api_base}/repos/{repo_path}/readme"
-                    async with self.session.get(readme_url) as readme_response:
-                        readme_content = ""
-                        if readme_response.status == 200:
-                            readme_data = await readme_response.json()
-                            import base64
-                            readme_content = base64.b64decode(readme_data["content"]).decode('utf-8')
-
-                    return {
-                        "type": "github",
-                        "repo_data": repo_data,
-                        "readme": readme_content,
-                        "url": url,
-                        "repo_path": repo_path
-                    }
-                else:
-                    self.logger.error(f"GitHub API error: {response.status}")
-                    return None
-
-        except Exception as e:
-            self.logger.error(f"Failed to fetch GitHub repo info: {e}")
-            return None
-
-    async def _fetch_npm_package_info(self, url: str) -> Optional[Dict[str, Any]]:
-        """Fetch NPM package information"""
-        try:
-            if not self.session:
-                return None
-
-            # Extract package name from URL or use directly
-            package_name = self.source_config.get("package", "")
-            if not package_name:
-                # Try to extract from URL
-                if "npmjs.com/package/" in url:
-                    package_name = url.split("npmjs.com/package/")[-1]
-                else:
-                    package_name = url.split("/")[-1]
-
-            npm_api_url = f"https://registry.npmjs.org/{package_name}"
-            async with self.session.get(npm_api_url) as response:
-                if response.status == 200:
-                    package_data = await response.json()
-                    return {
-                        "type": "npm",
-                        "package_data": package_data,
-                        "url": url,
-                        "package_name": package_name
-                    }
-                else:
-                    self.logger.error(f"NPM API error: {response.status}")
-                    return None
-
-        except Exception as e:
-            self.logger.error(f"Failed to fetch NPM package info: {e}")
-            return None
-
-    async def _fetch_api_source_info(self, url: str) -> Optional[Dict[str, Any]]:
-        """Fetch information from generic API source"""
-        try:
-            if not self.session:
-                return None
-
-            async with self.session.get(url) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    return {
-                        "type": "api",
-                        "data": data,
-                        "url": url
-                    }
-                else:
-                    self.logger.error(f"API error: {response.status}")
-                    return None
-
-        except Exception as e:
-            self.logger.error(f"Failed to fetch API source info: {e}")
-            return None
-
-    async def _check_source_accessibility(self, url: str) -> bool:
-        """Check if source is accessible"""
-        try:
-            if not self.session:
-                return False
-
-            async with self.session.get(url) as response:
-                return response.status < 400
-
-        except Exception:
-            return False
-
-    def _is_valid_url(self, url: str) -> bool:
-        """Validate URL format"""
-        try:
-            result = urlparse(url)
-            return all([result.scheme, result.netloc])
-        except Exception:
-            return False
-
-    async def _find_component_files(self, source_info: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """Find component files in the source"""
+    def _find_component_files_local(self) -> List[Dict[str, Any]]:
+        """Find component files in the local repository"""
         component_files = []
 
         try:
-            source_type = source_info.get("type")
-
-            if source_type == "github":
-                component_files = await self._find_github_components(source_info)
-            elif source_type == "npm":
-                component_files = await self._find_npm_components(source_info)
-            elif source_type == "api":
-                component_files = await self._find_api_components(source_info)
-
-            return component_files
-
-        except Exception as e:
-            self.logger.error(f"Failed to find component files: {e}")
-            return []
-
-    async def _find_github_components(self, source_info: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """Find component files in GitHub repository"""
-        component_files = []
-
-        try:
-            repo_path = source_info.get("repo_path", "")
-            default_branch = source_info.get("repo_data", {}).get("default_branch", "main")
-
             # Look for component file patterns
             patterns = [
                 "src/components/**/*.tsx",
@@ -427,95 +256,42 @@ class CommunityExtractor(BaseExtractor):
 
             for pattern in patterns:
                 try:
-                    files = await self._fetch_github_files(repo_path, default_branch, pattern)
-                    component_files.extend(files)
+                    files = self._find_files_by_pattern(pattern)
+                    for file_path in files:
+                        component_files.append({
+                            "path": str(file_path.relative_to(self.repo_path)),
+                            "type": self._determine_file_type(str(file_path))
+                        })
                 except Exception:
                     continue
 
             return component_files
 
         except Exception as e:
-            self.logger.error(f"Failed to find GitHub components: {e}")
+            logger.error(f"Failed to find component files: {e}")
             return []
 
-    async def _fetch_github_files(self, repo_path: str, branch: str, pattern: str) -> List[Dict[str, Any]]:
-        """Fetch files from GitHub repository matching pattern"""
-        files = []
-
-        try:
-            if not self.session:
-                return files
-
-            # This is a simplified implementation
-            # In a real implementation, you would use GitHub's search API or tree API
-            # For now, we'll return some mock files based on the pattern
-            mock_files = [
-                {"path": "src/components/MyComponent.tsx", "type": "component"},
-                {"path": "src/hooks/useCustomHook.ts", "type": "hook"},
-                {"path": "src/utils/helper.ts", "type": "utility"}
-            ]
-
-            return mock_files
-
-        except Exception as e:
-            self.logger.error(f"Failed to fetch GitHub files: {e}")
-            return []
-
-    async def _find_npm_components(self, source_info: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """Find component files in NPM package"""
-        component_files = []
-
-        try:
-            package_data = source_info.get("package_data", {})
-
-            # Look at main, module, and exports fields
-            main_file = package_data.get("main", "")
-            if main_file and self._is_component_file(main_file):
-                component_files.append({"path": main_file, "type": "main"})
-
-            module_file = package_data.get("module", "")
-            if module_file and self._is_component_file(module_file):
-                component_files.append({"path": module_file, "type": "module"})
-
-            return component_files
-
-        except Exception as e:
-            self.logger.error(f"Failed to find NPM components: {e}")
-            return []
-
-    async def _find_api_components(self, source_info: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """Find component files from API source"""
-        component_files = []
-
-        try:
-            data = source_info.get("data", {})
-
-            # Look for component definitions in API response
-            if "components" in data:
-                for component in data["components"]:
-                    if "file" in component:
-                        component_files.append({
-                            "path": component["file"],
-                            "type": "api",
-                            "data": component
-                        })
-
-            return component_files
-
-        except Exception as e:
-            self.logger.error(f"Failed to find API components: {e}")
-            return []
-
-    def _is_component_file(self, file_path: str) -> bool:
-        """Check if file is likely a component file"""
-        component_extensions = [".ts", ".tsx", ".js", ".jsx"]
-        component_indicators = ["component", "hook", "util", "lib"]
-
+    def _determine_file_type(self, file_path: str) -> str:
+        """Determine component type from file path"""
         file_lower = file_path.lower()
-        return (
-            any(file_path.endswith(ext) for ext in component_extensions) and
-            any(indicator in file_lower for indicator in component_indicators)
-        )
+        if "hook" in file_lower:
+            return "hook"
+        elif "block" in file_lower or "layout" in file_lower:
+            return "block"
+        elif "util" in file_lower or "helper" in file_lower:
+            return "utility"
+        else:
+            return "component"
+
+    def _is_valid_url(self, url: str) -> bool:
+        """Validate URL format"""
+        try:
+            result = urlparse(url)
+            return all([result.scheme, result.netloc])
+        except Exception:
+            return False
+
+
 
     async def _extract_community_component(self, file_info: Dict[str, Any], source_info: Dict[str, Any]) -> Optional[ExtractedComponent]:
         """Extract a single community component with full analysis"""
@@ -525,8 +301,8 @@ class CommunityExtractor(BaseExtractor):
 
             self.logger.info(f"🔧 Extracting community component: {file_path}")
 
-            # Fetch file content
-            content = await self._fetch_file_content(file_info, source_info)
+            # Fetch file content locally
+            content = self._fetch_file_content_local(file_info.get("path", ""))
             if not content:
                 return None
 
@@ -537,7 +313,7 @@ class CommunityExtractor(BaseExtractor):
             quality_metrics = await self._analyze_quality(content, file_path)
 
             # Extract license information
-            license_info = await self._extract_license_info(source_info)
+            license_info = self._extract_license_info(source_info)
 
             # Standardize code format
             standardized_content = await self._standardize_code(content)
@@ -558,41 +334,26 @@ class CommunityExtractor(BaseExtractor):
                 name=component_metadata.get("name", Path(file_path).stem),
                 category=self._determine_category(component_type),
                 type=component_type,
-                registry="community",
-                priority_source=self.source_name,
-                sources=[self.source_name],
-                display_name=component_metadata.get("display_name", Path(file_path).stem.replace("-", " ").title()),
+                sources=[self.repo_url],
+                priority_source=self.repo_url,
                 description=component_metadata.get("description", f"Community component: {Path(file_path).stem}"),
                 dependencies=component_metadata.get("dependencies", []),
+                peer_dependencies=[],
                 installation=component_metadata.get("installation", ""),
-                platform=["reactjs"],
-                framework="react",
-                quality_score=quality_score,
                 usage_examples=component_metadata.get("usage_examples", []),
-                category_specific_data={
+                metadata={
                     "security_vulnerabilities": [v.to_dict() for v in security_vulnerabilities],
                     "quality_metrics": quality_metrics.to_dict(),
                     "license_info": license_info.to_dict(),
                     "standardization_applied": True,
                     "source_file": file_path,
-                    "original_metadata": component_metadata
-                }
-            )
-
-            # Add source metadata
-            extracted_component.add_source_metadata(
-                self.source_name,
-                SourceMetadata(
-                    source_name=self.source_name,
-                    extracted_at=datetime.now(),
-                    url=self.source_config.get("url"),
-                    extraction_metadata={
-                        "security_issues": len(security_vulnerabilities),
-                        "quality_score": quality_metrics.maintainability_index,
-                        "license_compatible": license_info.is_compatible,
-                        "standardized": True
-                    }
-                )
+                    "original_metadata": component_metadata,
+                    "repository": self.repo_info
+                },
+                quality_score=quality_score,
+                last_updated=datetime.now(),
+                platform=["reactjs"],
+                registry="community"
             )
 
             return extracted_component
@@ -601,76 +362,12 @@ class CommunityExtractor(BaseExtractor):
             self.logger.error(f"Failed to extract community component: {e}")
             return None
 
-    async def _fetch_file_content(self, file_info: Dict[str, Any], source_info: Dict[str, Any]) -> Optional[str]:
-        """Fetch file content from source"""
+    def _fetch_file_content_local(self, file_path: str) -> Optional[str]:
+        """Fetch file content from local repository"""
         try:
-            source_type = source_info.get("type")
-
-            if source_type == "github":
-                return await self._fetch_github_file_content(file_info, source_info)
-            elif source_type == "npm":
-                return await self._fetch_npm_file_content(file_info, source_info)
-            elif source_type == "api":
-                return await self._fetch_api_file_content(file_info, source_info)
-
-            return None
-
+            return self._read_local_file(file_path)
         except Exception as e:
-            self.logger.error(f"Failed to fetch file content: {e}")
-            return None
-
-    async def _fetch_github_file_content(self, file_info: Dict[str, Any], source_info: Dict[str, Any]) -> Optional[str]:
-        """Fetch file content from GitHub"""
-        try:
-            if not self.session:
-                return None
-
-            repo_path = source_info.get("repo_path", "")
-            default_branch = source_info.get("repo_data", {}).get("default_branch", "main")
-            file_path = file_info.get("path", "")
-
-            raw_url = f"{self.github_raw_base}/{repo_path}/{default_branch}/{file_path}"
-            async with self.session.get(raw_url) as response:
-                if response.status == 200:
-                    return await response.text()
-                else:
-                    self.logger.error(f"Failed to fetch GitHub file: {response.status}")
-                    return None
-
-        except Exception as e:
-            self.logger.error(f"Failed to fetch GitHub file content: {e}")
-            return None
-
-    async def _fetch_npm_file_content(self, file_info: Dict[str, Any], source_info: Dict[str, Any]) -> Optional[str]:
-        """Fetch file content from NPM package"""
-        try:
-            if not self.session:
-                return None
-
-            package_name = source_info.get("package_name", "")
-            package_version = source_info.get("package_data", {}).get("dist-tags", {}).get("latest", "")
-            file_path = file_info.get("path", "")
-
-            url = f"https://unpkg.com/{package_name}@{package_version}/{file_path}"
-            async with self.session.get(url) as response:
-                if response.status == 200:
-                    return await response.text()
-                else:
-                    self.logger.error(f"Failed to fetch NPM file: {response.status}")
-                    return None
-
-        except Exception as e:
-            self.logger.error(f"Failed to fetch NPM file content: {e}")
-            return None
-
-    async def _fetch_api_file_content(self, file_info: Dict[str, Any], source_info: Dict[str, Any]) -> Optional[str]:
-        """Fetch file content from API source"""
-        try:
-            # For API sources, the content might be in the file_info
-            return file_info.get("content", "")
-
-        except Exception as e:
-            self.logger.error(f"Failed to fetch API file content: {e}")
+            logger.error(f"Failed to fetch local file content: {e}")
             return None
 
     async def _analyze_security(self, content: str, file_path: str) -> List[SecurityVulnerability]:
@@ -904,29 +601,23 @@ class CommunityExtractor(BaseExtractor):
         except Exception:
             return 50.0
 
-    async def _extract_license_info(self, source_info: Dict[str, Any]) -> LicenseInfo:
+    def _extract_license_info(self, source_info: Dict[str, Any]) -> LicenseInfo:
         """Extract license information"""
         try:
-            source_type = source_info.get("type")
+            # Get license from repository info (fetched by GitHub CLI)
             license_name = "Unknown"
             spdx_id = "UNKNOWN"
             is_compatible = False
             restrictions = []
 
-            if source_type == "github":
-                repo_data = source_info.get("repo_data", {})
-                license_info = repo_data.get("license")
+            repo_data = self.repo_info or {}
+            license_info = repo_data.get("license")
 
-                if license_info and isinstance(license_info, dict):
-                    license_name = license_info.get("name", "Unknown")
-                    spdx_id = license_info.get("spdx_id", "UNKNOWN")
-                elif license_info and isinstance(license_info, str):
-                    license_name = license_info
-                    spdx_id = license_info
-
-            elif source_type == "npm":
-                package_data = source_info.get("package_data", {})
-                license_name = package_data.get("license", "Unknown")
+            if license_info and isinstance(license_info, dict):
+                license_name = license_info.get("name", "Unknown")
+                spdx_id = license_info.get("spdx_id", "UNKNOWN")
+            elif license_info and isinstance(license_info, str):
+                license_name = license_info
                 spdx_id = license_name
 
             # Check compatibility
@@ -938,7 +629,7 @@ class CommunityExtractor(BaseExtractor):
             return LicenseInfo(license_name, spdx_id, is_compatible, restrictions)
 
         except Exception as e:
-            self.logger.error(f"Failed to extract license info: {e}")
+            logger.error(f"Failed to extract license info: {e}")
             return LicenseInfo("Unknown", "UNKNOWN", False, ["Unknown license restrictions"])
 
     def _get_license_restrictions(self, license_name: str) -> List[str]:
