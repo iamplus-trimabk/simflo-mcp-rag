@@ -1,0 +1,187 @@
+{
+  "registry_name": "shadcn_real",
+  "display_name": "Shadcn UI Real",
+  "description": "Real shadcn/ui repositories with actual extraction from GitHub",
+  "platforms": ["reactjs"],
+  "database_path": "rag_databases/shadcn_real_db",
+  "status": "active",
+  "categories": {
+    "components": {
+      "enabled": true,
+      "sources": [
+        {
+          "name": "shadcn_ui_main",
+          "type": "github",
+          "url": "https://github.com/shadcn-ui/ui",
+          "branch": "main",
+          "registry_file": "apps/www/registry/index.ts",
+          "extractor": "shadcn",
+          "priority": 10,
+          "update_frequency": "weekly",
+          "enabled": true,
+          "metadata": {
+            "stars": 45000,
+            "forks": 4200,
+            "last_commit": "2024-01-15T00:00:00Z",
+            "contributors": 1200,
+            "license": "MIT"
+          }
+        },
+        {
+          "name": "shadcn_components",
+          "type": "github",
+          "url": "https://github.com/shadcn-ui/ui",
+          "branch": "main",
+          "registry_file": "apps/www/registry/components.ts",
+          "extractor": "shadcn",
+          "priority": 8,
+          "update_frequency": "weekly",
+          "enabled": true,
+          "metadata": {
+            "component_count": 85,
+            "last_updated": "2024-01-15T00:00:00Z",
+            "quality_score": 0.95
+          }
+        }
+      ]
+    },
+    "hooks": {
+      "enabled": true,
+      "sources": [
+        {
+          "name": "shadcn_hooks",
+          "type": "github",
+          "url": "https://github.com/shadcn-ui/ui",
+          "branch": "main",
+          "registry_file": "apps/www/registry/registry-hooks.ts",
+          "extractor": "shadcn_hooks",
+          "priority": 10,
+          "update_frequency": "weekly",
+          "enabled": true,
+          "metadata": {
+            "hooks_count": 25,
+            "last_updated": "2024-01-15T00:00:00Z",
+            "quality_score": 0.92
+          }
+        },
+        {
+          "name": "shadcn_hooks_alt",
+          "type": "github",
+          "url": "https://github.com/shadcn-ui/ui",
+          "branch": "main",
+          "registry_file": "apps/www/registry/hooks.ts",
+          "extractor": "shadcn_hooks",
+          "priority": 5,
+          "update_frequency": "weekly",
+          "enabled": true,
+          "metadata": {
+            "hooks_count": 15,
+            "last_updated": "2024-01-10T00:00:00Z",
+            "quality_score": 0.85
+          }
+        },
+        {
+          "name": "npm_react_hooks",
+          "type": "npm",
+          "package": "react-hook-form",
+          "extractor": "npm_hooks",
+          "priority": 7,
+          "update_frequency": "weekly",
+          "enabled": true,
+          "metadata": {
+            "downloads": 25000000,
+            "version": "7.47.0",
+            "quality_score": 0.98
+          }
+        },
+        {
+          "name": "npm_usehooks",
+          "type": "npm",
+          "package": "@uidotdev/usehooks",
+          "extractor": "npm_hooks",
+          "priority": 6,
+          "update_frequency": "weekly",
+          "enabled": true,
+          "metadata": {
+            "downloads": 1500000,
+            "version": "2.4.1",
+            "quality_score": 0.88
+          }
+        }
+      ]
+    },
+    "blocks": {
+      "enabled": true,
+      "sources": [
+        {
+          "name": "shadcn_blocks",
+          "type": "github",
+          "url": "https://github.com/shadcn-ui/ui",
+          "branch": "main",
+          "registry_file": "apps/www/registry/registry-blocks.ts",
+          "extractor": "shadcn_blocks",
+          "priority": 10,
+          "update_frequency": "weekly",
+          "enabled": true,
+          "metadata": {
+            "blocks_count": 45,
+            "last_updated": "2024-01-15T00:00:00Z",
+            "quality_score": 0.90
+          }
+        },
+        {
+          "name": "shadcn_blocks_examples",
+          "type": "github",
+          "url": "https://github.com/shadcn-ui/ui",
+          "branch": "main",
+          "registry_file": "apps/www/registry/blocks.ts",
+          "extractor": "shadcn_blocks",
+          "priority": 5,
+          "update_frequency": "weekly",
+          "enabled": true,
+          "metadata": {
+            "blocks_count": 20,
+            "last_updated": "2024-01-10T00:00:00Z",
+            "quality_score": 0.82
+          }
+        }
+      ]
+    }
+  },
+  "search_configuration": {
+    "cross_category_search": true,
+    "default_category": "components",
+    "category_weights": {
+      "components": 0.6,
+      "hooks": 0.3,
+      "blocks": 0.1
+    },
+    "source_boosting": {
+      "official": 1.2,
+      "community": 0.8,
+      "third_party": 0.6
+    }
+  },
+  "build_configuration": {
+    "build_enabled": true,
+    "schedule": "0 2 * * *",
+    "notification_types": ["console"],
+    "notification_targets": [],
+    "retry_on_failure": true,
+    "max_retries": 3,
+    "timeout_minutes": 30,
+    "quality_threshold": 0.7,
+    "parallel_builds": false,
+    "cleanup_days": 30,
+    "health_check_interval": 300,
+    "auto_deploy": true
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "author": "SimFlo RAG Team",
+    "homepage": "https://ui.shadcn.com",
+    "documentation": "https://ui.shadcn.com/docs",
+    "tags": ["ui", "components", "hooks", "blocks", "react"],
+    "last_updated": "2024-01-15T00:00:00Z"
+  }
+}

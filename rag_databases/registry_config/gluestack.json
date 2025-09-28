@@ -1,0 +1,76 @@
+{
+  "registry_name": "gluestack",
+  "display_name": "Gluestack UI",
+  "description": "Universal React component library for web and native",
+  "platforms": ["reactjs", "reactnative"],
+  "database_path": "rag_databases/gluestack_db",
+  "status": "active",
+  "categories": {
+    "components": {
+      "enabled": true,
+      "sources": [
+        {
+          "name": "gluestack_ui_main",
+          "type": "github",
+          "url": "https://github.com/gluestack/gluestack-ui",
+          "branch": "main",
+          "registry_file": "packages/core/components/registry.ts",
+          "extractor": "gluestack",
+          "priority": 1,
+          "update_frequency": "weekly"
+        }
+      ]
+    },
+    "hooks": {
+      "enabled": true,
+      "sources": [
+        {
+          "name": "gluestack_hooks_main",
+          "type": "github",
+          "url": "https://github.com/gluestack/gluestack-ui",
+          "branch": "main",
+          "registry_file": "packages/core/hooks/registry.ts",
+          "extractor": "gluestack_hooks",
+          "priority": 1,
+          "update_frequency": "weekly"
+        }
+      ]
+    },
+    "blocks": {
+      "enabled": true,
+      "sources": [
+        {
+          "name": "gluestack_blocks_main",
+          "type": "github",
+          "url": "https://github.com/gluestack/gluestack-ui",
+          "branch": "main",
+          "registry_file": "packages/core/blocks/registry.ts",
+          "extractor": "gluestack_blocks",
+          "priority": 1,
+          "update_frequency": "weekly"
+        }
+      ]
+    }
+  },
+  "search_configuration": {
+    "cross_category_search": true,
+    "default_category": "components",
+    "category_weights": {
+      "components": 0.7,
+      "hooks": 0.2,
+      "blocks": 0.1
+    },
+    "source_boosting": {
+      "official": 1.2,
+      "community": 0.8,
+      "third_party": 0.6
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "maintainer": "gluestack",
+    "license": "MIT",
+    "last_updated": "2024-01-01T00:00:00Z",
+    "component_count": 13
+  }
+}

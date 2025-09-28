@@ -1,0 +1,76 @@
+{
+  "registry_name": "shadcn",
+  "display_name": "Shadcn UI",
+  "description": "Modern React component library with hooks and blocks",
+  "platforms": ["reactjs"],
+  "database_path": "rag_databases/shadcn_db",
+  "status": "active",
+  "categories": {
+    "components": {
+      "enabled": true,
+      "sources": [
+        {
+          "name": "shadcn_ui_main",
+          "type": "github",
+          "url": "https://github.com/shadcn-ui/ui",
+          "branch": "main",
+          "registry_file": "apps/www/registry/registry-ui.ts",
+          "extractor": "shadcn",
+          "priority": 1,
+          "update_frequency": "weekly"
+        }
+      ]
+    },
+    "hooks": {
+      "enabled": true,
+      "sources": [
+        {
+          "name": "shadcn_hooks_main",
+          "type": "github",
+          "url": "https://github.com/shadcn-ui/ui",
+          "branch": "main",
+          "registry_file": "apps/www/registry/registry-hooks.ts",
+          "extractor": "shadcn_hooks",
+          "priority": 1,
+          "update_frequency": "weekly"
+        }
+      ]
+    },
+    "blocks": {
+      "enabled": true,
+      "sources": [
+        {
+          "name": "shadcn_blocks_main",
+          "type": "github",
+          "url": "https://github.com/shadcn-ui/ui",
+          "branch": "main",
+          "registry_file": "apps/www/registry/registry-blocks.ts",
+          "extractor": "shadcn_blocks",
+          "priority": 1,
+          "update_frequency": "weekly"
+        }
+      ]
+    }
+  },
+  "search_configuration": {
+    "cross_category_search": true,
+    "default_category": "components",
+    "category_weights": {
+      "components": 0.6,
+      "hooks": 0.3,
+      "blocks": 0.1
+    },
+    "source_boosting": {
+      "official": 1.2,
+      "community": 0.8,
+      "third_party": 0.6
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "maintainer": "shadcn",
+    "license": "MIT",
+    "last_updated": "2024-01-01T00:00:00Z",
+    "component_count": 102
+  }
+}

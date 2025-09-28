@@ -1,0 +1,80 @@
+{
+  "registry_name": "bitbucket_test",
+  "display_name": "Bitbucket Test Registry",
+  "description": "Test registry for Bitbucket repository extraction",
+  "platforms": ["reactjs"],
+  "database_path": "rag_databases/bitbucket_test_db",
+  "status": "active",
+  "categories": {
+    "components": {
+      "enabled": true,
+      "sources": [
+        {
+          "name": "atlassian_design_system",
+          "type": "bitbucket",
+          "url": "https://bitbucket.org/atlassian/atlassian-frontend",
+          "workspace": "atlassian",
+          "repo_slug": "atlassian-frontend",
+          "branch": "master",
+          "registry_file": "packages/design-system/src/components/index.ts",
+          "extractor": "shadcn",
+          "priority": 10,
+          "update_frequency": "weekly",
+          "enabled": true,
+          "metadata": {
+            "stars": 1200,
+            "forks": 300,
+            "last_commit": "2024-01-15T00:00:00Z",
+            "contributors": 150,
+            "license": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    "hooks": {
+      "enabled": true,
+      "sources": [
+        {
+          "name": "atlassian_hooks",
+          "type": "bitbucket",
+          "url": "https://bitbucket.org/atlassian/atlassian-frontend",
+          "workspace": "atlassian",
+          "repo_slug": "atlassian-frontend",
+          "branch": "master",
+          "registry_file": "packages/design-system/src/hooks/index.ts",
+          "extractor": "shadcn_hooks",
+          "priority": 8,
+          "update_frequency": "weekly",
+          "enabled": true,
+          "metadata": {
+            "hooks_count": 20,
+            "last_updated": "2024-01-15T00:00:00Z",
+            "quality_score": 0.92
+          }
+        }
+      ]
+    }
+  },
+  "search_configuration": {
+    "cross_category_search": true,
+    "default_category": "components",
+    "category_weights": {
+      "components": 0.7,
+      "hooks": 0.3
+    }
+  },
+  "build_configuration": {
+    "build_enabled": true,
+    "schedule": "0 4 * * *",
+    "notification_types": ["console"],
+    "retry_on_failure": true,
+    "max_retries": 3,
+    "timeout_minutes": 20
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "author": "SimFlo RAG Team",
+    "tags": ["bitbucket", "atlassian", "design-system", "components", "hooks"],
+    "last_updated": "2024-01-15T00:00:00Z"
+  }
+}

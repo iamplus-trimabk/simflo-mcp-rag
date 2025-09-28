@@ -51,6 +51,32 @@ const ListRegistriesSchema = z.object({
   platform: z.enum(['reactjs', 'reactnative', 'auto', 'none']).optional(),
 });
 
+// Extraction Management Schemas
+const ListExtractionRegistriesSchema = z.object({});
+
+const RunExtractionSchema = z.object({
+  registry: z.string().optional(),
+  source: z.string().optional(),
+  mode: z.enum(['test', 'real']).default('test'),
+});
+
+const GetExtractionStatusSchema = z.object({});
+
+const SearchComponentsByCategorySchema = z.object({
+  query: z.string().min(1, "Search query is required"),
+  category: z.enum(['components', 'hooks', 'blocks']),
+  platform: z.enum(['reactjs', 'reactnative', 'auto', 'none']).optional(),
+  limit: z.number().min(1).max(50).optional().default(10),
+});
+
+const ListRegistrySourcesSchema = z.object({
+  registry: z.string().min(1, "Registry name is required"),
+});
+
+const ClearExtractionDataSchema = z.object({
+  registry: z.string().optional(),
+});
+
 // API client
 class RAGAPIClient {
   private baseUrl: string;
@@ -127,6 +153,54 @@ class RAGAPIClient {
 
   async getContextStats() {
     const response = await axios.get(`${this.baseUrl}/api/v1/context/stats`);
+    return response.data;
+  }
+
+  // Extraction Management APIs
+  async listExtractionRegistries() {
+    const response = await axios.get(`${this.baseUrl}/api/v2/extraction/registries`);
+    return response.data;
+  }
+
+  async runExtraction(registry?: string, source?: string, mode: string = 'test') {
+    const formData = new FormData();
+    if (registry) formData.append('registry', registry);
+    if (source) formData.append('source', source);
+    formData.append('mode', mode);
+
+    const response = await axios.post(`${this.baseUrl}/api/v2/extraction/run`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  }
+
+  async getExtractionStatus() {
+    const response = await axios.get(`${this.baseUrl}/api/v2/extraction/status`);
+    return response.data;
+  }
+
+  async searchComponentsByCategory(query: string, category: string, platform?: string, limit: number = 10) {
+    const params: any = { q: query, category, limit };
+    if (platform) params.platform = platform;
+
+    const response = await axios.get(`${this.baseUrl}/api/v2/components/search/category`, { params });
+    return response.data;
+  }
+
+  async listRegistrySources(registry: string) {
+    const params: any = { registry };
+
+    const response = await axios.get(`${this.baseUrl}/api/v2/extraction/sources`, { params });
+    return response.data;
+  }
+
+  async clearExtractionData(registry?: string) {
+    const params: any = {};
+    if (registry) params.registry = registry;
+
+    const response = await axios.delete(`${this.baseUrl}/api/v2/extraction/clear`, { params });
     return response.data;
   }
 }
@@ -289,6 +363,101 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               type: 'string',
               enum: ['reactjs', 'reactnative', 'auto', 'none'],
               description: 'Filter registries by platform support',
+            },
+          },
+        },
+      },
+      {
+        name: 'list_extraction_registries',
+        description: 'List available registries for specialized extraction with detailed source information',
+        inputSchema: {
+          type: 'object',
+          properties: {},
+        },
+      },
+      {
+        name: 'run_extraction',
+        description: 'Run the specialized extraction pipeline for components, hooks, and blocks',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            registry: {
+              type: 'string',
+              description: 'Specific registry to extract (e.g., "shadcn", "gluestack")',
+            },
+            source: {
+              type: 'string',
+              description: 'Specific source to extract within the registry',
+            },
+            mode: {
+              type: 'string',
+              enum: ['test', 'real'],
+              default: 'test',
+              description: 'Extraction mode: test (mock data) or real (live extraction)',
+            },
+          },
+        },
+      },
+      {
+        name: 'get_extraction_status',
+        description: 'Get extraction pipeline status, statistics, and available data',
+        inputSchema: {
+          type: 'object',
+          properties: {},
+        },
+      },
+      {
+        name: 'search_components_by_category',
+        description: 'Search for components within specific categories (components, hooks, blocks)',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            query: {
+              type: 'string',
+              description: 'Natural language search query (e.g., "form validation", "modal dialog")',
+            },
+            category: {
+              type: 'string',
+              enum: ['components', 'hooks', 'blocks'],
+              description: 'Component category to search within',
+            },
+            platform: {
+              type: 'string',
+              enum: ['reactjs', 'reactnative', 'auto', 'none'],
+              description: 'Target platform for component recommendations',
+            },
+            limit: {
+              type: 'number',
+              description: 'Maximum number of results to return (1-50)',
+              default: 10,
+            },
+          },
+          required: ['query', 'category'],
+        },
+      },
+      {
+        name: 'list_registry_sources',
+        description: 'List detailed sources for a specific registry including extractor types',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            registry: {
+              type: 'string',
+              description: 'Registry name (e.g., "shadcn", "gluestack")',
+            },
+          },
+          required: ['registry'],
+        },
+      },
+      {
+        name: 'clear_extraction_data',
+        description: 'Clear extracted data files from the extraction pipeline',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            registry: {
+              type: 'string',
+              description: 'Specific registry to clear (optional - clears all if not specified)',
             },
           },
         },
@@ -489,6 +658,168 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 `   Last Updated: ${reg.last_updated ? new Date(reg.last_updated * 1000).toISOString() : 'unknown'}\n` +
                 (reg.description ? `   Description: ${reg.description}\n` : '')
               ).join('\n')}`,
+            },
+          ],
+        };
+      }
+
+      case 'list_extraction_registries': {
+        const validated = ListExtractionRegistriesSchema.parse(args);
+        const result = await apiClient.listExtractionRegistries();
+
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to list extraction registries');
+        }
+
+        const registries = result.data?.registries || [];
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Available extraction registries (${result.data?.total_count || 0} total):\n\n${registries.map((reg: any, index: number) =>
+                `${index + 1}. **${reg.name}** (${reg.display_name})\n` +
+                `   Description: ${reg.description}\n` +
+                `   Platforms: ${reg.platforms?.join(', ') || 'any'}\n` +
+                `   Categories: ${reg.categories?.join(', ') || 'none'}\n` +
+                `   Status: ${reg.status}\n` +
+                `   Sources: ${reg.component_count || 0}\n` +
+                (reg.error ? `   Error: ${reg.error}\n` : '')
+              ).join('\n')}`,
+            },
+          ],
+        };
+      }
+
+      case 'run_extraction': {
+        const validated = RunExtractionSchema.parse(args);
+        const result = await apiClient.runExtraction(validated.registry, validated.source, validated.mode);
+
+        if (!result.success) {
+          throw new Error(result.error || 'Extraction failed');
+        }
+
+        const extraction = result.data;
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `**Extraction completed**\n\n` +
+                `**Mode:** ${extraction.mode}\n` +
+                `**Registry:** ${extraction.registry || 'all registries'}\n` +
+                `**Source:** ${extraction.source || 'all sources'}\n` +
+                `**Status:** ${extraction.success ? 'Success' : 'Failed'}\n` +
+                `**Message:** ${extraction.message}`,
+            },
+          ],
+        };
+      }
+
+      case 'get_extraction_status': {
+        const validated = GetExtractionStatusSchema.parse(args);
+        const result = await apiClient.getExtractionStatus();
+
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to get extraction status');
+        }
+
+        const status = result.data;
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `**Extraction Pipeline Status**\n\n` +
+                `**Output Directory:** ${status.output_directory_exists ? 'Exists' : 'Not found'}\n` +
+                `**Total Components:** ${status.total_components}\n` +
+                `**Last Extraction:** ${status.last_extraction || 'Never'}\n\n` +
+                `**Extracted Files:** ${status.extracted_files?.length || 0}\n` +
+                (status.extracted_files?.length > 0 ? `   ${status.extracted_files.join(', ')}\n` : '') +
+                `**Merged Files:** ${status.merged_files?.length || 0}\n` +
+                (status.merged_files?.length > 0 ? `   ${status.merged_files.join(', ')}\n` : ''),
+            },
+          ],
+        };
+      }
+
+      case 'search_components_by_category': {
+        const validated = SearchComponentsByCategorySchema.parse(args);
+        const result = await apiClient.searchComponentsByCategory(
+          validated.query,
+          validated.category,
+          validated.platform,
+          validated.limit
+        );
+
+        if (!result.success) {
+          throw new Error(result.error || 'Category search failed');
+        }
+
+        const search = result.data;
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Found ${search.total_found || 0} ${validated.category} matching "${validated.query}"${validated.platform ? ` for ${validated.platform}` : ''}:\n\n${search.results?.map((comp: any, index: number) =>
+                `${index + 1}. **${comp.name}** (${comp.type})\n` +
+                `   Registry: ${comp.registry}\n` +
+                `   Category: ${comp.category_match}\n` +
+                `   Relevance: ${((comp.relevance_score || 0) * 100).toFixed(1)}%\n` +
+                `   Dependencies: ${comp.dependencies?.join(', ') || 'none'}\n` +
+                (comp.description ? `   Description: ${comp.description}\n` : '') +
+                `   Install: \`${comp.install_command}\``
+              ).join('\n') || 'No results found'}`,
+            },
+          ],
+        };
+      }
+
+      case 'list_registry_sources': {
+        const validated = ListRegistrySourcesSchema.parse(args);
+        const result = await apiClient.listRegistrySources(validated.registry);
+
+        if (!result.success) {
+          throw new Error(result.error || `Failed to list sources for registry "${validated.registry}"`);
+        }
+
+        const sources = result.data;
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `**Sources for ${validated.registry}**\n\n` +
+                `**Total Sources:** ${sources.total_sources || 0}\n\n` +
+                Object.entries(sources.categories || {}).map(([category, categorySources]: [string, any[]]) =>
+                  `**${category}** (${categorySources.length} sources):\n` +
+                  categorySources.map((source, index) =>
+                    `   ${index + 1}. **${source.name}** (${source.type})\n` +
+                    `      URL: ${source.url}\n` +
+                    `      Enabled: ${source.enabled}\n` +
+                    `      Priority: ${source.priority}\n` +
+                    `      Extractor: ${source.extractor}\n`
+                  ).join('\n')
+                ).join('\n'),
+            },
+          ],
+        };
+      }
+
+      case 'clear_extraction_data': {
+        const validated = ClearExtractionDataSchema.parse(args);
+        const result = await apiClient.clearExtractionData(validated.registry);
+
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to clear extraction data');
+        }
+
+        const clear = result.data;
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `**Extraction data cleared**\n\n` +
+                `**Registry:** ${clear.registry || 'all registries'}\n` +
+                `**Cleared Files:** ${clear.cleared_files?.length || 0}\n` +
+                (clear.cleared_files?.length > 0 ? `   ${clear.cleared_files.join(', ')}\n` : '') +
+                `**Message:** ${clear.message}`,
             },
           ],
         };

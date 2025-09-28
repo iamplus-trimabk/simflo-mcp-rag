@@ -743,6 +743,409 @@ class RAGAPIServer:
                     ).dict()
                 )
 
+        # Specialized Extraction Pipeline Endpoints
+        @self.app.get("/api/v2/extraction/registries", response_model=APIResponse)
+        async def list_extraction_registries():
+            """List available registries for extraction"""
+            try:
+                import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from services.registry_config_manager import RegistryConfigManager
+                manager = RegistryConfigManager("rag_databases/registry_config")
+                registries = manager.list_registries()
+
+                registry_details = []
+                for registry_name in registries:
+                    try:
+                        config = manager.load_registry_config(registry_name)
+                        if config:
+                            registry_details.append({
+                                "name": registry_name,
+                                "display_name": config.display_name,
+                                "description": config.description,
+                                "platforms": config.platforms,
+                                "categories": list(config.categories.keys()),
+                                "status": config.status.value,
+                                "component_count": sum(
+                                    len(category.sources) for category in config.categories.values()
+                                )
+                            })
+                    except Exception as e:
+                        registry_details.append({
+                            "name": registry_name,
+                            "error": str(e)
+                        })
+
+                return APIResponse(
+                    success=True,
+                    data={
+                        "registries": registry_details,
+                        "total_count": len(registries)
+                    }
+                )
+
+            except Exception as e:
+                return JSONResponse(
+                    status_code=500,
+                    content=APIResponse(
+                        success=False,
+                        error=f"Failed to list extraction registries: {str(e)}"
+                    ).dict()
+                )
+
+        @self.app.post("/api/v2/extraction/run", response_model=APIResponse)
+        async def run_extraction(
+            registry: Optional[str] = Form(None, description="Specific registry to extract"),
+            source: Optional[str] = Form(None, description="Specific source to extract"),
+            mode: str = Form("test", description="Extraction mode (test/real)")
+        ):
+            """Run extraction pipeline"""
+            try:
+                sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from scripts.run_extraction import run_test_mode, run_real_mode
+
+                if mode == "test":
+                    success = await run_test_mode()
+                elif mode == "real":
+                    success = await run_real_mode(registry, source)
+                else:
+                    return JSONResponse(
+                        status_code=400,
+                        content=APIResponse(
+                            success=False,
+                            error=f"Invalid mode: {mode}. Must be 'test' or 'real'"
+                        ).dict()
+                    )
+
+                return APIResponse(
+                    success=success,
+                    data={
+                        "mode": mode,
+                        "registry": registry,
+                        "source": source,
+                        "message": "Extraction completed successfully" if success else "Extraction failed"
+                    }
+                )
+
+            except Exception as e:
+                return JSONResponse(
+                    status_code=500,
+                    content=APIResponse(
+                        success=False,
+                        error=f"Extraction failed: {str(e)}"
+                    ).dict()
+                )
+
+        @self.app.get("/api/v2/extraction/status", response_model=APIResponse)
+        async def get_extraction_status():
+            """Get extraction pipeline status and statistics"""
+            try:
+                from pathlib import Path
+                import json
+
+                output_dir = Path("rag_databases/extracted_data")
+                status = {
+                    "output_directory_exists": output_dir.exists(),
+                    "extracted_files": [],
+                    "total_components": 0,
+                    "last_extraction": None
+                }
+
+                if output_dir.exists():
+                    extracted_files = list(output_dir.glob("*_extracted.json"))
+                    merged_files = list(output_dir.glob("*_merged.json"))
+
+                    status["extracted_files"] = [f.stem for f in extracted_files]
+                    status["merged_files"] = [f.stem for f in merged_files]
+
+                    # Calculate total components
+                    for extracted_file in extracted_files:
+                        try:
+                            with open(extracted_file, 'r') as f:
+                                data = json.load(f)
+                                status["total_components"] += data.get("total_components", 0)
+
+                                # Track last extraction time
+                                extraction_time = data.get("extraction_timestamp")
+                                if extraction_time and (not status["last_extraction"] or extraction_time > status["last_extraction"]):
+                                    status["last_extraction"] = extraction_time
+                        except Exception:
+                            pass
+
+                return APIResponse(
+                    success=True,
+                    data=status
+                )
+
+            except Exception as e:
+                return JSONResponse(
+                    status_code=500,
+                    content=APIResponse(
+                        success=False,
+                        error=f"Failed to get extraction status: {str(e)}"
+                    ).dict()
+                )
+
+        @self.app.get("/api/v2/components/search/category", response_model=APIResponse)
+        async def search_components_by_category(
+            q: str = Query(..., description="Search query"),
+            category: str = Query(..., description="Component category (components/hooks/blocks)"),
+            platform: Optional[str] = Query(None, description="Platform context"),
+            limit: int = Query(10, description="Maximum number of results"),
+            quality_threshold: float = Query(0.0, description="Minimum quality score threshold"),
+            strategy: str = Query("weighted", description="Search strategy (exact/semantic/cross/weighted)")
+        ):
+            """Enhanced category-aware component search"""
+            try:
+                from context_manager import PlatformContext
+
+                # Validate platform context
+                platform_context = None
+                if platform:
+                    try:
+                        platform_context = PlatformContext(platform)
+                    except ValueError:
+                        return JSONResponse(
+                            status_code=400,
+                            content=APIResponse(
+                                success=False,
+                                error=f"Invalid platform: {platform}"
+                            ).dict()
+                        )
+
+                # Use enhanced category search service
+                try:
+                    from services.category_search_service import get_category_search_service, SearchStrategy
+                    search_service = get_category_search_service()
+
+                    # Parse strategy
+                    try:
+                        search_strategy = SearchStrategy(strategy)
+                    except ValueError:
+                        return JSONResponse(
+                            status_code=400,
+                            content=APIResponse(
+                                success=False,
+                                error=f"Invalid search strategy: {strategy}. Use: exact, semantic, cross, weighted"
+                            ).dict()
+                        )
+
+                    # Create search query
+                    search_query = search_service.create_search_query(
+                        query=q,
+                        categories=[category],
+                        platforms=[platform] if platform else None,
+                        quality_threshold=quality_threshold,
+                        strategy=search_strategy
+                    )
+
+                    # Perform enhanced search
+                    enhanced_results = await search_service.search_components(search_query, limit)
+
+                    # Convert to response format
+                    results = [result.to_dict() for result in enhanced_results]
+
+                    # Get category suggestions
+                    category_suggestions = search_service.suggest_categories(q)
+
+                    return APIResponse(
+                        success=True,
+                        data={
+                            "results": results,
+                            "category": category,
+                            "total_found": len(results),
+                            "query_analysis": {
+                                "strategy": strategy,
+                                "quality_threshold": quality_threshold,
+                                "category_suggestions": category_suggestions,
+                                "applied_filters": {
+                                    "categories": [category],
+                                    "platform": platform,
+                                    "quality_threshold": quality_threshold
+                                }
+                            },
+                            "context": {
+                                "platform": platform_context.value if platform_context else "none",
+                                "registries_searched": self.registry_manager.get_registries_for_context(platform_context) if self.registry_manager else []
+                            }
+                        }
+                    )
+
+                except ImportError:
+                    # Fallback to legacy search if enhanced service not available
+                    self.logger.warning("Enhanced search service not available, using legacy search")
+                    return await self._legacy_category_search(q, category, platform_context, limit)
+
+            except Exception as e:
+                return JSONResponse(
+                    status_code=500,
+                    content=APIResponse(
+                        success=False,
+                        error=f"Category search failed: {str(e)}"
+                    ).dict()
+                )
+
+        async def _legacy_category_search(self, q: str, category: str, platform_context, limit: int):
+            """Legacy category search fallback"""
+            # Use registry manager with category filter
+            results = self.registry_manager.search_components(
+                query=q,
+                platform_context=platform_context,
+                limit=limit
+            )
+
+            # Filter by category and enhance results
+            category_results = []
+            for result in results:
+                component_data = result.component
+
+                # Check if component matches category
+                component_categories = component_data.get("categories", [])
+                component_type = component_data.get("type", "")
+
+                category_match = (
+                    category in component_categories or
+                    category in component_type.lower() or
+                    (category == "hooks" and "hook" in component_type.lower()) or
+                    (category == "blocks" and "block" in component_type.lower())
+                )
+
+                if category_match:
+                    enhanced_result = {
+                        "name": component_data.get("name"),
+                        "type": component_data.get("type", "component"),
+                        "description": component_data.get("description"),
+                        "registry": result.registry,
+                        "relevance_score": result.relevance_score,
+                        "context_match": result.context_match,
+                        "platform_relevance": result.platform_relevance,
+                        "category_match": category,
+                        "categories": component_categories,
+                        "dependencies": component_data.get("dependencies", []),
+                        "install_command": component_data.get("installCommand", "")
+                    }
+                    category_results.append(enhanced_result)
+
+            return APIResponse(
+                success=True,
+                data={
+                    "results": category_results,
+                    "category": category,
+                    "total_found": len(category_results),
+                    "context": {
+                        "platform": platform_context.value if platform_context else "none",
+                        "registries_searched": self.registry_manager.get_registries_for_context(platform_context)
+                    },
+                    "legacy_mode": True
+                }
+            )
+
+        @self.app.get("/api/v2/extraction/sources", response_model=APIResponse)
+        async def list_registry_sources(
+            registry: str = Query(..., description="Registry name")
+        ):
+            """List sources for a specific registry"""
+            try:
+                import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from services.registry_config_manager import RegistryConfigManager
+
+                manager = RegistryConfigManager("rag_databases/registry_config")
+                config = manager.load_registry_config(registry)
+
+                if not config:
+                    return JSONResponse(
+                        status_code=404,
+                        content=APIResponse(
+                            success=False,
+                            error=f"Registry '{registry}' not found"
+                        ).dict()
+                    )
+
+                sources_info = {}
+                for category_name, category_config in config.categories.items():
+                    sources_info[category_name] = [
+                        {
+                            "name": source.name,
+                            "type": source.type.value,
+                            "url": getattr(source, 'url', ''),
+                            "enabled": category_config.enabled,
+                            "priority": getattr(source, 'priority', 1),
+                            "extractor": getattr(source, 'extractor', 'auto')
+                        }
+                        for source in category_config.sources
+                    ]
+
+                return APIResponse(
+                    success=True,
+                    data={
+                        "registry": registry,
+                        "categories": sources_info,
+                        "total_sources": sum(len(sources) for sources in sources_info.values())
+                    }
+                )
+
+            except Exception as e:
+                return JSONResponse(
+                    status_code=500,
+                    content=APIResponse(
+                        success=False,
+                        error=f"Failed to list registry sources: {str(e)}"
+                    ).dict()
+                )
+
+        @self.app.delete("/api/v2/extraction/clear", response_model=APIResponse)
+        async def clear_extraction_data(
+            registry: Optional[str] = Query(None, description="Specific registry to clear")
+        ):
+            """Clear extracted data files"""
+            try:
+                from pathlib import Path
+                import os
+
+                output_dir = Path("rag_databases/extracted_data")
+                if not output_dir.exists():
+                    return APIResponse(
+                        success=True,
+                        data={"message": "No extraction data to clear"}
+                    )
+
+                cleared_files = []
+                if registry:
+                    # Clear specific registry
+                    patterns = [f"{registry}_extracted.json", f"{registry}_merged.json"]
+                    for pattern in patterns:
+                        file_path = output_dir / pattern
+                        if file_path.exists():
+                            file_path.unlink()
+                            cleared_files.append(file_path.name)
+                else:
+                    # Clear all extraction data
+                    for file_path in output_dir.glob("*"):
+                        if file_path.is_file():
+                            file_path.unlink()
+                            cleared_files.append(file_path.name)
+
+                return APIResponse(
+                    success=True,
+                    data={
+                        "cleared_files": cleared_files,
+                        "registry": registry,
+                        "message": f"Cleared {len(cleared_files)} files"
+                    }
+                )
+
+            except Exception as e:
+                return JSONResponse(
+                    status_code=500,
+                    content=APIResponse(
+                        success=False,
+                        error=f"Failed to clear extraction data: {str(e)}"
+                    ).dict()
+                )
+
     def run(self, host: str = "127.0.0.1", port: int = 8000):
         """Run the API server"""
         print(f"🚀 Starting SimFlo RAG API server on {host}:{port}")
