@@ -1,0 +1,293 @@
+{
+  "test_suite": {
+    "name": "SimFlo MCP RAG Server Comprehensive Test Suite",
+    "description": "Comprehensive tests for MCP server functionality, build process, and integration",
+    "version": "1.0.0",
+    "author": "SimFlo Team"
+  },
+  "tests": [
+    {
+      "test_id": "CP-001",
+      "name": "MCP Server Source File Exists",
+      "description": "Verify MCP server TypeScript source file exists",
+      "command": "ls -la /Users/tbardale/v2/simflo-mcp-rag/mcp-server/src/index.ts",
+      "expect_exit_code": {"type": "exit_code", "value": 0}
+    },
+    {
+      "test_id": "CP-002",
+      "name": "Required MCP Tools Code Present",
+      "description": "Verify all 7 MCP tools are defined in source code",
+      "command": "grep -c \"\\(search_components\\|get_component_details\\|get_component_installation\\|list_components\\|set_platform_context\\|get_platform_context\\|list_registries\\)\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/src/index.ts",
+      "expect_stdout": {"type": "ge", "value": "7"}
+    },
+    {
+      "test_id": "CP-003",
+      "name": "Context Tools Implementation Present",
+      "description": "Verify 3 context-aware tools are implemented in source",
+      "command": "grep -c \"\\(set_platform_context\\|get_platform_context\\|list_registries\\)\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/src/index.ts",
+      "expect_stdout": {"type": "ge", "value": "3"}
+    },
+    {
+      "test_id": "CP-004",
+      "name": "API Server Python File Exists",
+      "description": "Verify API server Python file exists",
+      "command": "find /Users/tbardale/v2/simflo-mcp-rag -name \"api_server.py\" -type f",
+      "expect_exit_code": {"type": "exit_code", "value": 0}
+    },
+    {
+      "test_id": "CP-005",
+      "name": "Data Pipeline Python Files Present",
+      "description": "Verify Python data pipeline files exist",
+      "command": "ls -la /Users/tbardale/v2/simflo-mcp-rag/data-pipeline/*.py | wc -l",
+      "expect_stdout": {"type": "ge", "value": "5"}
+    },
+    {
+      "test_id": "LINT-001",
+      "name": "TypeScript Lint Success",
+      "description": "Verify MCP server passes TypeScript linting",
+      "command": "cd /Users/tbardale/v2/simflo-mcp-rag/mcp-server && npm run lint",
+      "expect_exit_code": {"type": "exit_code", "value": 0},
+      "timeout": 30
+    },
+    {
+      "test_id": "LINT-002",
+      "name": "TypeScript Type Check",
+      "description": "Verify MCP server passes TypeScript type checking",
+      "command": "cd /Users/tbardale/v2/simflo-mcp-rag/mcp-server && npm run type-check",
+      "expect_exit_code": {"type": "exit_code", "value": 0},
+      "timeout": 30
+    },
+    {
+      "test_id": "LINT-003",
+      "name": "Python Syntax Check",
+      "description": "Verify Python files have valid syntax",
+      "command": "python3 -m py_compile /Users/tbardale/v2/simflo-mcp-rag/data-pipeline/*.py",
+      "expect_exit_code": {"type": "exit_code", "value": 0},
+      "timeout": 20
+    },
+    {
+      "test_id": "LINT-004",
+      "name": "Testing Framework Python Lint",
+      "description": "Verify testing framework Python files are valid",
+      "command": "python3 -m py_compile /Users/tbardale/v2/simflo-mcp-rag/testing/*.py",
+      "expect_exit_code": {"type": "exit_code", "value": 0},
+      "timeout": 15
+    },
+    {
+      "test_id": "BLD-001",
+      "name": "TypeScript Compilation Success",
+      "description": "Verify MCP server compiles without errors",
+      "command": "cd /Users/tbardale/v2/simflo-mcp-rag/mcp-server && npm run build",
+      "expect_exit_code": {"type": "exit_code", "value": 0},
+      "timeout": 30
+    },
+    {
+      "test_id": "BLD-002",
+      "name": "Distribution Directory Creation",
+      "description": "Verify dist directory is created after build",
+      "command": "ls -la /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_exit_code": {"type": "exit_code", "value": 0}
+    },
+    {
+      "test_id": "BLD-003",
+      "name": "JavaScript File Generation",
+      "description": "Verify JavaScript files are generated in dist directory",
+      "command": "file /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_stdout": {"type": "contains", "value": "JavaScript"}
+    },
+    {
+      "test_id": "TL-001",
+      "name": "Exactly 7 Tools in Tools List",
+      "description": "CRITICAL: Verify MCP server exposes exactly 7 tools (this would have caught the missing 3 tools issue)",
+      "command": "grep -c \"name: '\\(search_components\\|get_component_details\\|get_component_installation\\|list_components\\|set_platform_context\\|get_platform_context\\|list_registries\\)'\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_stdout": {"type": "exact", "value": "7"}
+    },
+    {
+      "test_id": "TL-002",
+      "name": "Required Tool Names Present",
+      "description": "Verify all expected tool names are present in built JavaScript",
+      "command": "grep -c \"name: '\\(search_components\\|get_component_details\\|get_component_installation\\|list_components\\|set_platform_context\\|get_platform_context\\|list_registries\\)'\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_stdout": {"type": "exact", "value": "7"}
+    },
+    {
+      "test_id": "TL-003",
+      "name": "Context Tools Present",
+      "description": "Verify the 3 new context-aware tools are present",
+      "command": "grep -c \"name: '\\(set_platform_context\\|get_platform_context\\|list_registries\\)'\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_stdout": {"type": "exact", "value": "3"}
+    },
+    {
+      "test_id": "TL-004",
+      "name": "Platform Parameter in Search Tool",
+      "description": "Verify search_components tool has platform parameter",
+      "command": "grep -A 10 \"name: 'search_components'\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_stdout": {"type": "contains_all", "value": ["platform", "reactjs", "reactnative"]}
+    },
+    {
+      "test_id": "TL-005",
+      "name": "Registry Parameter in Detail Tool",
+      "description": "Verify get_component_details tool has registry parameter",
+      "command": "grep -A 8 \"name: 'get_component_details'\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_stdout": {"type": "contains", "value": "registry"}
+    },
+    {
+      "test_id": "API-001",
+      "name": "API Server Health Check",
+      "description": "Verify API server is running and responding",
+      "command": "curl -s http://127.0.0.1:8000/health",
+      "expect_stdout": {"type": "contains", "value": "status"},
+      "timeout": 10
+    },
+    {
+      "test_id": "API-002",
+      "name": "V2 Context Endpoints Available",
+      "description": "Verify v2 context endpoints are accessible",
+      "command": "curl -s http://127.0.0.1:8000/api/v2/context",
+      "expect_stdout": {"type": "contains", "value": "platform"},
+      "timeout": 10
+    },
+    {
+      "test_id": "API-003",
+      "name": "Context Setting Functionality",
+      "description": "Test setting platform context via API",
+      "command": "curl -s -X POST http://127.0.0.1:8000/api/v2/context/set -d 'platform=reactnative'",
+      "expect_stdout": {"type": "contains", "value": "reactnative"},
+      "timeout": 10
+    },
+    {
+      "test_id": "API-004",
+      "name": "Registry Listing Functionality",
+      "description": "Test registry listing endpoint",
+      "command": "curl -s 'http://127.0.0.1:8000/api/v2/registries?platform=reactjs'",
+      "expect_stdout": {"type": "contains", "value": "registries"},
+      "timeout": 10
+    },
+    {
+      "test_id": "MCP-001",
+      "name": "MCP Server Startup",
+      "description": "Verify MCP server starts without errors",
+      "command": "timeout 5 node /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js || echo 'Server started successfully'",
+      "expect_stderr": {"type": "none", "value": ""},
+      "timeout": 10
+    },
+    {
+      "test_id": "MCP-002",
+      "name": "MCP Server Process Check",
+      "description": "Verify MCP server process can be listed",
+      "command": "ps aux | grep -v grep | grep 'node.*dist/index.js'",
+      "expect_exit_code": {"type": "exit_code", "value": 0}
+    },
+    {
+      "test_id": "MCP-003",
+      "name": "MCP Client Tools Discovery",
+      "description": "Test MCP client can discover available tools using MCP SDK",
+      "command": "node test_mcp_client.js",
+      "working_dir": "/Users/tbardale/v2/simflo-mcp-rag/testing",
+      "expect_stdout": {"type": "contains", "value": "✅ All expected tools are present"},
+      "timeout": 15
+    },
+    {
+      "test_id": "MCP-004",
+      "name": "MCP Client Tool Execution",
+      "description": "Test MCP client can execute tools using MCP SDK",
+      "command": "node test_mcp_client.js",
+      "working_dir": "/Users/tbardale/v2/simflo-mcp-rag/testing",
+      "expect_stdout": {"type": "contains", "value": "🎉 All MCP client tests completed successfully"},
+      "timeout": 15
+    },
+    {
+      "test_id": "E2E-001",
+      "name": "Complete Build and Validation",
+      "description": "End-to-end test: build MCP server and validate all tools",
+      "command": "cd /Users/tbardale/v2/simflo-mcp-rag/mcp-server && npm run build && echo 'Build completed'",
+      "expect_exit_code": {"type": "exit_code", "value": 0}
+    },
+    {
+      "test_id": "E2E-002",
+      "name": "Tools Count Verification",
+      "description": "Verify tools count after build (critical for detecting missing tools)",
+      "command": "cd /Users/tbardale/v2/simflo-mcp-rag/mcp-server && npm run build && grep -o \"name: '[^\"]*' dist/index.js | wc -l",
+      "expect_stdout": {"type": "exact", "value": "8"}
+    },
+    {
+      "test_id": "E2E-003",
+      "name": "Schema Validation",
+      "description": "Verify all tools have proper input schemas",
+      "command": "grep -c \"inputSchema\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_stdout": {"type": "exact", "value": "7"}
+    },
+    {
+      "test_id": "E2E-004",
+      "name": "Handler Implementation Check",
+      "description": "Verify all 7 tool handlers are implemented",
+      "command": "grep -c \"case '[^']*':\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_stdout": {"type": "exact", "value": "7"}
+    },
+    {
+      "test_id": "INT-001",
+      "name": "API Server Integration",
+      "description": "Test API server with MCP server dependencies",
+      "command": "curl -s http://127.0.0.1:8000/api/v2/components/search?q=button&limit=1",
+      "expect_stdout": {"type": "contains", "value": "components"},
+      "timeout": 10
+    },
+    {
+      "test_id": "INT-002",
+      "name": "Context-Aware Search",
+      "description": "Test context-aware component search",
+      "command": "curl -s 'http://127.0.0.1:8000/api/v2/components/search?q=form&platform=reactnative&limit=1'",
+      "expect_stdout": {"type": "contains", "value": "reactnative"},
+      "timeout": 10
+    },
+    {
+      "test_id": "INT-003",
+      "name": "Registry Management",
+      "description": "Test registry system functionality",
+      "command": "curl -s http://127.0.0.1:8000/api/v2/registries",
+      "expect_stdout": {"type": "contains", "value": "gluestack_db"},
+      "timeout": 10
+    },
+    {
+      "test_id": "PERF-001",
+      "name": "Build Performance",
+      "description": "MCP server should build within reasonable time",
+      "command": "time cd /Users/tbardale/v2/simflo-mcp-rag/mcp-server && npm run build",
+      "expect_stderr": {"type": "none", "value": ""},
+      "timeout": 30
+    },
+    {
+      "test_id": "PERF-002",
+      "name": "API Response Time",
+      "description": "API should respond within acceptable time",
+      "command": "time curl -s http://127.0.0.1:8000/health",
+      "expect_exit_code": {"type": "exit_code", "value": 0},
+      "timeout": 10
+    },
+    {
+      "test_id": "SEC-001",
+      "name": "No Hardcoded Secrets",
+      "description": "Verify no hardcoded secrets in MCP server",
+      "command": "grep -r -i \"api[_-]key\\|password\\|secret\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/src/ | grep -v \"// \" | head -5",
+      "expect_stdout": {"type": "exact", "value": ""}
+    },
+    {
+      "test_id": "SEC-002",
+      "name": "Environment Variable Usage",
+      "description": "Verify environment variables are used for configuration",
+      "command": "grep -c \"process.env\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_stdout": {"type": "contains", "value": "1"}
+    }
+  ],
+  "test_categories": {
+    "code_presence": ["CP-001", "CP-002", "CP-003", "CP-004", "CP-005"],
+    "lint": ["LINT-001", "LINT-002", "LINT-003", "LINT-004"],
+    "build": ["BLD-001", "BLD-002", "BLD-003"],
+    "tools_list": ["TL-001", "TL-002", "TL-003", "TL-004", "TL-005"],
+    "api": ["API-001", "API-002", "API-003", "API-004"],
+    "mcp": ["MCP-001", "MCP-002", "MCP-003", "MCP-004"],
+    "end_to_end": ["E2E-001", "E2E-002", "E2E-003", "E2E-004"],
+    "integration": ["INT-001", "INT-002", "INT-003"],
+    "performance": ["PERF-001", "PERF-002"],
+    "security": ["SEC-001", "SEC-002"]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "test_suite": {
+    "name": "Build Validation Tests",
+    "description": "Verify build process completes successfully",
+    "version": "1.0.0",
+    "author": "SimFlo Team"
+  },
+  "tests": [
+    {
+      "test_id": "BLD-001",
+      "name": "TypeScript Compilation Success",
+      "description": "Verify MCP server compiles without errors",
+      "command": "cd /Users/tbardale/v2/simflo-mcp-rag/mcp-server && npm run build",
+      "expect_exit_code": {"type": "exit_code", "value": 0},
+      "timeout": 30
+    },
+    {
+      "test_id": "BLD-002",
+      "name": "Distribution Directory Creation",
+      "description": "Verify dist directory is created after build",
+      "command": "ls -la /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_exit_code": {"type": "exit_code", "value": 0}
+    },
+    {
+      "test_id": "BLD-003",
+      "name": "JavaScript File Generation",
+      "description": "Verify JavaScript files are generated in dist directory",
+      "command": "file /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_stdout": {"type": "contains", "value": "JavaScript"}
+    }
+  ]
+}

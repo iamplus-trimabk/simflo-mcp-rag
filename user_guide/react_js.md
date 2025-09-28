@@ -72,11 +72,21 @@ Ask Claude: "List all available MCP tools"
 Expected response:
 ```
 Available MCP Tools:
-1. search_components - Search for components using natural language
+1. search_components - Search for components using natural language with platform context awareness
 2. get_component_details - Get detailed information about a specific component
 3. get_component_installation - Get installation instructions and dependencies
 4. list_components - List components by type or category
+5. set_platform_context - Set platform context for intelligent component recommendations
+6. get_platform_context - Get current platform context information
+7. list_registries - List available component registries with platform filtering
 ```
+
+**Set Platform Context:**
+
+Tell Claude: "I'm working on a React JS project. Please set the platform context to reactjs so I get appropriate web component recommendations."
+
+**Alternative using MCP tool directly:**
+"Use the set_platform_context tool to set my context to reactjs since I'm building a web application."
 
 **Set Context:**
 
@@ -417,6 +427,44 @@ python3 vector_store.py --stats
 **Compare Components:**
 - "Compare input and textarea components"
 - "Show differences between modal and dialog components"
+
+## Context-Aware Question Examples
+
+### Essential Context-Setting Questions
+**Always start by setting context:**
+- "I'm working on a React JS project. Please set the platform context to reactjs."
+- "Use the set_platform_context tool to set my context to reactjs for web development."
+
+### React JS Component Queries
+**After setting context, ask for specific components:**
+- "Search for React JS form components with validation"
+- "Find responsive table components with sorting and filtering"
+- "Show me navigation bars with dropdown menus and mobile support"
+- "Find modal components with backdrop and animations"
+
+### Framework-Specific Queries
+**Tailwind CSS components:**
+- "Find Tailwind CSS button components with hover states"
+- "Show me responsive navbar components for Tailwind CSS"
+- "Search for form components built with Tailwind CSS"
+
+**Next.js components:**
+- "Find Next.js routing components"
+- "Show me Next.js layout components"
+- "Search for Next.js-specific table components"
+
+### Verification Questions
+**To test context awareness:**
+- "What platform context am I currently using?"
+- "List available registries for React JS development"
+- "Show me the top 5 React JS button components"
+- "What are the web-specific props for the table component?"
+
+### Integration Questions
+**Framework and library integration:**
+- "How do I integrate these components with Next.js?"
+- "What are the dependencies for using these with Vite?"
+- "Show me React Router compatible navigation components"
 
 ## Performance Tips
 

@@ -1,0 +1,555 @@
+{
+  "metadata": {
+    "test_suite": {},
+    "generated_at": "2025-09-28T11:58:35.929431",
+    "runner_version": "1.0.0"
+  },
+  "statistics": {
+    "total_tests": 25,
+    "passed_tests": 18,
+    "failed_tests": 7,
+    "pass_rate": 72.0,
+    "execution_time": 0.367814,
+    "start_time": "2025-09-28T11:58:35.561595",
+    "end_time": "2025-09-28T11:58:35.929409"
+  },
+  "category_analysis": {},
+  "failure_analysis": {
+    "total_failures": 7,
+    "failure_patterns": [
+      {
+        "error_type": "validation_failure",
+        "count": 7,
+        "affected_tests": [
+          "BLD-003",
+          "TL-004",
+          "TL-005",
+          "API-001",
+          "API-002",
+          "API-003",
+          "API-004"
+        ]
+      }
+    ],
+    "critical_failures": [],
+    "failed_test_ids": [
+      "BLD-003",
+      "TL-004",
+      "TL-005",
+      "API-001",
+      "API-002",
+      "API-003",
+      "API-004"
+    ]
+  },
+  "performance_analysis": {
+    "slowest_tests": [
+      {
+        "test_id": "LINT-002",
+        "name": "TypeScript Type Check",
+        "execution_time": 0.919431209564209
+      },
+      {
+        "test_id": "BLD-001",
+        "name": "TypeScript Compilation Success",
+        "execution_time": 0.9055469036102295
+      },
+      {
+        "test_id": "LINT-001",
+        "name": "TypeScript Lint Success",
+        "execution_time": 0.7141246795654297
+      },
+      {
+        "test_id": "CP-004",
+        "name": "API Server Python File Exists",
+        "execution_time": 0.18752622604370117
+      },
+      {
+        "test_id": "MCP-003",
+        "name": "MCP Client Tools Discovery",
+        "execution_time": 0.10320687294006348
+      }
+    ],
+    "average_execution_time": 0.1308156967163086
+  },
+  "recommendations": [
+    "\u26a0\ufe0f  WARNING: Pass rate below acceptable threshold. Review failures."
+  ],
+  "detailed_results": [
+    {
+      "test_id": "CP-001",
+      "name": "MCP Server Source File Exists",
+      "description": "Verify MCP server TypeScript source file exists",
+      "passed": true,
+      "execution_time": 0.006590127944946289,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "-rw-r--r--@ 1 tbardale  staff  20179 Sep 28 11:56 /Users/tbardale/v2/simflo-mcp-rag/mcp-server/src/index.ts\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "0",
+          "actual": "0",
+          "error_message": "Expected exit code 0, got 0"
+        }
+      ]
+    },
+    {
+      "test_id": "CP-002",
+      "name": "Required MCP Tools Code Present",
+      "description": "Verify all 7 MCP tools are defined in source code",
+      "passed": true,
+      "execution_time": 0.005639791488647461,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "15\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "7",
+          "actual": "15\n",
+          "error_message": ""
+        }
+      ]
+    },
+    {
+      "test_id": "CP-003",
+      "name": "Context Tools Implementation Present",
+      "description": "Verify 3 context-aware tools are implemented in source",
+      "passed": true,
+      "execution_time": 0.004225015640258789,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "7\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "3",
+          "actual": "7\n",
+          "error_message": ""
+        }
+      ]
+    },
+    {
+      "test_id": "CP-004",
+      "name": "API Server Python File Exists",
+      "description": "Verify API server Python file exists",
+      "passed": true,
+      "execution_time": 0.18752622604370117,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "/Users/tbardale/v2/simflo-mcp-rag/data-pipeline/api_server.py\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "0",
+          "actual": "0",
+          "error_message": "Expected exit code 0, got 0"
+        }
+      ]
+    },
+    {
+      "test_id": "CP-005",
+      "name": "Data Pipeline Python Files Present",
+      "description": "Verify Python data pipeline files exist",
+      "passed": true,
+      "execution_time": 0.007288217544555664,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "       9\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "5",
+          "actual": "       9\n",
+          "error_message": ""
+        }
+      ]
+    },
+    {
+      "test_id": "LINT-001",
+      "name": "TypeScript Lint Success",
+      "description": "Verify MCP server passes TypeScript linting",
+      "passed": true,
+      "execution_time": 0.7141246795654297,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "\n> simflo-mcp-server@1.0.0 lint\n> eslint src --ext .ts\n\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "0",
+          "actual": "0",
+          "error_message": "Expected exit code 0, got 0"
+        }
+      ]
+    },
+    {
+      "test_id": "LINT-002",
+      "name": "TypeScript Type Check",
+      "description": "Verify MCP server passes TypeScript type checking",
+      "passed": true,
+      "execution_time": 0.919431209564209,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "\n> simflo-mcp-server@1.0.0 type-check\n> tsc --noEmit\n\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "0",
+          "actual": "0",
+          "error_message": "Expected exit code 0, got 0"
+        }
+      ]
+    },
+    {
+      "test_id": "LINT-003",
+      "name": "Python Syntax Check",
+      "description": "Verify Python files have valid syntax",
+      "passed": true,
+      "execution_time": 0.04607987403869629,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "0",
+          "actual": "0",
+          "error_message": "Expected exit code 0, got 0"
+        }
+      ]
+    },
+    {
+      "test_id": "LINT-004",
+      "name": "Testing Framework Python Lint",
+      "description": "Verify testing framework Python files are valid",
+      "passed": true,
+      "execution_time": 0.033737897872924805,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "0",
+          "actual": "0",
+          "error_message": "Expected exit code 0, got 0"
+        }
+      ]
+    },
+    {
+      "test_id": "BLD-001",
+      "name": "TypeScript Compilation Success",
+      "description": "Verify MCP server compiles without errors",
+      "passed": true,
+      "execution_time": 0.9055469036102295,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "\n> simflo-mcp-server@1.0.0 build\n> tsc\n\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "0",
+          "actual": "0",
+          "error_message": "Expected exit code 0, got 0"
+        }
+      ]
+    },
+    {
+      "test_id": "BLD-002",
+      "name": "Distribution Directory Creation",
+      "description": "Verify dist directory is created after build",
+      "passed": true,
+      "execution_time": 0.007066249847412109,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "-rw-r--r--@ 1 tbardale  staff  23118 Sep 28 11:58 /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "0",
+          "actual": "0",
+          "error_message": "Expected exit code 0, got 0"
+        }
+      ]
+    },
+    {
+      "test_id": "BLD-003",
+      "name": "JavaScript File Generation",
+      "description": "Verify JavaScript files are generated in dist directory",
+      "passed": false,
+      "execution_time": 0.00878286361694336,
+      "exit_code": 0,
+      "error_message": "Validation failures:\n1. Expected 'JavaScript' not found in stdout",
+      "stdout": "/Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js: a /usr/bin/env node script text executable, ASCII text, with very long lines (330)\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": false,
+          "expected": "JavaScript",
+          "actual": "/Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js: a /usr/bin/env node script text executable, ASCII text, with very long lines (330)\n",
+          "error_message": "Expected 'JavaScript' not found in stdout"
+        }
+      ]
+    },
+    {
+      "test_id": "TL-001",
+      "name": "Exactly 7 Tools in Tools List",
+      "description": "CRITICAL: Verify MCP server exposes exactly 7 tools (this would have caught the missing 3 tools issue)",
+      "passed": true,
+      "execution_time": 0.004645824432373047,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "7\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "7",
+          "actual": "7\n",
+          "error_message": ""
+        }
+      ]
+    },
+    {
+      "test_id": "TL-002",
+      "name": "Required Tool Names Present",
+      "description": "Verify all expected tool names are present in built JavaScript",
+      "passed": true,
+      "execution_time": 0.004082202911376953,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "7\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "7",
+          "actual": "7\n",
+          "error_message": ""
+        }
+      ]
+    },
+    {
+      "test_id": "TL-003",
+      "name": "Context Tools Present",
+      "description": "Verify the 3 new context-aware tools are present",
+      "passed": true,
+      "execution_time": 0.00384521484375,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "3\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "3",
+          "actual": "3\n",
+          "error_message": ""
+        }
+      ]
+    },
+    {
+      "test_id": "TL-004",
+      "name": "Platform Parameter in Search Tool",
+      "description": "Verify search_components tool has platform parameter",
+      "passed": false,
+      "execution_time": 0.0038709640502929688,
+      "exit_code": 0,
+      "error_message": "Validation failures:\n1. Missing values in stdout: ['reactjs', 'reactnative']",
+      "stdout": "                name: 'search_components',\n                description: 'Search for components using natural language with platform context awareness',\n                inputSchema: {\n                    type: 'object',\n                    properties: {\n                        query: {\n                            type: 'string',\n                            description: 'Natural language search query (e.g., \"modal dialog\", \"form input validation\")',\n                        },\n                        limit: {\n                            type: 'number',\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": false,
+          "expected": "['platform', 'reactjs', 'reactnative']",
+          "actual": "                name: 'search_components',\n                description: 'Search for components using natural language with platform context awareness',\n                inputSchema: {\n                    type: 'object',\n                    properties: {\n                        query: {\n                            type: 'string',\n                            description: 'Natural language search query (e.g., \"modal dialog\", \"form input validation\")',\n                        },\n                     ...",
+          "error_message": "Missing values in stdout: ['reactjs', 'reactnative']"
+        }
+      ]
+    },
+    {
+      "test_id": "TL-005",
+      "name": "Registry Parameter in Detail Tool",
+      "description": "Verify get_component_details tool has registry parameter",
+      "passed": false,
+      "execution_time": 0.0038247108459472656,
+      "exit_code": 0,
+      "error_message": "Validation failures:\n1. Expected 'registry' not found in stdout",
+      "stdout": "                name: 'get_component_details',\n                description: 'Get detailed information about a specific component',\n                inputSchema: {\n                    type: 'object',\n                    properties: {\n                        name: {\n                            type: 'string',\n                            description: 'Component name (e.g., \"button\", \"dialog\", \"input\")',\n                        },\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": false,
+          "expected": "registry",
+          "actual": "                name: 'get_component_details',\n                description: 'Get detailed information about a specific component',\n                inputSchema: {\n                    type: 'object',\n                    properties: {\n                        name: {\n                            type: 'string',\n                            description: 'Component name (e.g., \"button\", \"dialog\", \"input\")',\n                        },\n",
+          "error_message": "Expected 'registry' not found in stdout"
+        }
+      ]
+    },
+    {
+      "test_id": "API-001",
+      "name": "API Server Health Check",
+      "description": "Verify API server is running and responding",
+      "passed": false,
+      "execution_time": 0.011852025985717773,
+      "exit_code": 7,
+      "error_message": "Validation failures:\n1. Expected 'status' not found in stdout",
+      "stdout": "",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": false,
+          "expected": "status",
+          "actual": "",
+          "error_message": "Expected 'status' not found in stdout"
+        }
+      ]
+    },
+    {
+      "test_id": "API-002",
+      "name": "V2 Context Endpoints Available",
+      "description": "Verify v2 context endpoints are accessible",
+      "passed": false,
+      "execution_time": 0.00869894027709961,
+      "exit_code": 7,
+      "error_message": "Validation failures:\n1. Expected 'platform' not found in stdout",
+      "stdout": "",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": false,
+          "expected": "platform",
+          "actual": "",
+          "error_message": "Expected 'platform' not found in stdout"
+        }
+      ]
+    },
+    {
+      "test_id": "API-003",
+      "name": "Context Setting Functionality",
+      "description": "Test setting platform context via API",
+      "passed": false,
+      "execution_time": 0.008059978485107422,
+      "exit_code": 7,
+      "error_message": "Validation failures:\n1. Expected 'reactnative' not found in stdout",
+      "stdout": "",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": false,
+          "expected": "reactnative",
+          "actual": "",
+          "error_message": "Expected 'reactnative' not found in stdout"
+        }
+      ]
+    },
+    {
+      "test_id": "API-004",
+      "name": "Registry Listing Functionality",
+      "description": "Test registry listing endpoint",
+      "passed": false,
+      "execution_time": 0.007933855056762695,
+      "exit_code": 7,
+      "error_message": "Validation failures:\n1. Expected 'registries' not found in stdout",
+      "stdout": "",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": false,
+          "expected": "registries",
+          "actual": "",
+          "error_message": "Expected 'registries' not found in stdout"
+        }
+      ]
+    },
+    {
+      "test_id": "MCP-001",
+      "name": "MCP Server Startup",
+      "description": "Verify MCP server starts without errors",
+      "passed": true,
+      "execution_time": 0.09038186073303223,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "",
+      "stderr": "SimFlo MCP RAG server started\n",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "",
+          "actual": "SimFlo MCP RAG server started\n",
+          "error_message": ""
+        }
+      ]
+    },
+    {
+      "test_id": "MCP-002",
+      "name": "MCP Server Process Check",
+      "description": "Verify MCP server process can be listed",
+      "passed": true,
+      "execution_time": 0.07146787643432617,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "tbardale         28346   0.0  0.2 433118736  26064 s016  S+   11:08AM   0:00.18 node /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "0",
+          "actual": "0",
+          "error_message": "Expected exit code 0, got 0"
+        }
+      ]
+    },
+    {
+      "test_id": "MCP-003",
+      "name": "MCP Client Tools Discovery",
+      "description": "Test MCP server basic functionality",
+      "passed": true,
+      "execution_time": 0.10320687294006348,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "\ud83d\udd0d Testing MCP Server Basic Functionality\n==================================================\nTesting MCP server at: /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js\n\u2705 MCP server built file exists\n\u2705 MCP server started successfully\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "\u2705 MCP server started successfully",
+          "actual": "\ud83d\udd0d Testing MCP Server Basic Functionality\n==================================================\nTesting MCP server at: /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js\n\u2705 MCP server built file exists\n\u2705 MCP server started successfully\n",
+          "error_message": ""
+        }
+      ]
+    },
+    {
+      "test_id": "MCP-004",
+      "name": "MCP Server Health Check",
+      "description": "Test MCP server can handle basic requests",
+      "passed": true,
+      "execution_time": 0.10248303413391113,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "\ud83d\udd0d Testing MCP Server Basic Functionality\n==================================================\nTesting MCP server at: /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js\n\u2705 MCP server built file exists\n\u2705 MCP server started successfully\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "\u2705 MCP server started successfully",
+          "actual": "\ud83d\udd0d Testing MCP Server Basic Functionality\n==================================================\nTesting MCP server at: /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js\n\u2705 MCP server built file exists\n\u2705 MCP server started successfully\n",
+          "error_message": ""
+        }
+      ]
+    }
+  ]
+}

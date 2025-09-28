@@ -1,0 +1,45 @@
+{
+  "test_suite": {
+    "name": "MCP Tools List Validation Tests - CRITICAL",
+    "description": "Validate MCP server exposes correct tools (would have caught missing 3 tools issue)",
+    "version": "1.0.0",
+    "author": "SimFlo Team"
+  },
+  "tests": [
+    {
+      "test_id": "TL-001",
+      "name": "Exactly 7 Tools in Tools List",
+      "description": "CRITICAL: Verify MCP server exposes exactly 7 tools (this would have caught the missing 3 tools issue)",
+      "command": "grep -c \"name: '\\(search_components\\|get_component_details\\|get_component_installation\\|list_components\\|set_platform_context\\|get_platform_context\\|list_registries\\)'\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_stdout": {"type": "exact", "value": "7"}
+    },
+    {
+      "test_id": "TL-002",
+      "name": "Required Tool Names Present",
+      "description": "Verify all expected tool names are present in built JavaScript",
+      "command": "grep -c \"name: '\\(search_components\\|get_component_details\\|get_component_installation\\|list_components\\|set_platform_context\\|get_platform_context\\|list_registries\\)'\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_stdout": {"type": "exact", "value": "7"}
+    },
+    {
+      "test_id": "TL-003",
+      "name": "Context Tools Present",
+      "description": "Verify the 3 new context-aware tools are present",
+      "command": "grep -c \"name: '\\(set_platform_context\\|get_platform_context\\|list_registries\\)'\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_stdout": {"type": "exact", "value": "3"}
+    },
+    {
+      "test_id": "TL-004",
+      "name": "Platform Parameter in Search Tool",
+      "description": "Verify search_components tool has platform parameter",
+      "command": "grep -A 10 \"name: 'search_components'\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_stdout": {"type": "contains_all", "value": ["platform", "reactjs", "reactnative"]}
+    },
+    {
+      "test_id": "TL-005",
+      "name": "Registry Parameter in Detail Tool",
+      "description": "Verify get_component_details tool has registry parameter",
+      "command": "grep -A 8 \"name: 'get_component_details'\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/dist/index.js",
+      "expect_stdout": {"type": "contains", "value": "registry"}
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "test_suite": {
+    "name": "SimFlo MCP RAG Complete Test Suite",
+    "description": "Master configuration running all test suites in logical order",
+    "version": "1.0.0",
+    "author": "SimFlo Team",
+    "execution_order": [
+      "code_presence",
+      "lint",
+      "build",
+      "tools_list",
+      "api",
+      "mcp"
+    ]
+  },
+  "test_suites": {
+    "code_presence": "test_suites/01-code_presence_tests.json",
+    "lint": "test_suites/02-lint_tests.json",
+    "build": "test_suites/03-build_tests.json",
+    "tools_list": "test_suites/04-tools_list_tests.json",
+    "api": "test_suites/05-api_tests.json",
+    "mcp": "test_suites/06-mcp_tests.json"
+  }
+}

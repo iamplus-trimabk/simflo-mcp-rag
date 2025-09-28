@@ -1,0 +1,306 @@
+{
+  "metadata": {
+    "test_suite": {
+      "name": "SimFlo MCP RAG Server Comprehensive Test Suite",
+      "description": "Comprehensive tests for MCP server functionality, build process, and integration",
+      "version": "1.0.0",
+      "author": "SimFlo Team"
+    },
+    "generated_at": "2025-09-28T11:13:51.923037",
+    "runner_version": "1.0.0"
+  },
+  "statistics": {
+    "total_tests": 8,
+    "passed_tests": 2,
+    "failed_tests": 6,
+    "pass_rate": 25.0,
+    "execution_time": 1.025714,
+    "start_time": "2025-09-28T11:13:50.897227",
+    "end_time": "2025-09-28T11:13:51.922941"
+  },
+  "category_analysis": {
+    "build": {
+      "total": 3,
+      "passed": 0,
+      "failed": 3,
+      "pass_rate": 0.0
+    },
+    "tools_list": {
+      "total": 5,
+      "passed": 2,
+      "failed": 3,
+      "pass_rate": 40.0
+    },
+    "api": {
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "pass_rate": 0
+    },
+    "mcp": {
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "pass_rate": 0
+    },
+    "end_to_end": {
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "pass_rate": 0
+    },
+    "integration": {
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "pass_rate": 0
+    },
+    "performance": {
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "pass_rate": 0
+    },
+    "security": {
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "pass_rate": 0
+    }
+  },
+  "failure_analysis": {
+    "total_failures": 6,
+    "failure_patterns": [
+      {
+        "error_type": "exit_code_mismatch",
+        "count": 3,
+        "affected_tests": [
+          "TS-001",
+          "TS-002",
+          "TL-001"
+        ]
+      },
+      {
+        "error_type": "validation_failure",
+        "count": 3,
+        "affected_tests": [
+          "TS-003",
+          "TL-004",
+          "TL-005"
+        ]
+      }
+    ],
+    "critical_failures": [],
+    "failed_test_ids": [
+      "TS-001",
+      "TS-002",
+      "TS-003",
+      "TL-001",
+      "TL-004",
+      "TL-005"
+    ]
+  },
+  "performance_analysis": {
+    "slowest_tests": [
+      {
+        "test_id": "TS-001",
+        "name": "TypeScript Compilation Success",
+        "execution_time": 0.9638547897338867
+      },
+      {
+        "test_id": "TL-001",
+        "name": "Exactly 7 Tools in Tools List",
+        "execution_time": 0.029098987579345703
+      },
+      {
+        "test_id": "TS-003",
+        "name": "JavaScript File Generation",
+        "execution_time": 0.00910186767578125
+      },
+      {
+        "test_id": "TS-002",
+        "name": "Distribution Directory Creation",
+        "execution_time": 0.007415771484375
+      },
+      {
+        "test_id": "TL-002",
+        "name": "Required Tool Names Present",
+        "execution_time": 0.0045850276947021484
+      }
+    ],
+    "average_execution_time": 0.1281629502773285
+  },
+  "recommendations": [
+    "\ud83d\udea8 CRITICAL: Low overall pass rate. Immediate attention required.",
+    "\ud83d\udd27 Fix build issues before proceeding with other tests.",
+    "\ud83d\udccb Tools list issues detected. This may indicate missing MCP functionality.",
+    "\ud83c\udf10 API endpoints failing. Check API server configuration.",
+    "\ud83d\udd12 Security issues detected. Review for hardcoded secrets."
+  ],
+  "detailed_results": [
+    {
+      "test_id": "TS-001",
+      "name": "TypeScript Compilation Success",
+      "description": "Verify MCP server compiles without errors",
+      "passed": false,
+      "execution_time": 0.9638547897338867,
+      "exit_code": 0,
+      "error_message": "Validation failures:\n1. Expected exit code {'type': 'exit_code', 'value': 0}, got 0\n2. Expected 'error' not found in stderr",
+      "stdout": "\n> simflo-mcp-server@1.0.0 build\n> tsc\n\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": false,
+          "expected": "{'type': 'exit_code', 'value': 0}",
+          "actual": "0",
+          "error_message": "Expected exit code {'type': 'exit_code', 'value': 0}, got 0"
+        },
+        {
+          "passed": false,
+          "expected": "error",
+          "actual": "",
+          "error_message": "Expected 'error' not found in stderr"
+        }
+      ]
+    },
+    {
+      "test_id": "TS-002",
+      "name": "Distribution Directory Creation",
+      "description": "Verify dist directory is created after build",
+      "passed": false,
+      "execution_time": 0.007415771484375,
+      "exit_code": 0,
+      "error_message": "Validation failures:\n1. Expected exit code {'type': 'exit_code', 'value': 0}, got 0",
+      "stdout": "-rw-r--r--@ 1 tbardale  staff  21256 Sep 28 11:13 dist/index.js\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": false,
+          "expected": "{'type': 'exit_code', 'value': 0}",
+          "actual": "0",
+          "error_message": "Expected exit code {'type': 'exit_code', 'value': 0}, got 0"
+        }
+      ]
+    },
+    {
+      "test_id": "TS-003",
+      "name": "JavaScript File Generation",
+      "description": "Verify JavaScript files are generated in dist directory",
+      "passed": false,
+      "execution_time": 0.00910186767578125,
+      "exit_code": 0,
+      "error_message": "Validation failures:\n1. Expected 'JavaScript' not found in stdout",
+      "stdout": "dist/index.js: a /usr/bin/env node script text executable, ASCII text, with very long lines (331)\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": false,
+          "expected": "JavaScript",
+          "actual": "dist/index.js: a /usr/bin/env node script text executable, ASCII text, with very long lines (331)\n",
+          "error_message": "Expected 'JavaScript' not found in stdout"
+        }
+      ]
+    },
+    {
+      "test_id": "TL-001",
+      "name": "Exactly 7 Tools in Tools List",
+      "description": "CRITICAL: Verify MCP server exposes exactly 7 tools (this would have caught the missing 3 tools issue)",
+      "passed": false,
+      "execution_time": 0.029098987579345703,
+      "exit_code": 1,
+      "error_message": "Validation failures:\n1. Expected exit code {'type': 'exit_code', 'value': 0}, got 1\n2. Custom validation failed",
+      "stdout": "",
+      "stderr": "node:internal/modules/cjs/loader:1228\n  throw err;\n  ^\n\nError: Cannot find module './dist/index.js'\nRequire stack:\n- /Users/tbardale/v2/simflo-mcp-rag/testing/[eval]\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1225:15)\n    at Module._load (node:internal/modules/cjs/loader:1051:27)\n    at Module.require (node:internal/modules/cjs/loader:1311:19)\n    at require (node:internal/modules/helpers:179:18)\n    at [eval]:1:15\n    at runScriptInThisContext (node:internal/vm:209:10)\n    at node:internal/process/execution:118:14\n    at [eval]-wrapper:6:24\n    at runScript (node:internal/process/execution:101:62)\n    at evalScript (node:internal/process/execution:133:3) {\n  code: 'MODULE_NOT_FOUND',\n  requireStack: [ '/Users/tbardale/v2/simflo-mcp-rag/testing/[eval]' ]\n}\n\nNode.js v20.18.0\n",
+      "validation_results": [
+        {
+          "passed": false,
+          "expected": "{'type': 'exit_code', 'value': 0}",
+          "actual": "1",
+          "error_message": "Expected exit code {'type': 'exit_code', 'value': 0}, got 1"
+        },
+        {
+          "passed": false,
+          "expected": "custom validation",
+          "actual": "custom validation result",
+          "error_message": "Custom validation failed"
+        }
+      ]
+    },
+    {
+      "test_id": "TL-002",
+      "name": "Required Tool Names Present",
+      "description": "Verify all expected tool names are present in built JavaScript",
+      "passed": true,
+      "execution_time": 0.0045850276947021484,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "7\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "7",
+          "actual": "7\n",
+          "error_message": ""
+        }
+      ]
+    },
+    {
+      "test_id": "TL-003",
+      "name": "Context Tools Present",
+      "description": "Verify the 3 new context-aware tools are present",
+      "passed": true,
+      "execution_time": 0.003877878189086914,
+      "exit_code": 0,
+      "error_message": "",
+      "stdout": "3\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": true,
+          "expected": "3",
+          "actual": "3\n",
+          "error_message": ""
+        }
+      ]
+    },
+    {
+      "test_id": "TL-004",
+      "name": "Platform Parameter in Search Tool",
+      "description": "Verify search_components tool has platform parameter",
+      "passed": false,
+      "execution_time": 0.0037560462951660156,
+      "exit_code": 0,
+      "error_message": "Validation failures:\n1. Missing values in stdout: ['reactjs', 'reactnative']",
+      "stdout": "                name: 'search_components',\n                description: 'Search for components using natural language with platform context awareness',\n                inputSchema: {\n                    type: 'object',\n                    properties: {\n                        query: {\n                            type: 'string',\n                            description: 'Natural language search query (e.g., \"modal dialog\", \"form input validation\")',\n                        },\n                        limit: {\n                            type: 'number',\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": false,
+          "expected": "['platform', 'reactjs', 'reactnative']",
+          "actual": "                name: 'search_components',\n                description: 'Search for components using natural language with platform context awareness',\n                inputSchema: {\n                    type: 'object',\n                    properties: {\n                        query: {\n                            type: 'string',\n                            description: 'Natural language search query (e.g., \"modal dialog\", \"form input validation\")',\n                        },\n                     ...",
+          "error_message": "Missing values in stdout: ['reactjs', 'reactnative']"
+        }
+      ]
+    },
+    {
+      "test_id": "TL-005",
+      "name": "Registry Parameter in Detail Tool",
+      "description": "Verify get_component_details tool has registry parameter",
+      "passed": false,
+      "execution_time": 0.0036132335662841797,
+      "exit_code": 0,
+      "error_message": "Validation failures:\n1. Expected 'registry' not found in stdout",
+      "stdout": "                name: 'get_component_details',\n                description: 'Get detailed information about a specific component',\n                inputSchema: {\n                    type: 'object',\n                    properties: {\n                        name: {\n                            type: 'string',\n                            description: 'Component name (e.g., \"button\", \"dialog\", \"input\")',\n                        },\n",
+      "stderr": "",
+      "validation_results": [
+        {
+          "passed": false,
+          "expected": "registry",
+          "actual": "                name: 'get_component_details',\n                description: 'Get detailed information about a specific component',\n                inputSchema: {\n                    type: 'object',\n                    properties: {\n                        name: {\n                            type: 'string',\n                            description: 'Component name (e.g., \"button\", \"dialog\", \"input\")',\n                        },\n",
+          "error_message": "Expected 'registry' not found in stdout"
+        }
+      ]
+    }
+  ]
+}

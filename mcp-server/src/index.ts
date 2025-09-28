@@ -63,7 +63,7 @@ class RAGAPIClient {
     const params: any = { q: query, limit };
     if (platform) params.platform = platform;
 
-    const response = await axios.get(`${this.baseUrl}/api/v2/components/search`, { params });
+    const response = await axios.get(`${this.baseUrl}/api/v1/components/search`, { params });
     return response.data;
   }
 
@@ -71,7 +71,7 @@ class RAGAPIClient {
     const params: any = {};
     if (registry) params.registry = registry;
 
-    const response = await axios.get(`${this.baseUrl}/api/v2/components/${name}`, { params });
+    const response = await axios.get(`${this.baseUrl}/api/v1/components/${name}`, { params });
     return response.data;
   }
 
@@ -79,7 +79,7 @@ class RAGAPIClient {
     const params: any = {};
     if (registry) params.registry = registry;
 
-    const response = await axios.get(`${this.baseUrl}/api/v2/components/${name}/installation`, { params });
+    const response = await axios.get(`${this.baseUrl}/api/v1/components/${name}/installation`, { params });
     return response.data;
   }
 
@@ -89,7 +89,7 @@ class RAGAPIClient {
     if (platform) params.platform = platform;
     if (registry) params.registry = registry;
 
-    const response = await axios.get(`${this.baseUrl}/api/v2/components`, { params });
+    const response = await axios.get(`${this.baseUrl}/api/v1/components`, { params });
     return response.data;
   }
 
@@ -100,12 +100,12 @@ class RAGAPIClient {
 
   // Context management APIs
   async setPlatformContext(platform: string, sessionId?: string, userAgent?: string, projectType?: string) {
-    const response = await axios.post(`${this.baseUrl}/api/v2/context/set`, {
-      platform,
-      session_id: sessionId,
-      user_agent: userAgent,
-      project_type: projectType,
-    });
+    const data: any = { platform };
+    if (sessionId) data.session_id = sessionId;
+    if (userAgent) data.user_agent = userAgent;
+    if (projectType) data.project_type = projectType;
+
+    const response = await axios.post(`${this.baseUrl}/api/v1/context/set`, data);
     return response.data;
   }
 
@@ -113,7 +113,7 @@ class RAGAPIClient {
     const params: any = {};
     if (sessionId) params.session_id = sessionId;
 
-    const response = await axios.get(`${this.baseUrl}/api/v2/context`, { params });
+    const response = await axios.get(`${this.baseUrl}/api/v1/context/current`, { params });
     return response.data;
   }
 
@@ -121,12 +121,12 @@ class RAGAPIClient {
     const params: any = {};
     if (platform) params.platform = platform;
 
-    const response = await axios.get(`${this.baseUrl}/api/v2/registries`, { params });
+    const response = await axios.get(`${this.baseUrl}/api/v1/registries`, { params });
     return response.data;
   }
 
   async getContextStats() {
-    const response = await axios.get(`${this.baseUrl}/api/v2/context/stats`);
+    const response = await axios.get(`${this.baseUrl}/api/v1/context/stats`);
     return response.data;
   }
 }
@@ -153,7 +153,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       {
         name: 'search_components',
-        description: 'Search for shadcn components using natural language queries',
+        description: 'Search for components using natural language with platform context awareness',
         inputSchema: {
           type: 'object',
           properties: {
@@ -166,19 +166,28 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               description: 'Maximum number of results to return (1-50)',
               default: 10,
             },
+            platform: {
+              type: 'string',
+              enum: ['reactjs', 'reactnative', 'auto', 'none'],
+              description: 'Target platform for component recommendations',
+            },
           },
           required: ['query'],
         },
       },
       {
         name: 'get_component_details',
-        description: 'Get detailed information about a specific shadcn component',
+        description: 'Get detailed information about a specific component',
         inputSchema: {
           type: 'object',
           properties: {
             name: {
               type: 'string',
               description: 'Component name (e.g., "button", "dialog", "input")',
+            },
+            registry: {
+              type: 'string',
+              description: 'Specific registry to search (e.g., "shadcn_db", "gluestack_db")',
             },
           },
           required: ['name'],
@@ -194,13 +203,17 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               type: 'string',
               description: 'Component name (e.g., "button", "dialog", "input")',
             },
+            registry: {
+              type: 'string',
+              description: 'Specific registry to search (e.g., "shadcn_db", "gluestack_db")',
+            },
           },
           required: ['name'],
         },
       },
       {
         name: 'list_components',
-        description: 'List available shadcn components, optionally filtered by type',
+        description: 'List available components by type or category with platform filtering',
         inputSchema: {
           type: 'object',
           properties: {
@@ -213,6 +226,69 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               type: 'number',
               description: 'Maximum number of results to return (1-100)',
               default: 20,
+            },
+            platform: {
+              type: 'string',
+              enum: ['reactjs', 'reactnative', 'auto', 'none'],
+              description: 'Filter by platform support',
+            },
+            registry: {
+              type: 'string',
+              description: 'Specific registry to search (e.g., "shadcn_db", "gluestack_db")',
+            },
+          },
+        },
+      },
+      {
+        name: 'set_platform_context',
+        description: 'Set the platform context for intelligent component recommendations',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            platform: {
+              type: 'string',
+              enum: ['reactjs', 'reactnative', 'auto', 'none'],
+              description: 'Target platform for component recommendations',
+            },
+            session_id: {
+              type: 'string',
+              description: 'Optional session identifier for context tracking',
+            },
+            user_agent: {
+              type: 'string',
+              description: 'Optional user agent information',
+            },
+            project_type: {
+              type: 'string',
+              description: 'Optional project type information',
+            },
+          },
+          required: ['platform'],
+        },
+      },
+      {
+        name: 'get_platform_context',
+        description: 'Get the current platform context and session information',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            session_id: {
+              type: 'string',
+              description: 'Optional session identifier',
+            },
+          },
+        },
+      },
+      {
+        name: 'list_registries',
+        description: 'List available component registries with platform filtering',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            platform: {
+              type: 'string',
+              enum: ['reactjs', 'reactnative', 'auto', 'none'],
+              description: 'Filter registries by platform support',
             },
           },
         },
@@ -235,15 +311,18 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           throw new Error(result.error || 'Search failed');
         }
 
+        // Handle v2 API response format which has data.components structure
+        const components = result.data?.components || result.data?.results || result.data || [];
+
         return {
           content: [
             {
               type: 'text',
-              text: `Found ${result.data.length} components matching "${validated.query}"${validated.platform ? ` for ${validated.platform}` : ''}:\n\n${result.data.map((comp: any, index: number) =>
+              text: `Found ${components.length} components matching "${validated.query}"${validated.platform ? ` for ${validated.platform}` : ''}:\n\n${components.map((comp: any, index: number) =>
                 `${index + 1}. **${comp.name}** (${comp.type || 'component'})\n` +
                 `   Registry: ${comp.registry || 'unknown'}\n` +
                 `   Platform: ${comp.platform ? (Array.isArray(comp.platform) ? comp.platform.join(', ') : comp.platform) : 'any'}\n` +
-                `   Relevance: ${(comp.relevance_score || comp.relevanceScore || 0 * 100).toFixed(1)}%\n` +
+                `   Relevance: ${((comp.relevance_score || comp.relevanceScore || 0) * 100).toFixed(1)}%\n` +
                 (comp.description ? `   Description: ${comp.description}\n` : '') +
                 (comp.installation ? `   Install: \`${comp.installation}\`\n` : '')
               ).join('\n')}`,
@@ -270,11 +349,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 `**Registry:** ${comp.registry || 'unknown'}\n` +
                 `**Platform:** ${comp.platform ? (Array.isArray(comp.platform) ? comp.platform.join(', ') : comp.platform) : 'any'}\n` +
                 (comp.installation ? `**Installation:** \`${comp.installation}\`\n` : '') +
-                (comp.dependencies && comp.dependencies.length > 0 ?
+                (comp.dependencies && Array.isArray(comp.dependencies) && comp.dependencies.length > 0 ?
                   `**Dependencies:** ${comp.dependencies.join(', ')}\n` : '') +
-                (comp.files && comp.files.length > 0 ?
+                (comp.files && Array.isArray(comp.files) && comp.files.length > 0 ?
                   `**Files:** ${comp.files.length} file(s)\n` : '') +
-                (comp.usage_examples && comp.usage_examples.length > 0 ?
+                (comp.usage_examples && Array.isArray(comp.usage_examples) && comp.usage_examples.length > 0 ?
                   `**Usage Examples:**\n${comp.usage_examples.map((ex: string, i: number) => `  ${i + 1}. ${ex}`).join('\n')}\n` : ''),
             },
           ],
@@ -313,11 +392,14 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           throw new Error(result.error || 'Failed to list components');
         }
 
+        // Handle v2 API response format which has data.components structure
+        const components = result.data?.components || result.data?.results || result.data || [];
+
         return {
           content: [
             {
               type: 'text',
-              text: `Available components${validated.type ? ` of type "${validated.type}"` : ''}${validated.platform ? ` for ${validated.platform}` : ''}${validated.registry ? ` from ${validated.registry}` : ''}:\n\n${result.data.map((comp: any, index: number) =>
+              text: `Available components${validated.type ? ` of type "${validated.type}"` : ''}${validated.platform ? ` for ${validated.platform}` : ''}${validated.registry ? ` from ${validated.registry}` : ''}:\n\n${components.map((comp: any, index: number) =>
                 `${index + 1}. **${comp.name}** (${comp.type || 'component'})\n` +
                 `   Registry: ${comp.registry || 'unknown'}\n` +
                 `   Platform: ${comp.platform ? (Array.isArray(comp.platform) ? comp.platform.join(', ') : comp.platform) : 'any'}\n` +
@@ -393,13 +475,15 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           throw new Error(result.error || 'Failed to list registries');
         }
 
+        const registries = result.data || [];
+
         return {
           content: [
             {
               type: 'text',
-              text: `Available component registries${validated.platform ? ` for ${validated.platform}` : ''}:\n\n${result.data.map((reg: any, index: number) =>
+              text: `Available component registries${validated.platform ? ` for ${validated.platform}` : ''}:\n\n${registries.map((reg: any, index: number) =>
                 `${index + 1}. **${reg.name}**\n` +
-                `   Components: ${reg.component_count || 0}\n` +
+                `   Components: ${reg.component_count || reg.components || 0}\n` +
                 `   Platform: ${reg.platform ? (Array.isArray(reg.platform) ? reg.platform.join(', ') : reg.platform) : 'any'}\n` +
                 `   Status: ${reg.is_active ? 'Active' : 'Inactive'}\n` +
                 `   Last Updated: ${reg.last_updated ? new Date(reg.last_updated * 1000).toISOString() : 'unknown'}\n` +

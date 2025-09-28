@@ -1,0 +1,45 @@
+{
+  "test_suite": {
+    "name": "Code Presence Validation Tests",
+    "description": "Verify required source files and code patterns exist before development begins",
+    "version": "1.0.0",
+    "author": "SimFlo Team"
+  },
+  "tests": [
+    {
+      "test_id": "CP-001",
+      "name": "MCP Server Source File Exists",
+      "description": "Verify MCP server TypeScript source file exists",
+      "command": "ls -la /Users/tbardale/v2/simflo-mcp-rag/mcp-server/src/index.ts",
+      "expect_exit_code": {"type": "exit_code", "value": 0}
+    },
+    {
+      "test_id": "CP-002",
+      "name": "Required MCP Tools Code Present",
+      "description": "Verify all 7 MCP tools are defined in source code",
+      "command": "grep -c \"\\(search_components\\|get_component_details\\|get_component_installation\\|list_components\\|set_platform_context\\|get_platform_context\\|list_registries\\)\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/src/index.ts",
+      "expect_stdout": {"type": "ge", "value": "7"}
+    },
+    {
+      "test_id": "CP-003",
+      "name": "Context Tools Implementation Present",
+      "description": "Verify 3 context-aware tools are implemented in source",
+      "command": "grep -c \"\\(set_platform_context\\|get_platform_context\\|list_registries\\)\" /Users/tbardale/v2/simflo-mcp-rag/mcp-server/src/index.ts",
+      "expect_stdout": {"type": "ge", "value": "3"}
+    },
+    {
+      "test_id": "CP-004",
+      "name": "API Server Python File Exists",
+      "description": "Verify API server Python file exists",
+      "command": "find /Users/tbardale/v2/simflo-mcp-rag -name \"api_server.py\" -type f",
+      "expect_exit_code": {"type": "exit_code", "value": 0}
+    },
+    {
+      "test_id": "CP-005",
+      "name": "Data Pipeline Python Files Present",
+      "description": "Verify Python data pipeline files exist",
+      "command": "ls -la /Users/tbardale/v2/simflo-mcp-rag/data-pipeline/*.py | wc -l",
+      "expect_stdout": {"type": "ge", "value": "5"}
+    }
+  ]
+}

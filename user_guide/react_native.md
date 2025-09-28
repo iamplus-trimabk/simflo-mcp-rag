@@ -72,15 +72,25 @@ Ask Claude: "List all available MCP tools"
 Expected response:
 ```
 Available MCP Tools:
-1. search_components - Search for components using natural language
+1. search_components - Search for components using natural language with platform context awareness
 2. get_component_details - Get detailed information about a specific component
 3. get_component_installation - Get installation instructions and dependencies
 4. list_components - List components by type or category
+5. set_platform_context - Set platform context for intelligent component recommendations
+6. get_platform_context - Get current platform context information
+7. list_registries - List available component registries
 ```
+
+**Set Platform Context:**
+
+Tell Claude: "I'm working on a React Native project. Please set the platform context to React Native so I get appropriate mobile component recommendations."
 
 **Set Context:**
 
 Tell Claude: "I'm working on a React Native project using Expo. I need help finding and implementing mobile UI components."
+
+**Alternative using MCP tool directly:**
+"Use the set_platform_context tool to set my context to reactnative since I'm building a mobile app."
 
 ### 4. Test Component Documentation Retrieval
 
@@ -474,6 +484,27 @@ python3 api_server.py --host 127.0.0.1 --port 8000
 **Android Components:**
 - "Android material design button"
 - "Android bottom navigation component"
+
+## Context-Aware Question Examples
+
+### Essential Context-Setting Questions
+**Always start by setting context:**
+- "I'm working on a React Native project. Please set the platform context to reactnative."
+- "Use the set_platform_context tool to set my context to reactnative for mobile development."
+
+### React Native Component Queries
+**After setting context, ask for specific components:**
+- "Search for React Native form components with validation"
+- "Find mobile-optimized table components with horizontal scrolling"
+- "Show me navigation bars with back button and drawer support"
+- "Find touch-friendly button components with proper sizing"
+
+### Verification Questions
+**To test context awareness:**
+- "What platform context am I currently using?"
+- "List available registries for React Native development"
+- "Show me the top 5 React Native button components"
+- "What are the mobile-specific props for the TextInput component?"
 
 ## Integration Examples
 
