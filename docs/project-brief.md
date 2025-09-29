@@ -1,130 +1,178 @@
-# Project Brief: Minimal Shadcn Components MCP RAG
+# Project Brief: SimFlo MCP RAG - Universal Component Discovery System
 
 ## Executive Summary
-Build a minimal, local MCP RAG system specifically for shadcn React components to help AI developers quickly find, understand, and install the right components. This is a personal use MVP - minimal effort, immediate usability, no tests, just the core functionality needed to make it work NOW.
+
+Build a universal RAG system that enables natural language search of technical components and documentation through AI assistants using the MCP protocol. The system has evolved from a minimal shadcn component search tool to a comprehensive multi-registry platform with advanced context awareness and intelligent recommendations.
+
+**Current Status**: MVP 4 - Enhanced Context Intelligence & Multi-Dimensional Awareness
 
 ## Problem Statement
-I need to quickly find shadcn components while working with AI assistants. Currently, I have to manually search through the shadcn registry or documentation, which breaks my workflow. I want to ask my AI assistant "find me a modal dialog component" and get back the exact component name, install command, and dependencies.
 
-**Key pain point:** Manual component discovery slows down development workflow with AI assistants.
+Developers need to quickly discover components, documentation, and technical solutions while working with AI assistants. Manual search through multiple registries, documentation sites, and project files breaks workflow efficiency. The system should understand the complete development context and provide intelligent, relevant recommendations.
+
+**Key pain points**:
+- Fragmented component discovery across multiple registries
+- Lack of context-aware search for development projects
+- Manual research slows down AI-assisted development
+- No integration between component search and project understanding
 
 ## Proposed Solution
-**Minimal MVP Approach:**
-- Parse existing shadcn registry files from `/Users/tbardale/github/shadcn-ui/`
-- Create simple JSON index with component metadata
-- Build MCP server with 4 basic tools for component search
-- Use ChromaDB for local vector storage
-- No UI, no tests, no complex features - just the core search functionality
 
-**Data Sources:**
-- `apps/v4/registry/registry-ui.ts` (47 components)
-- `apps/v4/registry/registry-hooks.ts` (1 hook)
-- `apps/v4/registry/registry-blocks.ts` (54 blocks)
-- Registry documentation files
+**Universal RAG System**:
+- Multi-registry component ingestion (shadcn, gluestack, radix)
+- Universal search across components and documentation
+- Advanced context awareness with project type detection
+- Intelligent recommendations based on technology stack
+- MCP protocol integration for AI assistant access
+
+**Current Capabilities**:
+- 130+ components across 3 major registries
+- Web documentation ingestion and search
+- Context-aware platform routing (React Native/React JS)
+- 8 operational MCP tools with intelligent search
+- Production-ready API server with comprehensive error handling
 
 ## Target Users
 
-### Primary User Segment: Me (Personal Use)
-- Developer working with shadcn components
-- Uses AI assistants for React development
-- Wants quick component discovery and installation info
-- Values speed over completeness
+### Primary User Segment: Developers Working with AI Assistants
+- React/React Native developers
+- Full-stack developers
+- Technical leads and architects
+- Development teams using component libraries
 
 ## Goals & Success Metrics
 
 ### Business Objectives
-- Get a working MCP RAG server for shadcn components ASAP
 - Reduce component discovery time from minutes to seconds
-- Enable natural language component search in AI conversations
+- Enable natural language technical search in AI conversations
+- Provide intelligent recommendations based on project context
+- Support multiple technology stacks and development patterns
 
 ### Success Criteria
-- **Single command start:** `npm run shadcn-rag`
+- **Single command start**: `python3 data-pipeline/api_server.py`
 - **Works offline** after initial indexing
-- **<100MB memory usage**
-- **<1 second response time**
-- **Provides installation commands** for all components
-- **Focus ONLY on shadcn** - no other frameworks
+- **<100MB memory usage** for typical operations
+- **<1 second response time** for search queries
+- **Multi-registry support** with context-aware routing
+- **Universal search** across components and documentation
 
-## MVP Scope (Minimal Viable Product)
+## Current Implementation (MVP 4)
 
-### Core Features (Must Have)
-- Parse shadcn registry files into JSON index
-- Basic vector search with ChromaDB
-- MCP server with 4 tools:
-  1. `find_shadcn_component` - natural language search
-  2. `get_shadcn_component_details` - complete component info
-  3. `list_shadcn_components` - list all components by category
-  4. `get_component_installation` - install commands and dependencies
-- Simple configuration pointing to shadcn registry directory
+### Core Features (Implemented)
+- ✅ Multi-registry system with 130+ components
+- ✅ Context-aware search with platform routing
+- ✅ Universal search across components and documentation
+- ✅ 8 operational MCP tools for AI assistant integration
+- ✅ Advanced context engine with project type detection
+- ✅ Web documentation ingestion with BeautifulSoup
+- ✅ Comprehensive error handling and monitoring
+- ✅ Production-ready API server with FastAPI
 
-### Out of Scope for MVP
-- Tests (unit, integration, e2e)
-- Web UI or dashboard
-- User authentication
-- Complex error handling
-- Logging and monitoring
-- Documentation beyond basic README
-- Multiple embedding models
-- Advanced search features
-- Real-time updates
-- Docker containerization
+### Technology Stack
+- **Backend**: Python 3.8+ with FastAPI framework
+- **Vector Database**: ChromaDB with multi-registry architecture
+- **MCP Protocol**: Python MCP SDK for AI assistant integration
+- **Web Processing**: BeautifulSoup4 for documentation extraction
+- **Search**: Semantic search with context-aware ranking
 
-### MVP Success Criteria
-I can:
-1. Run `npm run shadcn-rag` to start the server
-2. Ask my AI assistant to "find a modal dialog component"
-3. Get back component name, install command, and dependencies
-4. Install the component using the provided command
+### Registry Support
+- **shadcn_db**: 102 components from Shadcn UI registry
+- **gluestack_db**: 28 components from Gluestack UI registry
+- **radix_db**: Ready for ingestion (Radix UI components)
+- **Documentation**: Web documentation sites and technical content
 
-## Technical Considerations
+## System Architecture
 
-### Technology Stack (Minimal)
-- **Runtime:** Node.js + TypeScript
-- **Vector DB:** ChromaDB (local, lightweight)
-- **MCP:** Model Context Protocol SDK
-- **Search:** Basic semantic search
-- **Data:** Parsed from existing registry files
+### Multi-Registry Architecture
+```
+Multiple Sources → Specialized Extractors → Vector Stores (Per Registry) → Universal Search
+     ↓                   ↓                      ↓                      ↓
+Component Regs    Documentation Sites    ChromaDB Collections    Context-Aware API
+     +                   +                      +                      +
+Project Files     Code Examples         Search Indexing        Smart Routing
+```
 
-### Architecture
-- Single process, no microservices
-- In-memory or simple file-based storage
-- Direct file system access to shadcn registry
-- No external APIs or services
+### Context-Aware Routing
+- **React Native Context**: gluestack_db → shadcn_db → radix_db
+- **React JS Context**: shadcn_db → gluestack_db → radix_db
+- **Auto/None Context**: shadcn_db → gluestack_db → radix_db
+
+### Available MCP Tools
+1. **search_components** - Search for components by query
+2. **get_component_details** - Get detailed component information
+3. **list_components** - List all available components
+4. **get_component_installation** - Get installation commands
+5. **set_platform_context** - Switch between React Native/React JS/Auto/None
+6. **get_context_suggestions** - Get context suggestions for queries
+7. **get_context_stats** - Get context usage statistics
+8. **universal_search** - Search across components and documentation
+
+## Current MVP Status: MVP 4 - Enhanced Context Intelligence
+
+### In Development: Multi-Dimensional Context Awareness
+- **Technology Stack Detection**: React, Vue, Angular, Node.js, Python, etc.
+- **Environmental Context**: Testing frameworks, styling, deployment tools
+- **Intelligent Recommendations**: Context-aware component suggestions
+- **Integration Guidance**: Step-by-step integration assistance
+- **Best Practice Matching**: Recommendations based on detected patterns
+
+### Success Metrics for MVP 4
+- 10+ context dimensions successfully detected
+- 20+ technologies accurately recognized
+- 40%+ improvement in search relevance with rich context
+- 80%+ accuracy in component recommendations
+
+## Technical Implementation
+
+### Key Files
+- **API Server**: `data-pipeline/api_server.py` - FastAPI server with MCP integration
+- **Context Engine**: `data-pipeline/context_manager.py` - Multi-dimensional context awareness
+- **Registry Manager**: `data-pipeline/registry_manager.py` - Multi-registry management
+- **Extractors**: `data-pipeline/extractors/` - Specialized data source processors
+- **Vector Stores**: `rag_databases/*/` - ChromaDB collections per registry
+
+### Development Workflow
+1. **Start Server**: `python3 data-pipeline/api_server.py`
+2. **Test Search**: Use API endpoints or MCP tools
+3. **Add Registries**: Extend extractor system
+4. **Enhance Context**: Develop new context dimensions
+5. **Iterate**: Build, test, and deploy incrementally
 
 ## Constraints & Assumptions
 
 ### Constraints
-- **Zero budget:** Personal project
-- **Immediate need:** Want working solution ASAP
-- **Single user:** Just for me
-- **Limited scope:** Only shadcn components
+- **Local Development**: Focused on local developer workflow
+- **Python-Based**: Built with Python ecosystem for rapid development
+- **MCP Protocol**: Uses standard MCP for AI assistant integration
+- **Community Registries**: Leverages existing component libraries
 
 ### Key Assumptions
-- shadcn registry files exist at `/Users/tbardale/github/shadcn-ui/`
-- Basic Node.js/TypeScript knowledge
-- No need for enterprise features
-- Rebuilding from scratch is acceptable if needed
+- Component registries follow predictable structures
+- Projects use common configuration files (package.json, etc.)
+- AI assistants support MCP protocol integration
+- Local development environment with standard tooling
 
-## Risks & Open Questions
+## Future Vision: Universal Development Assistant
 
-### Key Risks
-- Registry file format changes could break parsing
-- MCP protocol complexity might be underestimated
-- ChromaDB setup could be more complex than expected
-
-### Open Questions
-- What's the minimal viable embedding model?
-- How to handle registry file parsing robustly?
-- What's the simplest way to expose MCP tools?
+The system evolves toward comprehensive development assistance:
+- **Multi-Source Ingestion**: GitHub, documentation sites, APIs
+- **Rich Context Understanding**: Complete technology stack awareness
+- **Intelligent Recommendations**: Best practices and integration patterns
+- **IDE Integration**: Direct development environment integration
+- **Collaborative Features**: Team knowledge sharing and patterns
 
 ## Next Steps
 
 ### Immediate Actions
-1. Create focused PRD for this minimal shadcn MCP RAG
-2. Prototype registry file parsing
-3. Set up basic MCP server structure
-4. Implement simple vector search
-5. Test with actual AI assistant integration
+1. Complete MVP 4 enhanced context intelligence
+2. Implement technology stack detection system
+3. Build recommendation engine with compatibility matrices
+4. Add integration guidance capabilities
 
-### PM Handoff
-This is a minimal, focused project brief for personal use. Create a PRD that emphasizes speed and simplicity over completeness. Focus only on the 4 core MCP tools and basic functionality needed to make it work immediately.
+### Development Approach
+- **Iterative**: Build small, testable increments
+- **User-Focused**: Solve real developer problems
+- **Extensible**: Plugin architecture for new data sources
+- **Local-First**: Optimize for individual developer workflow
+
+This project represents the evolution from a simple component search tool to an intelligent development assistant that understands the complete development ecosystem and provides contextual, actionable guidance across all aspects of software development.
