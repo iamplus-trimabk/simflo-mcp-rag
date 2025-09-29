@@ -18,6 +18,12 @@ import threading
 import time
 
 from context_manager import get_context_manager, PlatformContext
+from project_context_engine import (
+    ProjectContextEngine,
+    get_project_context_engine,
+    enhance_search_with_context,
+    detect_project_type
+)
 
 
 @dataclass
@@ -58,6 +64,7 @@ class RegistryManager:
         # Setup logging
         self.logger = logging.getLogger(__name__)
         self.context_manager = get_context_manager()
+        self.project_context_engine = get_project_context_engine()
 
         # Initialize registries
         self.discover_registries()
@@ -245,6 +252,98 @@ class RegistryManager:
         ))
 
         return all_results[:limit]
+
+    def search_components_with_context(
+        self,
+        query: str,
+        platform_context: Optional[PlatformContext] = None,
+        project_context_query: Optional[str] = None,
+        file_list: Optional[List[str]] = None,
+        package_json: Optional[Dict[str, Any]] = None,
+        limit: int = 10
+    ) -> List[Dict[str, Any]]:
+        """Enhanced search with project context awareness"""
+
+        # Detect project type if context information is provided
+        if project_context_query or file_list or package_json:
+            project_context = self.project_context_engine.detect_project_type(
+                query=project_context_query,
+                file_list=file_list,
+                package_json=package_json
+            )
+
+            self.logger.info(f"Detected project context: {project_context.project_type.value} "
+                           f"with confidence {project_context.confidence:.2f}")
+        else:
+            project_context = None
+
+        # Get base search results
+        base_results = self.search_components(
+            query=query,
+            platform_context=platform_context,
+            limit=limit * 2  # Get more results for context filtering
+        )
+
+        # Convert base results to dictionaries for context enhancement
+        base_results_dict = []
+        for result in base_results:
+            result_dict = result.component.copy()
+            result_dict.update({
+                "registry": result.registry,
+                "relevance_score": result.relevance_score,
+                "context_match": result.context_match,
+                "platform_relevance": result.platform_relevance,
+                "distance": result.distance
+            })
+            base_results_dict.append(result_dict)
+
+        # Enhance results with project context
+        if project_context and project_context.project_type.value != "unknown":
+            enhanced_results = self.project_context_engine.enhance_search_results(
+                base_results_dict, query
+            )
+
+            # Convert enhanced results back to search results with context info
+            final_results = []
+            for enhanced_result in enhanced_results:
+                # Create enhanced result dictionary
+                enhanced_dict = enhanced_result.original_result.copy()
+                enhanced_dict.update({
+                    "context_boost": enhanced_result.context_boost,
+                    "context_explanation": enhanced_result.relevance_explanation,
+                    "project_type_match": enhanced_result.project_type_match,
+                    "platform_alignment": enhanced_result.platform_alignment,
+                    "library_compatibility": enhanced_result.library_compatibility,
+                    "final_context_score": enhanced_result.final_context_score,
+                    "detected_project_type": project_context.project_type.value,
+                    "context_confidence": project_context.confidence
+                })
+                final_results.append(enhanced_dict)
+
+            self.logger.info(f"Enhanced {len(final_results)} results with project context")
+        else:
+            # No project context detected, return base results with minimal context info
+            final_results = []
+            for result in base_results_dict:
+                result.update({
+                    "context_boost": 1.0,
+                    "context_explanation": ["No project context detected"],
+                    "project_type_match": 0.0,
+                    "platform_alignment": 0.0,
+                    "library_compatibility": 0.0,
+                    "final_context_score": 1.0,
+                    "detected_project_type": "unknown",
+                    "context_confidence": 0.0
+                })
+                final_results.append(result)
+
+        # Sort by final context score if available, otherwise by relevance score
+        final_results.sort(
+            key=lambda x: x.get("final_context_score", x.get("relevance_score", 0.0)),
+            reverse=True
+        )
+
+        return final_results[:limit]
 
     def _search_single_registry(
         self,
@@ -615,6 +714,36 @@ class RegistryManager:
                 }
 
         return doc_stats
+
+    def get_project_type_suggestions(self, query: str) -> List[Dict[str, Any]]:
+        """Get project type suggestions based on query"""
+        return self.project_context_engine.get_project_type_suggestions(query)
+
+    def detect_project_context(
+        self,
+        query: Optional[str] = None,
+        file_list: Optional[List[str]] = None,
+        package_json: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """Detect project context and return detailed information"""
+        project_context = self.project_context_engine.detect_project_type(
+            query=query,
+            file_list=file_list,
+            package_json=package_json
+        )
+
+        return {
+            "project_type": project_context.project_type.value,
+            "confidence": project_context.confidence,
+            "characteristics": project_context.characteristics,
+            "detected_from": project_context.detected_from,
+            "timestamp": project_context.timestamp,
+            "session_id": project_context.session_id
+        }
+
+    def get_context_engine_stats(self) -> Dict[str, Any]:
+        """Get context engine statistics"""
+        return self.project_context_engine.get_context_stats()
 
 
 # Global registry manager instance

@@ -73,6 +73,46 @@ class ContextResponse(BaseModel):
     registries: List[str]
 
 
+class ProjectContextRequest(BaseModel):
+    query: Optional[str] = None
+    file_list: Optional[List[str]] = None
+    package_json: Optional[Dict[str, Any]] = None
+
+
+class ProjectContextResponse(BaseModel):
+    project_type: str
+    confidence: float
+    characteristics: Dict[str, Any]
+    detected_from: List[str]
+    timestamp: float
+    session_id: str
+
+
+class ContextualSearchRequest(BaseModel):
+    query: str
+    platform: Optional[str] = None
+    project_context_query: Optional[str] = None
+    file_list: Optional[List[str]] = None
+    package_json: Optional[Dict[str, Any]] = None
+    limit: int = 10
+
+
+class ContextualSearchResult(BaseModel):
+    name: Optional[str] = None
+    type: Optional[str] = None
+    description: Optional[str] = None
+    registry: Optional[str] = None
+    relevance_score: Optional[float] = None
+    context_boost: float
+    context_explanation: List[str]
+    project_type_match: float
+    platform_alignment: float
+    library_compatibility: float
+    final_context_score: float
+    detected_project_type: str
+    context_confidence: float
+
+
 class RegistryResponse(BaseModel):
     name: str
     description: str
@@ -1248,6 +1288,126 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to clear extraction data: {str(e)}"
+                    ).dict()
+                )
+
+        # Enhanced Context-Aware Search Endpoints
+        @self.app.post("/api/v2/context/detect", response_model=APIResponse)
+        async def detect_project_context(request: ProjectContextRequest):
+            """Detect project type from various context sources"""
+            try:
+                context_info = self.registry_manager.detect_project_context(
+                    query=request.query,
+                    file_list=request.file_list,
+                    package_json=request.package_json
+                )
+
+                return APIResponse(
+                    success=True,
+                    data=context_info
+                ).dict()
+            except Exception as e:
+                self.logger.error(f"Project context detection failed: {e}")
+                return JSONResponse(
+                    status_code=500,
+                    content=APIResponse(
+                        success=False,
+                        error=f"Failed to detect project context: {str(e)}"
+                    ).dict()
+                )
+
+        @self.app.get("/api/v2/context/suggestions", response_model=APIResponse)
+        async def get_project_type_suggestions(
+            query: str = Query(..., description="Search query to analyze for project type suggestions")
+        ):
+            """Get project type suggestions based on search query"""
+            try:
+                suggestions = self.registry_manager.get_project_type_suggestions(query)
+
+                return APIResponse(
+                    success=True,
+                    data={
+                        "query": query,
+                        "suggestions": suggestions
+                    }
+                ).dict()
+            except Exception as e:
+                self.logger.error(f"Project type suggestions failed: {e}")
+                return JSONResponse(
+                    status_code=500,
+                    content=APIResponse(
+                        success=False,
+                        error=f"Failed to get project type suggestions: {str(e)}"
+                    ).dict()
+                )
+
+        @self.app.post("/api/v2/search/contextual", response_model=APIResponse)
+        async def contextual_search(request: ContextualSearchRequest):
+            """Enhanced search with project context awareness"""
+            try:
+                # Convert platform string to PlatformContext if provided
+                platform_context = None
+                if request.platform:
+                    try:
+                        platform_context = PlatformContext(request.platform)
+                    except ValueError:
+                        pass
+
+                # Perform contextual search
+                results = self.registry_manager.search_components_with_context(
+                    query=request.query,
+                    platform_context=platform_context,
+                    project_context_query=request.project_context_query,
+                    file_list=request.file_list,
+                    package_json=request.package_json,
+                    limit=request.limit
+                )
+
+                # Get context info for response
+                context_info = None
+                if request.project_context_query or request.file_list or request.package_json:
+                    context_info = self.registry_manager.detect_project_context(
+                        query=request.project_context_query,
+                        file_list=request.file_list,
+                        package_json=request.package_json
+                    )
+
+                return APIResponse(
+                    success=True,
+                    data={
+                        "results": results,
+                        "query": request.query,
+                        "context_info": context_info,
+                        "total_results": len(results)
+                    }
+                ).dict()
+            except Exception as e:
+                self.logger.error(f"Contextual search failed: {e}")
+                return JSONResponse(
+                    status_code=500,
+                    content=APIResponse(
+                        success=False,
+                        error=f"Failed to perform contextual search: {str(e)}"
+                    ).dict()
+                )
+
+        @self.app.get("/api/v2/context/stats", response_model=APIResponse)
+        async def get_context_engine_stats():
+            """Get context engine statistics and usage information"""
+            try:
+                stats = self.registry_manager.get_context_engine_stats()
+
+                return APIResponse(
+                    success=True,
+                    data=stats
+                ).dict()
+            except Exception as e:
+                self.logger.error(f"Context engine stats failed: {e}")
+                return JSONResponse(
+                    status_code=500,
+                    content=APIResponse(
+                        success=False,
+                        error=f"Failed to get context engine stats: {str(e)}"
                     ).dict()
                 )
 
