@@ -535,7 +535,15 @@ class RegistryManager:
                     try:
                         with open(components_file, 'r') as f:
                             data = json.load(f)
-                            for component in data.get("components", [])[:limit]:
+                            # Handle both old format (dict with components) and new format (direct list)
+                            if isinstance(data, dict) and "components" in data:
+                                component_list = data["components"]
+                            elif isinstance(data, list):
+                                component_list = data
+                            else:
+                                component_list = []
+
+                            for component in component_list[:limit]:
                                 components.append({
                                     **component,
                                     'registry': reg_name
@@ -726,6 +734,35 @@ class RegistryManager:
                 }
 
         return doc_stats
+
+    def universal_search(
+        self,
+        query: str,
+        platform_context: Optional[PlatformContext] = None,
+        limit: int = 20
+    ) -> List[SearchResult]:
+        """Universal search across components and documentation with multi-dimensional context"""
+        all_results = []
+
+        # Search components
+        component_results = self.search_components(
+            query=query,
+            limit=limit,
+            platform_context=platform_context
+        )
+        all_results.extend(component_results)
+
+        # Search documentation
+        doc_results = self.search_documentation(
+            query=query,
+            limit=limit
+        )
+        all_results.extend(doc_results)
+
+        # Sort by relevance score
+        all_results.sort(key=lambda x: (-x.relevance_score, x.distance or float('inf')))
+
+        return all_results[:limit]
 
     def get_project_type_suggestions(self, query: str) -> List[Dict[str, Any]]:
         """Get project type suggestions based on query"""

@@ -326,7 +326,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Search failed: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.get("/api/v1/components/{name}", response_model=APIResponse)
@@ -340,7 +340,7 @@ class RAGAPIServer:
                         content=APIResponse(
                             success=False,
                             error=f"Component '{name}' not found"
-                        ).dict()
+                        ).model_dump()
                     )
 
                 component_data = ComponentResponse(
@@ -356,7 +356,7 @@ class RAGAPIServer:
 
                 return APIResponse(
                     success=True,
-                    data=component_data.dict()
+                    data=component_data.model_dump()
                 )
 
             except Exception as e:
@@ -365,7 +365,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to get component details: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.get("/api/v1/components", response_model=APIResponse)
@@ -404,7 +404,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to list components: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.get("/api/v1/components/{name}/installation", response_model=APIResponse)
@@ -418,7 +418,7 @@ class RAGAPIServer:
                         content=APIResponse(
                             success=False,
                             error=f"Component '{name}' not found"
-                        ).dict()
+                        ).model_dump()
                     )
 
                 install_info = InstallationInfoResponse(
@@ -430,7 +430,7 @@ class RAGAPIServer:
 
                 return APIResponse(
                     success=True,
-                    data=install_info.dict()
+                    data=install_info.model_dump()
                 )
 
             except Exception as e:
@@ -439,7 +439,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to get installation info: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.get("/api/v1/stats", response_model=APIResponse)
@@ -457,7 +457,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to get stats: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         # Context Management Endpoints
@@ -481,7 +481,7 @@ class RAGAPIServer:
                         session_id=context.session_id,
                         timestamp=context.timestamp,
                         registries=registries
-                    ).dict()
+                    ).model_dump()
                 )
 
             except Exception as e:
@@ -490,7 +490,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to set context: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.get("/api/v1/context/current", response_model=APIResponse)
@@ -513,7 +513,7 @@ class RAGAPIServer:
                         session_id=context.session_id,
                         timestamp=context.timestamp,
                         registries=registries
-                    ).dict()
+                    ).model_dump()
                 )
 
             except Exception as e:
@@ -522,7 +522,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to get context: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.delete("/api/v1/context/clear", response_model=APIResponse)
@@ -541,7 +541,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to clear context: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         # Registry Management Endpoints
@@ -559,7 +559,7 @@ class RAGAPIServer:
                             content=APIResponse(
                                 success=False,
                                 error=f"Invalid platform: {platform}"
-                            ).dict()
+                            ).model_dump()
                         )
 
                 registries = self.registry_manager.get_available_registries(platform_context)
@@ -585,7 +585,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to list registries: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         # Enhanced Context-Aware Search Endpoints
@@ -609,7 +609,7 @@ class RAGAPIServer:
                             content=APIResponse(
                                 success=False,
                                 error=f"Invalid platform: {platform}"
-                            ).dict()
+                            ).model_dump()
                         )
                 else:
                     platform_context = self.context_manager.get_current_platform()
@@ -654,7 +654,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Search failed: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.get("/api/v2/components/{name}", response_model=APIResponse)
@@ -672,7 +672,7 @@ class RAGAPIServer:
                         content=APIResponse(
                             success=False,
                             error=f"Component '{name}' not found"
-                        ).dict()
+                        ).model_dump()
                     )
 
                 return APIResponse(
@@ -686,7 +686,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to get component details: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.get("/api/v2/components", response_model=APIResponse)
@@ -707,7 +707,7 @@ class RAGAPIServer:
                             content=APIResponse(
                                 success=False,
                                 error=f"Invalid platform: {platform}"
-                            ).dict()
+                            ).model_dump()
                         )
 
                 components = self.registry_manager.list_components(
@@ -730,7 +730,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to list components: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         # Context Management Endpoints
@@ -754,7 +754,7 @@ class RAGAPIServer:
                         content=APIResponse(
                             success=False,
                             error=f"Invalid platform: {platform}. Must be one of: [reactjs, reactnative, auto, none]"
-                        ).dict()
+                        ).model_dump()
                     )
 
                 context_info = self.context_manager.set_context(
@@ -782,7 +782,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to set platform context: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.get("/api/v2/context", response_model=APIResponse)
@@ -818,7 +818,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to get platform context: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.get("/api/v2/registries", response_model=APIResponse)
@@ -839,7 +839,7 @@ class RAGAPIServer:
                             content=APIResponse(
                                 success=False,
                                 error=f"Invalid platform: {platform}"
-                            ).dict()
+                            ).model_dump()
                         )
 
                 registries = self.registry_manager.get_available_registries(platform_context)
@@ -866,7 +866,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to list registries: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.get("/api/v2/context/stats", response_model=APIResponse)
@@ -885,7 +885,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to get context stats: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         # Specialized Extraction Pipeline Endpoints
@@ -936,7 +936,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to list extraction registries: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.post("/api/v2/extraction/run", response_model=APIResponse)
@@ -960,7 +960,7 @@ class RAGAPIServer:
                         content=APIResponse(
                             success=False,
                             error=f"Invalid mode: {mode}. Must be 'test' or 'real'"
-                        ).dict()
+                        ).model_dump()
                     )
 
                 return APIResponse(
@@ -979,7 +979,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Extraction failed: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.get("/api/v2/extraction/status", response_model=APIResponse)
@@ -1029,7 +1029,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to get extraction status: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.get("/api/v2/components/search/category", response_model=APIResponse)
@@ -1056,7 +1056,7 @@ class RAGAPIServer:
                             content=APIResponse(
                                 success=False,
                                 error=f"Invalid platform: {platform}"
-                            ).dict()
+                            ).model_dump()
                         )
 
                 # Use enhanced category search service
@@ -1073,7 +1073,7 @@ class RAGAPIServer:
                             content=APIResponse(
                                 success=False,
                                 error=f"Invalid search strategy: {strategy}. Use: exact, semantic, cross, weighted"
-                            ).dict()
+                            ).model_dump()
                         )
 
                     # Create search query
@@ -1128,7 +1128,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Category search failed: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         async def _legacy_category_search(self, q: str, category: str, platform_context, limit: int):
@@ -1206,7 +1206,7 @@ class RAGAPIServer:
                         content=APIResponse(
                             success=False,
                             error=f"Registry '{registry}' not found"
-                        ).dict()
+                        ).model_dump()
                     )
 
                 sources_info = {}
@@ -1238,7 +1238,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to list registry sources: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.delete("/api/v2/extraction/clear", response_model=APIResponse)
@@ -1288,7 +1288,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to clear extraction data: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         # Enhanced Context-Aware Search Endpoints
@@ -1305,7 +1305,7 @@ class RAGAPIServer:
                 return APIResponse(
                     success=True,
                     data=context_info
-                ).dict()
+                ).model_dump()
             except Exception as e:
                 self.logger.error(f"Project context detection failed: {e}")
                 return JSONResponse(
@@ -1313,7 +1313,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to detect project context: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.get("/api/v2/context/suggestions", response_model=APIResponse)
@@ -1330,7 +1330,7 @@ class RAGAPIServer:
                         "query": query,
                         "suggestions": suggestions
                     }
-                ).dict()
+                ).model_dump()
             except Exception as e:
                 self.logger.error(f"Project type suggestions failed: {e}")
                 return JSONResponse(
@@ -1338,7 +1338,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to get project type suggestions: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
         @self.app.post("/api/v2/search/contextual", response_model=APIResponse)
@@ -1380,7 +1380,7 @@ class RAGAPIServer:
                         "context_info": context_info,
                         "total_results": len(results)
                     }
-                ).dict()
+                ).model_dump()
             except Exception as e:
                 self.logger.error(f"Contextual search failed: {e}")
                 return JSONResponse(
@@ -1388,7 +1388,50 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to perform contextual search: {str(e)}"
-                    ).dict()
+                    ).model_dump()
+                )
+
+        @self.app.get("/api/v2/search/universal", response_model=APIResponse)
+        async def universal_search(
+            q: str = Query(..., description="Universal search query"),
+            limit: int = Query(20, description="Maximum number of results"),
+            platform: Optional[str] = Query(None, description="Platform filter (reactjs, reactnative)")
+        ):
+            """Universal search across components and documentation with multi-dimensional context"""
+            try:
+                # Convert platform string to PlatformContext if provided
+                platform_context = None
+                if platform:
+                    try:
+                        platform_context = PlatformContext(platform)
+                    except ValueError:
+                        pass
+
+                # Perform universal search with context awareness
+                results = self.registry_manager.universal_search(
+                    query=q,
+                    platform_context=platform_context,
+                    limit=limit
+                )
+
+                return APIResponse(
+                    success=True,
+                    data={
+                        "results": results,
+                        "query": q,
+                        "platform": platform,
+                        "total_results": len(results),
+                        "search_type": "universal"
+                    }
+                ).model_dump()
+            except Exception as e:
+                self.logger.error(f"Universal search failed: {e}")
+                return JSONResponse(
+                    status_code=500,
+                    content=APIResponse(
+                        success=False,
+                        error=f"Failed to perform universal search: {str(e)}"
+                    ).model_dump()
                 )
 
         @self.app.get("/api/v2/context/stats", response_model=APIResponse)
@@ -1400,7 +1443,7 @@ class RAGAPIServer:
                 return APIResponse(
                     success=True,
                     data=stats
-                ).dict()
+                ).model_dump()
             except Exception as e:
                 self.logger.error(f"Context engine stats failed: {e}")
                 return JSONResponse(
@@ -1408,7 +1451,7 @@ class RAGAPIServer:
                     content=APIResponse(
                         success=False,
                         error=f"Failed to get context engine stats: {str(e)}"
-                    ).dict()
+                    ).model_dump()
                 )
 
     def _setup_exception_handlers(self):
@@ -1423,7 +1466,7 @@ class RAGAPIServer:
                 content=APIResponse(
                     success=False,
                     error=f"Validation error: {str(exc)}"
-                ).dict()
+                ).model_dump()
             )
 
         @self.app.exception_handler(KeyError)
@@ -1435,7 +1478,7 @@ class RAGAPIServer:
                 content=APIResponse(
                     success=False,
                     error=f"Resource not found: {str(exc)}"
-                ).dict()
+                ).model_dump()
             )
 
         @self.app.exception_handler(Exception)
@@ -1447,7 +1490,7 @@ class RAGAPIServer:
                 content=APIResponse(
                     success=False,
                     error="Internal server error. Please try again later."
-                ).dict()
+                ).model_dump()
             )
 
     def run(self, host: str = "127.0.0.1", port: int = 8000):
