@@ -233,9 +233,12 @@ class ContextManager:
                     platform = context.platform.value
                     platform_counts[platform] = platform_counts.get(platform, 0) + 1
 
+            # Get current platform directly to avoid deadlock
+            current_platform = self.current_context.platform.value if self.current_context else PlatformContext.NONE.value
+
             return {
                 "total_sessions": self.session_counter,
-                "current_platform": self.get_current_platform().value,
+                "current_platform": current_platform,
                 "platform_distribution": platform_counts,
                 "history_size": len(self.context_history),
                 "registry_mappings": [
