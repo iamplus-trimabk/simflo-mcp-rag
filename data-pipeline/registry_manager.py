@@ -374,9 +374,17 @@ class RegistryManager:
             distances = results['distances'][0] if 'distances' in results else [None] * len(documents)
 
             for i, (doc, metadata, distance) in enumerate(zip(documents, metadatas, distances)):
+                # Skip empty documents
+                if not doc or (isinstance(doc, str) and doc.strip() == ''):
+                    continue
+
                 # Parse document back to component data
                 try:
                     component = json.loads(doc) if isinstance(doc, str) else doc
+
+                    # Skip if component is not a dictionary
+                    if not isinstance(component, dict):
+                        continue
 
                     # Calculate relevance scores
                     relevance_score = self._calculate_relevance_score(query, component, metadata)
@@ -394,8 +402,12 @@ class RegistryManager:
 
                     search_results.append(search_result)
 
+                except json.JSONDecodeError as e:
+                    self.logger.warning(f"Failed to parse JSON for search result {i}: {e}")
+                    continue
                 except Exception as e:
-                    self.logger.warning(f"Failed to parse search result {i}: {e}")
+                    self.logger.warning(f"Failed to process search result {i}: {e}")
+                    continue
 
         return search_results
 

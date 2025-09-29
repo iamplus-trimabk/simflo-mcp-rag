@@ -26,7 +26,7 @@
           "reactnative",
           "docs"
         ],
-        "last_updated": 1759093943.0058036
+        "last_updated": 1759115205.6514964
       }
     }
   },
@@ -46,8 +46,8 @@
       "gluestack_db": {
         "component_count": 28,
         "platforms": [
-          "reactjs",
-          "react-native"
+          "react-native",
+          "reactjs"
         ],
         "last_updated": 1759087780.0121958,
         "is_active": true
@@ -55,8 +55,8 @@
       "radix_db": {
         "component_count": 0,
         "platforms": [
-          "reactjs",
-          "reactnative"
+          "reactnative",
+          "reactjs"
         ],
         "last_updated": 1759082402.6603975,
         "is_active": true
@@ -69,7 +69,7 @@
           "reactnative",
           "docs"
         ],
-        "last_updated": 1759093943.0058036,
+        "last_updated": 1759115205.6514964,
         "is_active": true
       }
     }
