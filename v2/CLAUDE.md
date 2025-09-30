@@ -30,4 +30,8 @@ v2/core/registry-system/registry.py list --format json
 v2/core/registry-system/registry.py info --name shadcn_db --format json
 v2/core/registry-system/registry.py search --query "button" --limit 5 --format json
 v2/core/registry-system/registry.py status --format json
+
+# Registry System Tests
+v2/core/registry-system/tests/run.py --verbose
+v2/tests/cmd_test_executor.py v2/core/registry-system/tests/cmd_tests.json
 ```
