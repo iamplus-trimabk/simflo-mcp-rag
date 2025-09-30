@@ -20,7 +20,7 @@ All component-to-component communication uses CLI interfaces with simple Python 
 
 ## Completed Components
 - **Registry System**: ✅ Complete - CLI wrapper with list, info, search, and status commands
-- **MCP Server**: ⏳ Pending - Not yet migrated
+- **MCP Server**: ✅ Complete - CLI-only architecture with 12 commands for AI assistant integration + comprehensive user guide
 - **RAG Engine**: ⏳ Pending - Not yet migrated
 
 ## CLI Examples
@@ -31,7 +31,16 @@ v2/core/registry-system/registry.py info --name shadcn_db --format json
 v2/core/registry-system/registry.py search --query "button" --limit 5 --format json
 v2/core/registry-system/registry.py status --format json
 
-# Registry System Tests
+# MCP Server CLI (Working) - AI Assistant Integration
+v2/core/mcp-server/mcp_server.py search "button" --limit 10 --format json
+v2/core/mcp-server/mcp_server.py get-component dialog --registry shadcn_db --format json
+v2/core/mcp-server/mcp_server.py list-components --type ui --platform reactjs --limit 20 --format json
+v2/core/mcp-server/mcp_server.py set-context reactjs --session-id abc123 --format json
+v2/core/mcp-server/mcp_server.py list-registries --format json
+
+# CLI Tests
 v2/core/registry-system/tests/run.py --verbose
+v2/core/mcp-server/tests/run.py --verbose
 v2/tests/cmd_test_executor.py v2/core/registry-system/tests/cmd_tests.json
+v2/tests/cmd_test_executor.py v2/core/mcp-server/tests/mcp_tests.json
 ```

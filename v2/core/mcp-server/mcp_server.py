@@ -265,10 +265,13 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  %(prog)s search --query "button" --limit 10 --format json
-  %(prog)s get-component --name dialog --registry shadcn_db --format json
-  %(prog)s set-context --platform reactjs --format json
-  %(prog)s run-extraction --registry shadcn --mode test --format json
+  %(prog)s search "button" --limit 10 --format json
+  %(prog)s get-component dialog --registry shadcn_db --format json
+  %(prog)s set-context reactjs --format json
+  %(prog)s run-extraction shadcn --mode test --format json
+
+For comprehensive usage guide and AI integration patterns, see:
+  v2/core/mcp-server/user_guide.md
         """
     )
 
