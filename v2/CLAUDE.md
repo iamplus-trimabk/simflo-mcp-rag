@@ -21,7 +21,8 @@ All component-to-component communication uses CLI interfaces with simple Python 
 ## Completed Components
 - **Registry System**: ✅ Complete - CLI wrapper with list, info, search, and status commands
 - **MCP Server**: ✅ Complete - CLI-only architecture with 12 commands for AI assistant integration + comprehensive user guide
-- **RAG Engine**: ⏳ Pending - Not yet migrated
+- **Extractors**: ✅ Complete - CLI wrapper with access to 11 specialized extractors for content extraction + comprehensive user guide
+- **RAG Engine**: ⏳ Pending - Not yet migrated (functionality provided by MCP server)
 
 ## CLI Examples
 ```bash
@@ -38,9 +39,17 @@ v2/core/mcp-server/mcp_server.py list-components --type ui --platform reactjs --
 v2/core/mcp-server/mcp_server.py set-context reactjs --session-id abc123 --format json
 v2/core/mcp-server/mcp_server.py list-registries --format json
 
+# Extractors CLI (Working)
+v2/extractors/extractors_cli.py list-extractors --format json
+v2/extractors/extractors_cli.py run-extractor shadcn --format json
+v2/extractors/extractors_cli.py run-all-extractors --format json
+v2/extractors/extractors_cli.py status --format json
+
 # CLI Tests
 v2/core/registry-system/tests/run.py --verbose
 v2/core/mcp-server/tests/run.py --verbose
+v2/extractors/tests/run.py --verbose
 v2/tests/cmd_test_executor.py v2/core/registry-system/tests/cmd_tests.json
 v2/tests/cmd_test_executor.py v2/core/mcp-server/tests/mcp_tests.json
+v2/tests/cmd_test_executor.py v2/extractors/tests/extractor_tests.json
 ```
