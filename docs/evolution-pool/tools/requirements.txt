@@ -1,5 +1,0 @@
-# Simple Research Stack - Good enough > Perfect
-requests == 2.31.0      # HTTP requests
-beautifulsoup4 == 4.12.2  # HTML parsing
-pandas == 2.1.0          # Data processing
-lxml == 4.9.3            # Better HTML parser (optional but recommended)

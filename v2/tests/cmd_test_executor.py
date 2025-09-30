@@ -140,16 +140,16 @@ class CommandTestExecutor:
             if not pattern.search(stdout):
                 return False, f"Stdout does not match expected pattern: {test_def.expected_stdout_pattern}"
 
-        # Check exact stderr match
-        if test_def.expected_stderr is not None:
-            if stderr.strip() != test_def.expected_stderr.strip():
-                return False, f"Expected stderr: '{test_def.expected_stderr}', got: '{stderr.strip()}'"
-
-        # Check stderr pattern
+        # Check stderr pattern first (takes priority over exact match)
         if test_def.expected_stderr_pattern:
             pattern = re.compile(test_def.expected_stderr_pattern, re.DOTALL)
             if not pattern.search(stderr):
                 return False, f"Stderr does not match expected pattern: {test_def.expected_stderr_pattern}"
+
+        # Check exact stderr match only if no pattern is specified
+        elif test_def.expected_stderr is not None and test_def.expected_stderr != "":
+            if stderr.strip() != test_def.expected_stderr.strip():
+                return False, f"Expected stderr: '{test_def.expected_stderr}', got: '{stderr.strip()}'"
 
         return True, None
 
