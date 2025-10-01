@@ -7,7 +7,7 @@ The Extractors CLI provides a comprehensive command-line interface for orchestra
 ### Basic Usage Pattern
 
 ```bash
-python3 v2/extractors/extractors_cli.py <command> [arguments] --format json
+python3 v2/04-extractors/extractors_cli.py <command> [arguments] --format json
 ```
 
 All commands support `--format json` (default) and `--format table` output formats.
@@ -22,10 +22,10 @@ List all available specialized extractors with their capabilities.
 
 ```bash
 # List all extractors
-python3 v2/extractors/extractors_cli.py list-extractors --format json
+python3 v2/04-extractors/extractors_cli.py list-extractors --format json
 
 # List extractors with table output
-python3 v2/extractors/extractors_cli.py list-extractors --format table
+python3 v2/04-extractors/extractors_cli.py list-extractors --format table
 ```
 
 **Output Example:**
@@ -59,10 +59,10 @@ Check the status of the extractor system and available modules.
 
 ```bash
 # Get system status
-python3 v2/extractors/extractors_cli.py status --format json
+python3 v2/04-extractors/extractors_cli.py status --format json
 
 # Get status with table output
-python3 v2/extractors/extractors_cli.py status --format table
+python3 v2/04-extractors/extractors_cli.py status --format table
 ```
 
 **Output Example:**
@@ -88,13 +88,13 @@ Execute a single extractor for content extraction.
 
 ```bash
 # Run shadcn extractor
-python3 v2/extractors/extractors_cli.py run-extractor shadcn --format json
+python3 v2/04-extractors/extractors_cli.py run-extractor shadcn --format json
 
 # Run gluestack extractor with table output
-python3 v2/extractors/extractors_cli.py run-extractor gluestack --format table
+python3 v2/04-extractors/extractors_cli.py run-extractor gluestack --format table
 
 # Run community extractor
-python3 v2/extractors/extractors_cli.py run-extractor community --format json
+python3 v2/04-extractors/extractors_cli.py run-extractor community --format json
 ```
 
 **Output Example:**
@@ -116,10 +116,10 @@ Execute all available extractors in sequence.
 
 ```bash
 # Run all extractors
-python3 v2/extractors/extractors_cli.py run-all-extractors --format json
+python3 v2/04-extractors/extractors_cli.py run-all-extractors --format json
 
 # Run all extractors with table output
-python3 v2/extractors/extractors_cli.py run-all-extractors --format table
+python3 v2/04-extractors/extractors_cli.py run-all-extractors --format table
 ```
 
 **Output Example:**
@@ -185,24 +185,24 @@ Each extractor supports different source types:
 
 ```bash
 # 1. Check system status
-python3 v2/extractors/extractors_cli.py status --format json
+python3 v2/04-extractors/extractors_cli.py status --format json
 
 # 2. List available extractors
-python3 v2/extractors/extractors_cli.py list-extractors --format json
+python3 v2/04-extractors/extractors_cli.py list-extractors --format json
 
 # 3. Run specific extractor
-python3 v2/extractors/extractors_cli.py run-extractor shadcn --format json
+python3 v2/04-extractors/extractors_cli.py run-extractor shadcn --format json
 
 # 4. Run all extractors for comprehensive extraction
-python3 v2/extractors/extractors_cli.py run-all-extractors --format json
+python3 v2/04-extractors/extractors_cli.py run-all-extractors --format json
 ```
 
 ### Integration with RAG Pipeline
 
 ```bash
 # Example: Extract content and then search with MCP server
-python3 v2/extractors/extractors_cli.py run-extractor shadcn --format json
-python3 v2/core/mcp-server/mcp_server.py search "button component" --format json
+python3 v2/04-extractors/extractors_cli.py run-extractor shadcn --format json
+python3 v2/core/01-mcp-server/mcp_server.py search "button component" --format json
 ```
 
 ### Automation Script Example
@@ -213,10 +213,10 @@ python3 v2/core/mcp-server/mcp_server.py search "button component" --format json
 
 echo "Starting content extraction..."
 echo "System Status:"
-python3 v2/extractors/extractors_cli.py status --format table
+python3 v2/04-extractors/extractors_cli.py status --format table
 
 echo -e "\nRunning all extractors..."
-python3 v2/extractors/extractors_cli.py run-all-extractors --format json
+python3 v2/04-extractors/extractors_cli.py run-all-extractors --format json
 
 echo -e "\nExtraction complete!"
 ```
@@ -264,31 +264,31 @@ echo -e "\nExtraction complete!"
 
 ```bash
 # Update specific component library
-python3 v2/extractors/extractors_cli.py run-extractor shadcn --format json
-python3 v2/extractors/extractors_cli.py run-extractor gluestack --format json
+python3 v2/04-extractors/extractors_cli.py run-extractor shadcn --format json
+python3 v2/04-extractors/extractors_cli.py run-extractor gluestack --format json
 ```
 
 ### 2. Comprehensive Content Refresh
 
 ```bash
 # Run all extractors to update entire content database
-python3 v2/extractors/extractors_cli.py run-all-extractors --format json
+python3 v2/04-extractors/extractors_cli.py run-all-extractors --format json
 ```
 
 ### 3. System Health Check
 
 ```bash
 # Check extractor system status
-python3 v2/extractors/extractors_cli.py status --format json
-python3 v2/extractors/extractors_cli.py list-extractors --format json
+python3 v2/04-extractors/extractors_cli.py status --format json
+python3 v2/04-extractors/extractors_cli.py list-extractors --format json
 ```
 
 ### 4. Targeted Extraction
 
 ```bash
 # Extract from specific source types
-python3 v2/extractors/extractors_cli.py run-extractor community --format json
-python3 v2/extractors/extractors_cli.py run-extractor documentation --format json
+python3 v2/04-extractors/extractors_cli.py run-extractor community --format json
+python3 v2/04-extractors/extractors_cli.py run-extractor documentation --format json
 ```
 
 ## Troubleshooting
@@ -296,11 +296,11 @@ python3 v2/extractors/extractors_cli.py run-extractor documentation --format jso
 ### Common Issues
 
 1. **Extractor not found**
-   - Check available extractors: `python3 v2/extractors/extractors_cli.py list-extractors --format json`
+   - Check available extractors: `python3 v2/04-extractors/extractors_cli.py list-extractors --format json`
    - Verify extractor name spelling matches available list
 
 2. **Module import errors**
-   - Check system status: `python3 v2/extractors/extractors_cli.py status --format json`
+   - Check system status: `python3 v2/04-extractors/extractors_cli.py status --format json`
    - Verify extractors directory exists and contains modules
 
 3. **Extraction failures**
@@ -315,23 +315,23 @@ python3 v2/extractors/extractors_cli.py run-extractor documentation --format jso
 
 ```bash
 # Check system health
-python3 v2/extractors/extractors_cli.py status --format table
+python3 v2/04-extractors/extractors_cli.py status --format table
 
 # List available extractors
-python3 v2/extractors/extractors_cli.py list-extractors --format table
+python3 v2/04-extractors/extractors_cli.py list-extractors --format table
 
 # Test specific extractor
-python3 v2/extractors/extractors_cli.py run-extractor shadcn --format table
+python3 v2/04-extractors/extractors_cli.py run-extractor shadcn --format table
 ```
 
 ### Error Recovery
 
 ```bash
 # Re-run failed extractors
-python3 v2/extractors/extractors_cli.py run-extractor <failed_extractor> --format json
+python3 v2/04-extractors/extractors_cli.py run-extractor <failed_extractor> --format json
 
 # Check what extractors are available vs what failed
-python3 v2/extractors/extractors_cli.py list-extractors --format json
+python3 v2/04-extractors/extractors_cli.py list-extractors --format json
 ```
 
 ## Advanced Usage
@@ -340,31 +340,31 @@ python3 v2/extractors/extractors_cli.py list-extractors --format json
 
 ```bash
 # Use table format for easier reading
-python3 v2/extractors/extractors_cli.py status --format table
-python3 v2/extractors/extractors_cli.py list-extractors --format table
+python3 v2/04-extractors/extractors_cli.py status --format table
+python3 v2/04-extractors/extractors_cli.py list-extractors --format table
 ```
 
 ### JSON Output for Scripting
 
 ```bash
 # Use JSON format for automation scripts
-python3 v2/extractors/extractors_cli.py run-all-extractors --format json | jq '.data.summary.completed'
+python3 v2/04-extractors/extractors_cli.py run-all-extractors --format json | jq '.data.summary.completed'
 ```
 
 ### Combining with Other v2 Components
 
 ```bash
 # Extract content then search
-python3 v2/extractors/extractors_cli.py run-extractor shadcn --format json
-python3 v2/core/mcp-server/mcp_server.py search "shadcn button" --format json
+python3 v2/04-extractors/extractors_cli.py run-extractor shadcn --format json
+python3 v2/core/01-mcp-server/mcp_server.py search "shadcn button" --format json
 
 # Check registry content
-python3 v2/core/registry-system/registry.py status --format json
+python3 v2/core/00-rag-registry/registry.py status --format json
 ```
 
 ## Getting Help
 
 - **Command help**: Use `--help` with any command
-- **Available extractors**: `python3 v2/extractors/extractors_cli.py list-extractors --format json`
-- **System status**: `python3 v2/extractors/extractors_cli.py status --format json`
-- **Test functionality**: `python3 v2/extractors/tests/run.py`
+- **Available extractors**: `python3 v2/04-extractors/extractors_cli.py list-extractors --format json`
+- **System status**: `python3 v2/04-extractors/extractors_cli.py status --format json`
+- **Test functionality**: `python3 v2/04-extractors/tests/run.py`

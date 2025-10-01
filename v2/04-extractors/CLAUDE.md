@@ -41,7 +41,7 @@ The CLI provides access to specialized extractors:
 
 ## Integration with Existing System
 
-The CLI directly integrates with existing `/extractors/` modules:
+The CLI directly integrates with existing extractor modules:
 - **extractor_factory**: Extractor discovery and management
 - **base_extractor**: Common extraction interfaces
 - **Specialized extractors**: Domain-specific extraction logic

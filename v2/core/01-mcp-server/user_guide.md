@@ -7,7 +7,7 @@ The MCP Server CLI provides a comprehensive command-line interface for AI assist
 ### Basic Usage Pattern
 
 ```bash
-python3 v2/core/mcp-server/mcp_server.py <command> [arguments] --format json
+python3 v2/core/01-mcp-server/mcp_server.py <command> [arguments] --format json
 ```
 
 All commands support `--format json` (default) and `--format table` output formats.
@@ -22,13 +22,13 @@ Search for components using natural language queries with optional platform filt
 
 ```bash
 # Basic search
-python3 v2/core/mcp-server/mcp_server.py search "button" --limit 5
+python3 v2/core/01-mcp-server/mcp_server.py search "button" --limit 5
 
 # Search with platform context
-python3 v2/core/mcp-server/mcp_server.py search "modal dialog" --platform reactjs --limit 10
+python3 v2/core/01-mcp-server/mcp_server.py search "modal dialog" --platform reactjs --limit 10
 
 # Search with table output
-python3 v2/core/mcp-server/mcp_server.py search "form input validation" --format table
+python3 v2/core/01-mcp-server/mcp_server.py search "form input validation" --format table
 ```
 
 **Output Example:**
@@ -60,13 +60,13 @@ Retrieve detailed information about a specific component.
 
 ```bash
 # Get component from any registry
-python3 v2/core/mcp-server/mcp_server.py get-component button
+python3 v2/core/01-mcp-server/mcp_server.py get-component button
 
 # Get component from specific registry
-python3 v2/core/mcp-server/mcp_server.py get-component dialog --registry shadcn_db
+python3 v2/core/01-mcp-server/mcp_server.py get-component dialog --registry shadcn_db
 
 # Get component with table output
-python3 v2/core/mcp-server/mcp_server.py get-component input --format table
+python3 v2/core/01-mcp-server/mcp_server.py get-component input --format table
 ```
 
 **Output Example:**
@@ -96,13 +96,13 @@ List components from registries with filtering options.
 
 ```bash
 # List all components
-python3 v2/core/mcp-server/mcp_server.py list-components --limit 20
+python3 v2/core/01-mcp-server/mcp_server.py list-components --limit 20
 
 # List UI components only
-python3 v2/core/mcp-server/mcp_server.py list-components --type ui --limit 10
+python3 v2/core/01-mcp-server/mcp_server.py list-components --type ui --limit 10
 
 # List components from specific registry with platform filter
-python3 v2/core/mcp-server/mcp_server.py list-components --registry shadcn_db --platform reactjs
+python3 v2/core/01-mcp-server/mcp_server.py list-components --registry shadcn_db --platform reactjs
 ```
 
 **Output Example:**
@@ -139,13 +139,13 @@ Set platform context for intelligent component recommendations.
 
 ```bash
 # Set React JS context
-python3 v2/core/mcp-server/mcp_server.py set-context reactjs
+python3 v2/core/01-mcp-server/mcp_server.py set-context reactjs
 
 # Set context with session tracking
-python3 v2/core/mcp-server/mcp_server.py set-context reactnative --session-id mobile-app-123
+python3 v2/core/01-mcp-server/mcp_server.py set-context reactnative --session-id mobile-app-123
 
 # Set context with project information
-python3 v2/core/mcp-server/mcp_server.py set-context reactjs --session-id webapp-456 --project-type "dashboard"
+python3 v2/core/01-mcp-server/mcp_server.py set-context reactjs --session-id webapp-456 --project-type "dashboard"
 ```
 
 **Output Example:**
@@ -170,10 +170,10 @@ Retrieve the current platform context and session information.
 
 ```bash
 # Get current context
-python3 v2/core/mcp-server/mcp_server.py get-context
+python3 v2/core/01-mcp-server/mcp_server.py get-context
 
 # Get context for specific session
-python3 v2/core/mcp-server/mcp_server.py get-context --session-id mobile-app-123
+python3 v2/core/01-mcp-server/mcp_server.py get-context --session-id mobile-app-123
 ```
 
 **Output Example:**
@@ -199,13 +199,13 @@ List all available component registries with optional platform filtering.
 
 ```bash
 # List all registries
-python3 v2/core/mcp-server/mcp_server.py list-registries
+python3 v2/core/01-mcp-server/mcp_server.py list-registries
 
 # List React JS registries only
-python3 v2/core/mcp-server/mcp_server.py list-registries --platform reactjs
+python3 v2/core/01-mcp-server/mcp_server.py list-registries --platform reactjs
 
 # List registries with table output
-python3 v2/core/mcp-server/mcp_server.py list-registries --format table
+python3 v2/core/01-mcp-server/mcp_server.py list-registries --format table
 ```
 
 **Output Example:**
@@ -257,41 +257,41 @@ These commands are included for API compatibility but return "not implemented" m
 
 ```bash
 # 1. Set platform context for relevant recommendations
-python3 v2/core/mcp-server/mcp_server.py set-context reactjs --session-id ai-session-001
+python3 v2/core/01-mcp-server/mcp_server.py set-context reactjs --session-id ai-session-001
 
 # 2. Search for components based on requirements
-python3 v2/core/mcp-server/mcp_server.py search "form with validation and submit button" --limit 5
+python3 v2/core/01-mcp-server/mcp_server.py search "form with validation and submit button" --limit 5
 
 # 3. Get detailed information about specific components
-python3 v2/core/mcp-server/mcp_server.py get-component form --registry shadcn_db
+python3 v2/core/01-mcp-server/mcp_server.py get-component form --registry shadcn_db
 
 # 4. List related components
-python3 v2/core/mcp-server/mcp_server.py list-components --type ui --platform reactjs
+python3 v2/core/01-mcp-server/mcp_server.py list-components --type ui --platform reactjs
 ```
 
 ### Advanced Query Examples
 
 ```bash
 # Search for modal dialog components
-python3 v2/core/mcp-server/mcp_server.py search "modal dialog with overlay and close button"
+python3 v2/core/01-mcp-server/mcp_server.py search "modal dialog with overlay and close button"
 
 # Search for navigation components
-python3 v2/core/mcp-server/mcp_server.py search "navigation menu with dropdown and responsive design"
+python3 v2/core/01-mcp-server/mcp_server.py search "navigation menu with dropdown and responsive design"
 
 # Search for data display components
-python3 v2/core/mcp-server/mcp_server.py search "data table with sorting and pagination"
+python3 v2/core/01-mcp-server/mcp_server.py search "data table with sorting and pagination"
 ```
 
 ### Context-Aware Recommendations
 
 ```bash
 # React Native context
-python3 v2/core/mcp-server/mcp_server.py set-context reactnative --session-id mobile-dev
-python3 v2/core/mcp-server/mcp_server.py search "bottom navigation with tabs"
+python3 v2/core/01-mcp-server/mcp_server.py set-context reactnative --session-id mobile-dev
+python3 v2/core/01-mcp-server/mcp_server.py search "bottom navigation with tabs"
 
 # Auto-detect context
-python3 v2/core/mcp-server/mcp_server.py set-context auto --project-type "mobile app"
-python3 v2/core/mcp-server/mcp_server.py search "card component with image and text"
+python3 v2/core/01-mcp-server/mcp_server.py set-context auto --project-type "mobile app"
+python3 v2/core/01-mcp-server/mcp_server.py search "card component with image and text"
 ```
 
 ## Output Format Reference
@@ -346,40 +346,40 @@ python3 v2/core/mcp-server/mcp_server.py search "card component with image and t
 
 ```bash
 # Set React JS context
-python3 v2/core/mcp-server/mcp_server.py set-context reactjs --session-id new-project
+python3 v2/core/01-mcp-server/mcp_server.py set-context reactjs --session-id new-project
 
 # Find essential UI components
-python3 v2/core/mcp-server/mcp_server.py search "button input form dialog" --limit 10
+python3 v2/core/01-mcp-server/mcp_server.py search "button input form dialog" --limit 10
 
 # Get installation details for chosen components
-python3 v2/core/mcp-server/mcp_server.py get-component button
-python3 v2/core/mcp-server/mcp_server.py get-component form
+python3 v2/core/01-mcp-server/mcp_server.py get-component button
+python3 v2/core/01-mcp-server/mcp_server.py get-component form
 ```
 
 ### 2. Mobile App Component Discovery
 
 ```bash
 # Set React Native context
-python3 v2/core/mcp-server/mcp_server.py set-context reactnative --session-id mobile-app
+python3 v2/core/01-mcp-server/mcp_server.py set-context reactnative --session-id mobile-app
 
 # Find mobile-specific components
-python3 v2/core/mcp-server/mcp_server.py search "bottom tab navigation with icons" --platform reactnative
+python3 v2/core/01-mcp-server/mcp_server.py search "bottom tab navigation with icons" --platform reactnative
 
 # List all available mobile components
-python3 v2/core/mcp-server/mcp_server.py list-components --platform reactnative
+python3 v2/core/01-mcp-server/mcp_server.py list-components --platform reactnative
 ```
 
 ### 3. Component Library Exploration
 
 ```bash
 # Explore what's available in shadcn
-python3 v2/core/mcp-server/mcp_server.py list-registries --platform reactjs
+python3 v2/core/01-mcp-server/mcp_server.py list-registries --platform reactjs
 
 # Browse shadcn components
-python3 v2/core/mcp-server/mcp_server.py list-components --registry shadcn_db --type ui
+python3 v2/core/01-mcp-server/mcp_server.py list-components --registry shadcn_db --type ui
 
 # Search for specific patterns
-python3 v2/core/mcp-server/mcp_server.py search "accessible form components" --registry shadcn_db
+python3 v2/core/01-mcp-server/mcp_server.py search "accessible form components" --registry shadcn_db
 ```
 
 ## Troubleshooting
@@ -387,17 +387,17 @@ python3 v2/core/mcp-server/mcp_server.py search "accessible form components" --r
 ### Common Issues
 
 1. **No components found in search**
-   - Check if registries are available: `python3 v2/core/mcp-server/mcp_server.py list-registries`
+   - Check if registries are available: `python3 v2/core/01-mcp-server/mcp_server.py list-registries`
    - Try broader search terms
    - Verify platform context is set correctly
 
 2. **Component not found**
    - Use exact component name: `button` instead of `"Button Component"`
-   - Check available components: `python3 v2/core/mcp-server/mcp_server.py list-components`
+   - Check available components: `python3 v2/core/01-mcp-server/mcp_server.py list-components`
    - Try different registry: `--registry gluestack_db`
 
 3. **Registry not available**
-   - Check registry status: `python3 v2/core/mcp-server/mcp_server.py list-registries`
+   - Check registry status: `python3 v2/core/01-mcp-server/mcp_server.py list-registries`
    - Verify platform compatibility
    - Check if registry is marked as `is_active: true`
 
@@ -405,16 +405,16 @@ python3 v2/core/mcp-server/mcp_server.py search "accessible form components" --r
 
 ```bash
 # Check available registries
-python3 v2/core/mcp-server/mcp_server.py list-registries
+python3 v2/core/01-mcp-server/mcp_server.py list-registries
 
 # Verify current context
-python3 v2/core/mcp-server/mcp_server.py get-context
+python3 v2/core/01-mcp-server/mcp_server.py get-context
 
 # Test basic search
-python3 v2/core/mcp-server/mcp_server.py search "button" --limit 1
+python3 v2/core/01-mcp-server/mcp_server.py search "button" --limit 1
 
 # List component types
-python3 v2/core/mcp-server/mcp_server.py list-components --type ui --limit 5
+python3 v2/core/01-mcp-server/mcp_server.py list-components --type ui --limit 5
 ```
 
 ## Integration Examples
@@ -425,10 +425,10 @@ python3 v2/core/mcp-server/mcp_server.py list-components --type ui --limit 5
 // Example: Claude/ChatGPT integration
 async function findComponents(requirement, platform = 'reactjs') {
   // Set context
-  await exec(`python3 v2/core/mcp-server/mcp_server.py set-context ${platform}`);
+  await exec(`python3 v2/core/01-mcp-server/mcp_server.py set-context ${platform}`);
 
   // Search for components
-  const searchResult = await exec(`python3 v2/core/mcp-server/mcp_server.py search "${requirement}" --format json`);
+  const searchResult = await exec(`python3 v2/core/01-mcp-server/mcp_server.py search "${requirement}" --format json`);
   const searchData = JSON.parse(searchResult.stdout);
 
   if (searchData.success && searchData.data.total_found > 0) {
@@ -436,7 +436,7 @@ async function findComponents(requirement, platform = 'reactjs') {
     const components = searchData.data.components.slice(0, 3);
     const details = await Promise.all(
       components.map(comp =>
-        exec(`python3 v2/core/mcp-server/mcp_server.py get-component ${comp.name} --format json`)
+        exec(`python3 v2/core/01-mcp-server/mcp_server.py get-component ${comp.name} --format json`)
       )
     );
 
@@ -459,19 +459,19 @@ SESSION_ID="setup-$(date +%s)"
 echo "Setting up components for $PLATFORM project..."
 
 # Set context
-python3 v2/core/mcp-server/mcp_server.py set-context $PLATFORM --session-id $SESSION_ID
+python3 v2/core/01-mcp-server/mcp_server.py set-context $PLATFORM --session-id $SESSION_ID
 
 # Find essential components
 echo "Finding essential components..."
-python3 v2/core/mcp-server/mcp_server.py search "button input form dialog card" --limit 20 --format table
+python3 v2/core/01-mcp-server/mcp_server.py search "button input form dialog card" --limit 20 --format table
 
 echo "Use get-component command to get installation details for specific components."
-echo "Example: python3 v2/core/mcp-server/mcp_server.py get-component button"
+echo "Example: python3 v2/core/01-mcp-server/mcp_server.py get-component button"
 ```
 
 ## Getting Help
 
 - **Command help**: Use `--help` with any command
-- **Available registries**: `python3 v2/core/mcp-server/mcp_server.py list-registries`
-- **Current context**: `python3 v2/core/mcp-server/mcp_server.py get-context`
-- **Component exploration**: `python3 v2/core/mcp-server/mcp_server.py list-components --limit 10`
+- **Available registries**: `python3 v2/core/01-mcp-server/mcp_server.py list-registries`
+- **Current context**: `python3 v2/core/01-mcp-server/mcp_server.py get-context`
+- **Component exploration**: `python3 v2/core/01-mcp-server/mcp_server.py list-components --limit 10`

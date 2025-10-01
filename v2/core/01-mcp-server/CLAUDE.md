@@ -46,9 +46,9 @@ search-by-category "form" components --format json
 list-registry-sources shadcn --format json
 ```
 
-## Integration with Data Pipeline
+## Integration with RAG Builder
 
-The CLI directly integrates with existing data-pipeline modules:
+The CLI directly integrates with RAG builder modules:
 - **registry_manager**: Component search, registry management
 - **context_manager**: Platform context management
 - **vector_store**: Vector search functionality

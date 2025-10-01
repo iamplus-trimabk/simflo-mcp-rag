@@ -3,10 +3,12 @@
 ## Purpose
 This directory contains the holistically restructured architecture for simflo-rag, designed for long-term maintainability and evolutionary development.
 
-## Components
-- **core/**: Essential system components (MCP server, RAG engine, registry system)
-- **extractors/**: Content extraction and analysis ecosystem
-- **content-collection/**: Content discovery and acquisition
+## Components (Numbered System)
+- **00-rag-registry/**: Registry-based RAG database management with CLI commands
+- **01-mcp-server/**: AI assistant integration via CLI (12 commands)
+- **02-rag-builder/**: Pipeline orchestration and RAG construction
+- **03-content-collection/**: Source discovery and content acquisition (documentation only)
+- **04-extractors/**: Content extraction from various sources (11 specialized extractors)
 
 ## CLI-First Architecture
 All component-to-component communication uses CLI interfaces with simple Python CLI calls.
@@ -17,39 +19,48 @@ All component-to-component communication uses CLI interfaces with simple Python 
 - Clear boundaries between components
 - Evolutionary development approach
 - JSON output format for all CLI commands
+- Registry-based organization for RAG databases
 
 ## Completed Components
-- **Registry System**: ✅ Complete - CLI wrapper with list, info, search, and status commands
-- **MCP Server**: ✅ Complete - CLI-only architecture with 12 commands for AI assistant integration + comprehensive user guide
-- **Extractors**: ✅ Complete - CLI wrapper with access to 11 specialized extractors for content extraction + comprehensive user guide
-- **RAG Engine**: ⏳ Pending - Not yet migrated (functionality provided by MCP server)
+- **00-rag-registry**: ✅ Complete - Registry-based organization with CLI management commands
+- **01-mcp-server**: ✅ Complete - CLI-only architecture with 12 commands for AI assistant integration + comprehensive user guide
+- **02-rag-builder**: ✅ Complete - Pipeline orchestration with CLI wrapper
+- **04-extractors**: ✅ Complete - CLI wrapper with access to 11 specialized extractors for content extraction + comprehensive user guide
+- **03-content-collection**: ⏳ Documentation only - Planned for future implementation
 
 ## CLI Examples
 ```bash
-# Registry System CLI (Working)
-v2/core/registry-system/registry.py list --format json
-v2/core/registry-system/registry.py info --name shadcn_db --format json
-v2/core/registry-system/registry.py search --query "button" --limit 5 --format json
-v2/core/registry-system/registry.py status --format json
+# RAG Registry CLI (Working) - Registry-based management
+v2/core/00-rag-registry/registry.py list --format json
+v2/core/00-rag-registry/registry.py info --name shadcn --format json
+v2/core/00-rag-registry/registry.py search --query "button" --limit 5 --format json
+v2/core/00-rag-registry/registry.py status --format json
+v2/core/00-rag-registry/registry.py clean-db --registry shadcn --format json
+v2/core/00-rag-registry/registry.py rebuild-db --registry shadcn --format json
 
 # MCP Server CLI (Working) - AI Assistant Integration
-v2/core/mcp-server/mcp_server.py search "button" --limit 10 --format json
-v2/core/mcp-server/mcp_server.py get-component dialog --registry shadcn_db --format json
-v2/core/mcp-server/mcp_server.py list-components --type ui --platform reactjs --limit 20 --format json
-v2/core/mcp-server/mcp_server.py set-context reactjs --session-id abc123 --format json
-v2/core/mcp-server/mcp_server.py list-registries --format json
+v2/core/01-mcp-server/mcp_server.py search "button" --limit 10 --format json
+v2/core/01-mcp-server/mcp_server.py get-component dialog --registry shadcn --format json
+v2/core/01-mcp-server/mcp_server.py list-components --type ui --platform reactjs --limit 20 --format json
+v2/core/01-mcp-server/mcp_server.py set-context reactjs --session-id abc123 --format json
+v2/core/01-mcp-server/mcp_server.py list-registries --format json
 
-# Extractors CLI (Working)
-v2/extractors/extractors_cli.py list-extractors --format json
-v2/extractors/extractors_cli.py run-extractor shadcn --format json
-v2/extractors/extractors_cli.py run-all-extractors --format json
-v2/extractors/extractors_cli.py status --format json
+# RAG Builder CLI (Working) - Pipeline orchestration
+v2/core/02-rag-builder/rag_builder_cli.py status --format json
+v2/core/02-rag-builder/rag_builder_cli.py list-profiles --format json
+v2/core/02-rag-builder/rag_builder_cli.py check --format json
+
+# Extractors CLI (Working) - Content extraction
+v2/04-extractors/extractors_cli.py list-extractors --format json
+v2/04-extractors/extractors_cli.py run-extractor shadcn --format json
+v2/04-extractors/extractors_cli.py run-all-extractors --format json
+v2/04-extractors/extractors_cli.py status --format json
 
 # CLI Tests
-v2/core/registry-system/tests/run.py --verbose
-v2/core/mcp-server/tests/run.py --verbose
-v2/extractors/tests/run.py --verbose
-v2/tests/cmd_test_executor.py v2/core/registry-system/tests/cmd_tests.json
-v2/tests/cmd_test_executor.py v2/core/mcp-server/tests/mcp_tests.json
-v2/tests/cmd_test_executor.py v2/extractors/tests/extractor_tests.json
+v2/core/00-rag-registry/tests/run.py --verbose
+v2/core/01-mcp-server/tests/run.py --verbose
+v2/04-extractors/tests/run.py --verbose
+v2/tests/cmd_test_executor.py v2/core/00-rag-registry/tests/cmd_tests.json
+v2/tests/cmd_test_executor.py v2/core/01-mcp-server/tests/mcp_tests.json
+v2/tests/cmd_test_executor.py v2/04-extractors/tests/extractor_tests.json
 ```

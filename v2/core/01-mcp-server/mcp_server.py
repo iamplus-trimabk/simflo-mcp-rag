@@ -14,8 +14,8 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional, Union
 from datetime import datetime
 
-# Add the data-pipeline directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "data-pipeline"))
+# Add the rag-builder core directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent / "02-rag-builder" / "core"))
 
 try:
     from registry_manager import get_registry_manager, RegistryInfo
@@ -23,8 +23,8 @@ try:
     from vector_store import VectorStore
     from parse_registry import ShadcnComponent
 except ImportError as e:
-    print(f"Error importing data-pipeline modules: {e}")
-    print("Make sure data-pipeline/ directory exists and contains required modules")
+    print(f"Error importing rag-builder modules: {e}")
+    print("Make sure v2/core/02-rag-builder/core/ directory exists and contains required modules")
     sys.exit(1)
 
 
