@@ -131,7 +131,8 @@ class ExtractorFactory:
         else:
             module_name = f"{extractor_name}_extractor"
 
-        return f"extractors.{module_name}"
+        # Try direct import from core directory first
+        return module_name
 
     def validate_extractor_compatibility(self, source_config: Dict[str, Any], extractor_name: str) -> bool:
         """Validate that an extractor is compatible with a source configuration"""

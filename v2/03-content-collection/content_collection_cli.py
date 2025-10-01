@@ -18,6 +18,10 @@ project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 try:
+    # Add current directory to path for imports
+    current_dir = Path(__file__).parent
+    sys.path.insert(0, str(current_dir))
+
     from source_discovery.discover import SourceDiscovery
     from content_fetching.fetcher import ContentFetcher
 except ImportError as e:
@@ -190,13 +194,15 @@ Examples:
         """
     )
 
-    parser.add_argument('--format', choices=['json', 'table'], default='json',
-                       help='Output format (default: json)')
-
     subparsers = parser.add_subparsers(dest='command', help='Available commands')
 
+    # Create parent parser for common arguments
+    parent_parser = argparse.ArgumentParser(add_help=False)
+    parent_parser.add_argument('--format', choices=['json', 'table'], default='json',
+                             help='Output format (default: json)')
+
     # Discover command
-    discover_parser = subparsers.add_parser('discover', help='Discover content sources')
+    discover_parser = subparsers.add_parser('discover', help='Discover content sources', parents=[parent_parser])
     discover_parser.add_argument('--query', required=True,
                                 help='Search query for discovering sources')
     discover_parser.add_argument('--source-type', choices=['github', 'npm', 'documentation', 'community'],
@@ -206,7 +212,7 @@ Examples:
     discover_parser.add_argument('--output', help='Output file for discovered sources')
 
     # Fetch command
-    fetch_parser = subparsers.add_parser('fetch', help='Fetch content from sources')
+    fetch_parser = subparsers.add_parser('fetch', help='Fetch content from sources', parents=[parent_parser])
     fetch_parser.add_argument('--sources-file', help='JSON file containing sources to fetch')
     fetch_parser.add_argument('--sources', help='JSON string containing sources to fetch')
     fetch_parser.add_argument('--output-dir', default='fetched_content',
@@ -215,10 +221,10 @@ Examples:
                               help='Enable parallel fetching')
 
     # Status command
-    status_parser = subparsers.add_parser('status', help='Get system status')
+    status_parser = subparsers.add_parser('status', help='Get system status', parents=[parent_parser])
 
     # List source types command
-    list_parser = subparsers.add_parser('list-source-types', help='List available source types')
+    list_parser = subparsers.add_parser('list-source-types', help='List available source types', parents=[parent_parser])
 
     args = parser.parse_args()
 

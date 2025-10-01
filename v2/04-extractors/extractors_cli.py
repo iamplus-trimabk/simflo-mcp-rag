@@ -24,10 +24,9 @@ core_dir = Path(__file__).parent / 'core'
 sys.path.insert(0, str(core_dir))
 
 try:
-    from extractor_factory import ExtractorFactory
-    from base_extractor import BaseExtractor, ExtractionResult
+    from simple_extractor_factory import SimpleExtractorFactory
 except ImportError as e:
-    print(f"Error importing extractor modules: {e}")
+    print(f"Error importing simple extractor factory: {e}")
     print(f"Current directory: {current_dir}")
     print(f"Core extractors dir exists: {(Path(__file__).parent / 'core').exists()}")
 
@@ -62,7 +61,7 @@ def format_output(data: Any, format_type: str = "json", success: bool = True) ->
 def handle_list_extractors(args) -> str:
     """List all available extractors"""
     try:
-        factory = ExtractorFactory()
+        factory = SimpleExtractorFactory()
         extractors = factory.get_available_extractors()
 
         data = {
@@ -79,7 +78,7 @@ def handle_list_extractors(args) -> str:
 def handle_run_extractor(args) -> str:
     """Run a specific extractor"""
     try:
-        factory = ExtractorFactory()
+        factory = SimpleExtractorFactory()
 
         # Get available extractors to validate
         available_extractors = factory.get_available_extractors()
@@ -88,36 +87,17 @@ def handle_run_extractor(args) -> str:
                 "error": f"Extractor '{args.name}' not found. Available: {list(available_extractors.keys())}"
             }, args.format, success=False)
 
-        # Create extractor instance (simplified approach)
-        try:
-            extractor = factory.create_extractor(args.name)
-        except:
-            # Fallback: direct import and instantiate
-            extractor_class_name = f"{args.name}_extractor"
-            module_name = f"extractors.{extractor_class_name}"
-
-            try:
-                module = importlib.import_module(module_name)
-                extractor_class = getattr(module, f"{args.name.title()}Extractor")
-                # Most extractors need source_config - provide minimal config for demo
-                if args.name in ['gluestack', 'shadcn_components', 'shadcn_hooks', 'shadcn_blocks']:
-                    extractor = extractor_class({"type": "github", "repo": "test/repo"})
-                else:
-                    extractor = extractor_class()
-            except ImportError:
-                return format_output({
-                    "error": f"Could not create extractor '{args.name}'. Module '{module_name}' not found."
-                }, args.format, success=False)
-
-        # Run extraction
+        # Run extraction using the simple factory
         print(f"Running {args.name} extractor...")
+        result = factory.run_extractor(args.name)
 
-        # This is a simplified interface - real extraction would need parameters
-        result = extractor.extract() if hasattr(extractor, 'extract') else None
+        if "error" in result:
+            return format_output(result, args.format, success=False)
 
         data = {
             "extractor": args.name,
-            "status": "completed" if result else "initialized",
+            "status": "completed",
+            "result": result,
             "message": f"Extractor {args.name} executed successfully"
         }
 
@@ -130,7 +110,7 @@ def handle_run_extractor(args) -> str:
 def handle_run_all_extractors(args) -> str:
     """Run all available extractors"""
     try:
-        factory = ExtractorFactory()
+        factory = SimpleExtractorFactory()
         extractors = factory.get_available_extractors()
 
         results = []
@@ -138,12 +118,12 @@ def handle_run_all_extractors(args) -> str:
         for extractor_name in extractors.keys():
             try:
                 print(f"Running {extractor_name} extractor...")
+                result = factory.run_extractor(extractor_name)
 
-                # Simplified extraction execution
                 data = {
                     "extractor": extractor_name,
-                    "status": "completed",
-                    "message": f"Extractor {extractor_name} executed successfully"
+                    "status": "completed" if "error" not in result else "failed",
+                    "result": result
                 }
                 results.append(data)
 
@@ -172,19 +152,21 @@ def handle_run_all_extractors(args) -> str:
 def handle_status(args) -> str:
     """Get extractor system status"""
     try:
-        factory = ExtractorFactory()
+        factory = SimpleExtractorFactory()
         extractors = factory.get_available_extractors()
 
         # Check if extractors directory exists and has modules
         extractors_dir = Path(__file__).parent / "core"
-        extractor_modules = list(extractors_dir.glob("*_extractor.py")) if extractors_dir.exists() else []
+        extractor_modules = list(extractors_dir.glob("*extractor*.py")) if extractors_dir.exists() else []
 
         data = {
             "extractors_available": len(extractors),
             "extractor_modules_found": len(extractor_modules),
             "extractors_directory": str(extractors_dir),
             "directory_exists": extractors_dir.exists(),
-            "extractors": list(extractors.keys())
+            "extractors": list(extractors.keys()),
+            "factory_type": "SimpleExtractorFactory",
+            "working_extractors": [name for name, info in extractors.items() if "error" not in info]
         }
 
         return format_output(data, args.format)
