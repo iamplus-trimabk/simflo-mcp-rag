@@ -103,7 +103,9 @@ class SimpleGluestackExtractor:
             possible_paths = [
                 repo_path / "components" / "ui",
                 repo_path / "src" / "components" / "ui",
-                repo_path / "packages" / "components" / "ui"
+                repo_path / "packages" / "components" / "ui",
+                repo_path / "packages" / "gluestack-core" / "src",
+                repo_path / "packages" / "gluestack-ui" / "src"
             ]
 
             components_dir = None
@@ -112,13 +114,27 @@ class SimpleGluestackExtractor:
                     components_dir = path
                     break
 
+            if not components_dir:
+                # If no standard components directory, look for any .tsx files that might be components
+                print(f"Standard component directories not found, searching for .tsx files...")
+                # Create a fake components directory for searching
+                components_dir = repo_path
+
             if components_dir:
                 # Find all .tsx files in the components directory
-                component_files = list(components_dir.glob("*.tsx"))
-                component_files = [f for f in component_files if not f.name.startswith('.')]
+                if components_dir == repo_path:
+                    # Search recursively if we're using the repo root
+                    component_files = list(repo_path.rglob("*.tsx"))
+                else:
+                    # Search recursively in the specific directory
+                    component_files = list(components_dir.rglob("*.tsx"))
+
+                component_files = [f for f in component_files if not f.name.startswith('.') and not f.name.startswith('test')]
+                component_files = [f for f in component_files if 'node_modules' not in str(f) and 'test' not in str(f).lower()]
+                component_files = [f for f in component_files if 'template' not in str(f).lower()]
 
                 # Extract real component data from the files found
-                for file_path in component_files[:5]:  # Limit to first 5 components
+                for file_path in component_files[:10]:  # Limit to first 10 components
                     component_name = file_path.stem.replace('index.', '')
 
                     # Read file content
@@ -256,7 +272,7 @@ class SimpleGluestackExtractor:
         # Add repository link if repository field is available
         if 'repository' in component:
             content.extend([
-                f"**Source Repository**: [View on GitHub]({self.github_api_base.replace('/api/v3', '')}/{component['repository']}/tree/main/{component['file_path']})",
+                f"**Source Repository**: [View on GitHub](https://github.com/{component['repository']}/tree/main/{component['file_path']})",
             ])
 
         content.extend([

@@ -23,7 +23,7 @@ class SimpleShadcnExtractor:
     def extract(self, repo_url: Optional[str] = None) -> Dict[str, Any]:
         """Extract components from shadcn repository"""
         try:
-            # Default to shadcn-ui/ui if no repo specified
+            # Default to the official shadcn-ui repository if no repo specified
             target_repo = repo_url or "shadcn-ui/ui"
 
             # Ensure GitHub directory exists
@@ -99,18 +99,40 @@ class SimpleShadcnExtractor:
 
         try:
             # Look for component files in the local repository
-            components_dir = repo_path / "components" / "ui"
-            if not components_dir.exists():
-                # Try alternative path
-                components_dir = repo_path / "apps" / "www" / "components" / "ui"
+            # Try different possible paths for component structure
+            possible_paths = [
+                repo_path / "components" / "ui",
+                repo_path / "apps" / "www" / "components" / "ui",
+                repo_path / "app" / "components" / "ui",
+                repo_path / "src" / "components" / "ui"
+            ]
+
+            components_dir = None
+            for path in possible_paths:
+                if path.exists():
+                    components_dir = path
+                    break
+
+            if not components_dir:
+                # If no standard components directory, look for any .tsx files that might be components
+                print(f"Standard component directories not found, searching for .tsx files...")
+                # Create a fake components directory for searching
+                components_dir = repo_path
 
             if components_dir.exists():
                 # Find all .tsx files in the components directory
-                component_files = list(components_dir.glob("*.tsx"))
-                component_files = [f for f in component_files if not f.name.startswith('.')]
+                if components_dir == repo_path:
+                    # Search recursively if we're using the repo root
+                    component_files = list(repo_path.rglob("*.tsx"))
+                else:
+                    # Search only in the specific directory
+                    component_files = list(components_dir.glob("*.tsx"))
+
+                component_files = [f for f in component_files if not f.name.startswith('.') and not f.name.startswith('test')]
+                component_files = [f for f in component_files if 'node_modules' not in str(f) and 'test' not in str(f).lower()]
 
                 # Extract real component data from the files found
-                for file_path in component_files[:5]:  # Limit to first 5 components
+                for file_path in component_files[:10]:  # Limit to first 10 components
                     component_name = file_path.stem.replace('index.', '')
 
                     # Read file content
@@ -256,7 +278,7 @@ class SimpleShadcnExtractor:
             f"- **File Path**: {component['file_path']}",
             f"- **Registry**: {component['registry']}",
             "",
-            f"**Source Repository**: [View on GitHub]({self.github_api_base.replace('/api/v3', '')}/{component['repository']}/tree/main/{component['file_path']})",
+            f"**Source Repository**: [View on GitHub](https://github.com/{component['repository']}/tree/main/{component['file_path']})",
             "",
             "---",
             f"*Extracted by SimFlo RAG on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*"

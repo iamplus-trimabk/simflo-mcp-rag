@@ -53,8 +53,11 @@ class SearchResult:
 class RegistryManager:
     """Manages multiple vector databases for component libraries"""
 
-    def __init__(self, base_path: str = "./v2/core/00-rag-registry/registries"):
+    def __init__(self, base_path: str = None):
         """Initialize registry manager"""
+        if base_path is None:
+            # Default to the correct absolute path
+            base_path = str(Path(__file__).parent.parent.parent / "00-rag-registry" / "registries")
         self.base_path = Path(base_path)
         self.registries: Dict[str, RegistryInfo] = {}
         self.clients: Dict[str, chromadb.Client] = {}

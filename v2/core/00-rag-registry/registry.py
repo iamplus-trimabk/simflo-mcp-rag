@@ -193,15 +193,118 @@ class RegistryManager:
                 "error": f"No source files found in {registry_name}/files"
             }
 
-        # For now, just report what would be processed
-        # In a full implementation, this would rebuild the vector database
-        return {
-            "success": True,
-            "registry": registry_name,
-            "source_files_found": len(source_files),
-            "source_files": [str(f) for f in source_files[:10]],  # Show first 10
-            "message": f"Found {len(source_files)} source files for rebuilding {registry_name} database"
-        }
+        # Rebuild the vector database using ChromaDB
+        try:
+            import chromadb
+            from sentence_transformers import SentenceTransformer
+            import uuid
+
+            # Initialize sentence transformer model
+            model = SentenceTransformer('all-MiniLM-L6-v2')
+
+            # Create ChromaDB client
+            client = chromadb.PersistentClient(path=str(db_dir))
+
+            # Delete existing collection if it exists
+            try:
+                client.delete_collection(name="components")
+            except:
+                pass
+
+            # Create new collection
+            collection = client.create_collection(name="components")
+
+            # Process each source file
+            documents = []
+            metadatas = []
+            ids = []
+
+            for source_file in source_files:
+                try:
+                    # Read file content
+                    with open(source_file, 'r', encoding='utf-8') as f:
+                        content = f.read()
+
+                    # Extract metadata from filename
+                    relative_path = source_file.relative_to(files_dir)
+                    registry_type = relative_path.parts[0] if len(relative_path.parts) > 1 else registry_name
+                    component_type = relative_path.parts[1] if len(relative_path.parts) > 2 else "component"
+                    component_name = source_file.stem
+
+                    # Extract title from content
+                    title = content.split('\n')[0].replace('# ', '') if content.startswith('# ') else component_name
+
+                    # Create metadata
+                    metadata = {
+                        "registry": registry_type,
+                        "type": component_type,
+                        "name": component_name,
+                        "title": title,
+                        "file_path": str(relative_path),
+                        "source_file": str(source_file)
+                    }
+
+                    # Extract tags if present
+                    if "**Tags**:" in content:
+                        tags_line = content.split("**Tags**:")[1].split('\n')[0]
+                        metadata["tags"] = tags_line.strip()
+
+                    # Add to batch
+                    documents.append(content)
+                    metadatas.append(metadata)
+                    ids.append(str(uuid.uuid4()))
+
+                except Exception as e:
+                    print(f"Warning: Could not process {source_file}: {e}")
+                    continue
+
+            # Add documents to ChromaDB in batches
+            if documents:
+                batch_size = 100
+                for i in range(0, len(documents), batch_size):
+                    batch_docs = documents[i:i+batch_size]
+                    batch_metas = metadatas[i:i+batch_size]
+                    batch_ids = ids[i:i+batch_size]
+
+                    collection.add(
+                        documents=batch_docs,
+                        metadatas=batch_metas,
+                        ids=batch_ids
+                    )
+
+                # Create vector database file marker
+                db_marker = db_dir / f"{registry_name}_vector_db.marker"
+                with open(db_marker, 'w') as f:
+                    f.write(f"Vector database created at {datetime.now().isoformat()}\n")
+                    f.write(f"Documents processed: {len(documents)}\n")
+                    f.write(f"Registry: {registry_name}\n")
+
+                return {
+                    "success": True,
+                    "registry": registry_name,
+                    "source_files_found": len(source_files),
+                    "documents_processed": len(documents),
+                    "vector_db_created": True,
+                    "collection_name": "components",
+                    "message": f"Successfully rebuilt {registry_name} vector database with {len(documents)} documents"
+                }
+            else:
+                return {
+                    "success": False,
+                    "registry": registry_name,
+                    "error": "No valid documents could be processed from source files"
+                }
+
+        except ImportError as e:
+            return {
+                "success": False,
+                "error": f"Required dependencies not installed: {e}. Install with: pip install chromadb sentence-transformers"
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "error": f"Failed to rebuild vector database: {str(e)}"
+            }
 
     def get_system_status(self) -> Dict[str, Any]:
         """Get overall system status"""

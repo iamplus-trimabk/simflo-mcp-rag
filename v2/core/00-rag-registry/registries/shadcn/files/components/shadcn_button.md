@@ -1,6 +1,6 @@
 # Button Component
 
-A button component with multiple variants and styles
+A button component from shadcn-ui
 
 ## Installation
 
@@ -11,7 +11,7 @@ npm install @radix-ui/react-slot
 ## Usage
 
 ```tsx
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
 <Button variant="default">Click me</Button>
 ```
 
@@ -19,11 +19,11 @@ import { Button } from '@/components/ui/button'
 
 - **Name**: button
 - **Category**: ui
-- **Tags**: button, react, typescript, accessible
+- **Tags**: button, react, typescript, accessible, variants
 - **File Path**: components/ui/button.tsx
 - **Registry**: shadcn
 
-**Source Repository**: [View on GitHub](https://api.github.com/shadcn-ui/ui/tree/main/components/ui/button.tsx)
+**Source Repository**: [View on GitHub](https://github.com/shadcn-ui/ui/tree/main/components/ui/button.tsx)
 
 ---
-*Extracted by SimFlo RAG on 2025-10-01 21:24:23*
+*Extracted by SimFlo RAG on 2025-10-01 23:17:35*
