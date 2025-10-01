@@ -3,7 +3,7 @@
   "display_name": "Shadcn UI",
   "description": "Modern React component library with hooks and blocks",
   "platforms": ["reactjs"],
-  "database_path": "rag_databases/shadcn_db",
+  "database_path": "v2/core/00-rag-registry/registries/shadcn/db",
   "status": "active",
   "categories": {
     "components": {

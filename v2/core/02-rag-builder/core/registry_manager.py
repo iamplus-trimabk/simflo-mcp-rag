@@ -53,7 +53,7 @@ class SearchResult:
 class RegistryManager:
     """Manages multiple vector databases for component libraries"""
 
-    def __init__(self, base_path: str = "./rag_databases"):
+    def __init__(self, base_path: str = "./v2/core/00-rag-registry/registries"):
         """Initialize registry manager"""
         self.base_path = Path(base_path)
         self.registries: Dict[str, RegistryInfo] = {}

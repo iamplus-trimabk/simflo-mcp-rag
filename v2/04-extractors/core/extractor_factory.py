@@ -6,7 +6,7 @@ Creates and manages specialized extractors for different source types.
 
 import logging
 from typing import Dict, List, Optional, Type, Any
-from extractors.base_extractor import BaseExtractor, ExtractionResult
+from base_extractor import BaseExtractor, ExtractionResult
 import importlib
 import inspect
 

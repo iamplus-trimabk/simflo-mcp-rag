@@ -3,7 +3,7 @@
   "display_name": "Shadcn UI Real",
   "description": "Real shadcn/ui repositories with actual extraction from GitHub",
   "platforms": ["reactjs"],
-  "database_path": "rag_databases/shadcn_real_db",
+  "database_path": "v2/core/00-rag-registry/registries/shadcn_real/db",
   "status": "active",
   "categories": {
     "components": {

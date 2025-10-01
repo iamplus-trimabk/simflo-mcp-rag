@@ -3,7 +3,7 @@
   "display_name": "Gluestack UI",
   "description": "Universal UI library for React and React Native",
   "platforms": ["reactjs", "react-native"],
-  "database_path": "rag_databases/gluestack_db",
+  "database_path": "v2/core/00-rag-registry/registries/gluestack/db",
   "status": "active",
   "categories": {
     "components": {

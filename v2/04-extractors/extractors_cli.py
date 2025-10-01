@@ -15,23 +15,27 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional, Union
 from datetime import datetime
 
-# Add the project root to path for imports
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
+# Add the current directory to path for imports
+current_dir = Path(__file__).parent
+sys.path.insert(0, str(current_dir))
+
+# Also add the core directory
+core_dir = Path(__file__).parent / 'core'
+sys.path.insert(0, str(core_dir))
 
 try:
-    from extractors.extractor_factory import ExtractorFactory
-    from extractors.base_extractor import BaseExtractor, ExtractionResult
+    from extractor_factory import ExtractorFactory
+    from base_extractor import BaseExtractor, ExtractionResult
 except ImportError as e:
     print(f"Error importing extractor modules: {e}")
-    print(f"Project root: {project_root}")
-    print(f"Extractors dir exists: {(project_root / 'extractors').exists()}")
+    print(f"Current directory: {current_dir}")
+    print(f"Core extractors dir exists: {(Path(__file__).parent / 'core').exists()}")
 
     # Try to provide more helpful error info
-    extractors_dir = project_root / 'extractors'
+    extractors_dir = Path(__file__).parent / 'core'
     if extractors_dir.exists():
         files = list(extractors_dir.glob('*.py'))
-        print(f"Files in extractors: {[f.name for f in files]}")
+        print(f"Files in core extractors: {[f.name for f in files]}")
 
     sys.exit(1)
 
@@ -172,7 +176,7 @@ def handle_status(args) -> str:
         extractors = factory.get_available_extractors()
 
         # Check if extractors directory exists and has modules
-        extractors_dir = Path(__file__).parent.parent.parent.parent / "extractors"
+        extractors_dir = Path(__file__).parent / "core"
         extractor_modules = list(extractors_dir.glob("*_extractor.py")) if extractors_dir.exists() else []
 
         data = {
