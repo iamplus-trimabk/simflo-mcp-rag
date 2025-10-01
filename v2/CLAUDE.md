@@ -28,48 +28,67 @@ All component-to-component communication uses CLI interfaces with simple Python 
 - **03-content-collection**: ✅ Complete - Source discovery and content acquisition with CLI interface
 - **04-extractors**: ✅ Complete - CLI wrapper with access to 11 specialized extractors for content extraction + comprehensive user guide
 
+## Command Alias System
+
+**Setup**: Run `source v2/commands.sh` to enable aliases, or add to shell profile for persistence.
+
+### Helper Functions
+- `simflo_help` - Show command reference
+- `simflo_setup` - Test core components functionality
+- `simflo_status` - Quick status across all components
+- `simflo_test` - Run core test suites
+
 ## CLI Examples (Using Command Aliases)
 
-**Setup**: First run `source commands.sh` to enable aliases, or add to your shell profile for persistence.
 ```bash
-# RAG Registry CLI (Working) - Registry-based management
-rag_registry list --format json
-rag_registry info --name shadcn --format json
-rag_registry search --query "button" --limit 5 --format json
-rag_registry status --format json
-rag_registry clean-db --registry shadcn --format json
-rag_registry rebuild-db --registry shadcn --format json
+# Quick Status & Testing
+simflo_status              # Show status of all components
+simflo_test               # Run core test suites
+simflo_help               # Show command reference
 
-# MCP Server CLI (Working) - AI Assistant Integration
-mcp_server search "button" --limit 10 --format json
-mcp_server get-component dialog --registry shadcn --format json
-mcp_server list-components --type ui --platform reactjs --limit 20 --format json
-mcp_server set-context reactjs --session-id abc123 --format json
-mcp_server list-registries --format json
+# RAG Registry CLI (Working) - Registry-based management
+rag_registry list
+rag_registry_info --name shadcn
+rag_registry_search --query "button" --limit 5
+rag_registry_status
+rag_registry_clean --registry shadcn
+rag_registry_rebuild --registry shadcn
+
+# MCP Server CLI (Working) - AI Assistant Integration (18 commands total)
+mcp_search "button" --limit 10
+mcp_get_component dialog --registry shadcn
+mcp_list_components --type ui --platform reactjs --limit 20
+mcp_set_context reactjs --session-id abc123
+mcp_list_registries
+
+# MCP Server Extraction Commands (NEWLY IMPLEMENTED!)
+mcp_run_extraction --registry shadcn
+mcp_extraction_status
+mcp_list_extraction_registries
+mcp_clear_extraction_data --registry shadcn
+mcp_search_by_category "button" components
+mcp_list_registry_sources shadcn
 
 # RAG Builder CLI (Working) - Pipeline orchestration
-rag_builder status --format json
-rag_builder list-profiles --format json
-rag_builder check --format json
+rag_builder_status
+rag_builder_list_profiles
+rag_builder_check
 
 # Content Collection CLI (Working) - Source discovery and content acquisition
-content_collection discover --query "react components" --source-type github --limit 10 --format json
-content_collection list-source-types --format json
-content_collection status --format json
+content_discover --query "react components" --source-type github --limit 10
+content_list_source_types
+content_status
 
 # Extractors CLI (Working) - Content extraction
-extractors list-extractors --format json
-extractors run-extractor shadcn --format json
-extractors run-all-extractors --format json
-extractors status --format json
+extractors_list
+extractors_run shadcn
+extractors_run_all
+extractors_status
 
-# CLI Tests
-python3 v2/core/00-rag-registry/tests/run.py --verbose
-python3 v2/core/01-mcp-server/tests/run.py --verbose
-python3 v2/03-content-collection/tests/run.py --verbose
-python3 v2/04-extractors/tests/run.py --verbose
-test_executor v2/core/00-rag-registry/tests/cmd_tests.json
-test_executor v2/core/01-mcp-server/tests/mcp_tests.json
-test_executor v2/03-content-collection/tests/content_collection_tests.json
-test_executor v2/04-extractors/tests/extractor_tests.json
+# Individual Test Commands
+test_registry              # Registry system tests
+test_mcp                  # MCP server tests
+test_content              # Content collection tests
+test_extractors           # Extractor tests
+test_all                  # Run all tests
 ```

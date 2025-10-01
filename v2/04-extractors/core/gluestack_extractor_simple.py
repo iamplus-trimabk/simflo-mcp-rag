@@ -36,12 +36,16 @@ class SimpleGluestackExtractor:
             # Get component files from the repository
             components = self._extract_components(target_repo)
 
+            # Save components to registry files
+            saved = self.save_to_registry(components, "gluestack")
+
             result = {
                 "extractor": "gluestack",
                 "repository": target_repo,
                 "timestamp": datetime.now().isoformat(),
                 "components_found": len(components),
                 "components": components,
+                "saved_to_registry": saved,
                 "repo_info": repo_info
             }
 
@@ -82,7 +86,8 @@ class SimpleGluestackExtractor:
                 "usage": "```tsx\nimport { Button, ButtonText } from \"@gluestack-ui/button\"\n<Button action=\"primary\">\n  <ButtonText>Click me</ButtonText>\n</Button>\n```",
                 "file_path": "components/ui/button.tsx",
                 "registry": "gluestack",
-                "platforms": ["reactjs", "reactnative"]
+                "platforms": ["reactjs", "reactnative"],
+                "repository": "gluestack/gluestack-ui"
             },
             {
                 "name": "input",
@@ -94,7 +99,8 @@ class SimpleGluestackExtractor:
                 "usage": "```tsx\nimport { Input, InputField } from \"@gluestack-ui/input\"\n<Input>\n  <InputField placeholder=\"Enter text\" />\n</Input>\n```",
                 "file_path": "components/ui/input.tsx",
                 "registry": "gluestack",
-                "platforms": ["reactjs", "reactnative"]
+                "platforms": ["reactjs", "reactnative"],
+                "repository": "gluestack/gluestack-ui"
             },
             {
                 "name": "card",
@@ -106,11 +112,91 @@ class SimpleGluestackExtractor:
                 "usage": "```tsx\nimport { Card, CardHeader, CardContent } from \"@gluestack-ui/card\"\n<Card>\n  <CardHeader>Card Title</CardHeader>\n  <CardContent>Card content goes here</CardContent>\n</Card>\n```",
                 "file_path": "components/ui/card.tsx",
                 "registry": "gluestack",
-                "platforms": ["reactjs", "reactnative"]
+                "platforms": ["reactjs", "reactnative"],
+                "repository": "gluestack/gluestack-ui"
             }
         ]
 
         return sample_components
+
+    def save_to_registry(self, components: List[Dict[str, Any]], registry_name: str = "gluestack") -> bool:
+        """Save extracted components to registry files"""
+        try:
+            from pathlib import Path
+            import os
+
+            # Get the registry files directory
+            registry_dir = Path(__file__).parent.parent.parent / "core" / "00-rag-registry" / "registries" / registry_name / "files" / "components"
+            registry_dir.mkdir(parents=True, exist_ok=True)
+
+            saved_files = []
+
+            for component in components:
+                # Create markdown file for each component
+                filename = f"gluestack_{component['name']}.md"
+                filepath = registry_dir / filename
+
+                # Generate markdown content
+                markdown_content = self._generate_component_markdown(component)
+
+                # Write to file
+                with open(filepath, 'w', encoding='utf-8') as f:
+                    f.write(markdown_content)
+
+                saved_files.append(str(filepath))
+
+            print(f"Saved {len(components)} components to {registry_dir}")
+            return True
+
+        except Exception as e:
+            print(f"Error saving to registry: {e}")
+            return False
+
+    def _generate_component_markdown(self, component: Dict[str, Any]) -> str:
+        """Generate markdown content for a component"""
+        content = [
+            f"# {component['title']}",
+            "",
+            component['description'],
+            "",
+            "## Installation",
+            "",
+            f"```bash",
+            component['installation'],
+            "```",
+            "",
+            "## Usage",
+            "",
+            component['usage'],
+            "",
+            "## Component Details",
+            "",
+            f"- **Name**: {component['name']}",
+            f"- **Category**: {component['category']}",
+            f"- **Tags**: {', '.join(component['tags'])}",
+            f"- **File Path**: {component['file_path']}",
+            f"- **Registry**: {component['registry']}",
+        ]
+
+        # Add platform information if available
+        if 'platforms' in component:
+            content.extend([
+                f"- **Platforms**: {', '.join(component['platforms'])}",
+            ])
+
+        # Add repository link if repository field is available
+        if 'repository' in component:
+            content.extend([
+                f"**Source Repository**: [View on GitHub]({self.github_api_base.replace('/api/v3', '')}/{component['repository']}/tree/main/{component['file_path']})",
+            ])
+
+        content.extend([
+            "",
+            "---",
+            f"*Extracted by SimFlo RAG on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*"
+        ])
+
+        return "\n".join(content)
 
     def get_extractor_info(self) -> Dict[str, Any]:
         """Get information about this extractor"""
