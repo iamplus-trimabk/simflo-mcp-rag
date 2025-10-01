@@ -4,7 +4,7 @@
     {
       "test_name": "help_command",
       "description": "Test main help command",
-      "command": "python3 v2/core/mcp-server/mcp_server.py --help",
+      "command": "python3 v2/core/01-mcp-server/mcp_server.py --help",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*SimFlo MCP RAG - CLI Server for AI Assistants.*",
       "expected_stderr": ""
@@ -12,7 +12,7 @@
     {
       "test_name": "search_help",
       "description": "Test search command help",
-      "command": "python3 v2/core/mcp-server/mcp_server.py search --help",
+      "command": "python3 v2/core/01-mcp-server/mcp_server.py search --help",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*Natural language search query.*",
       "expected_stderr": ""
@@ -20,7 +20,7 @@
     {
       "test_name": "search_command",
       "description": "Test component search with JSON output",
-      "command": "python3 v2/core/mcp-server/mcp_server.py search \"button\" --limit 5",
+      "command": "python3 v2/core/01-mcp-server/mcp_server.py search \"button\" --limit 5",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*success.*true.*data.*query.*button.*",
       "expected_stderr": ""
@@ -28,7 +28,7 @@
     {
       "test_name": "search_with_platform",
       "description": "Test component search with platform filter",
-      "command": "python3 v2/core/mcp-server/mcp_server.py search \"modal\" --platform reactjs --limit 3",
+      "command": "python3 v2/core/01-mcp-server/mcp_server.py search \"modal\" --platform reactjs --limit 3",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*success.*true.*platform.*reactjs.*",
       "expected_stderr": ""
@@ -36,7 +36,7 @@
     {
       "test_name": "list_registries_command",
       "description": "Test list registries command",
-      "command": "python3 v2/core/mcp-server/mcp_server.py list-registries",
+      "command": "python3 v2/core/01-mcp-server/mcp_server.py list-registries",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*success.*true.*total_registries.*",
       "expected_stderr": ""
@@ -44,7 +44,7 @@
     {
       "test_name": "set_context_command",
       "description": "Test set platform context command",
-      "command": "python3 v2/core/mcp-server/mcp_server.py set-context reactjs --session-id test123",
+      "command": "python3 v2/core/01-mcp-server/mcp_server.py set-context reactjs --session-id test123",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*success.*true.*platform.*reactjs.*",
       "expected_stderr": ""
@@ -52,7 +52,7 @@
     {
       "test_name": "get_context_command",
       "description": "Test get platform context command",
-      "command": "python3 v2/core/mcp-server/mcp_server.py get-context --session-id test123",
+      "command": "python3 v2/core/01-mcp-server/mcp_server.py get-context --session-id test123",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*success.*true.*platform.*",
       "expected_stderr": ""
@@ -60,7 +60,7 @@
     {
       "test_name": "list_components_command",
       "description": "Test list components command",
-      "command": "python3 v2/core/mcp-server/mcp_server.py list-components --type ui --limit 5",
+      "command": "python3 v2/core/01-mcp-server/mcp_server.py list-components --type ui --limit 5",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*success.*true.*type.*ui.*total_count.*",
       "expected_stderr": ""
@@ -68,21 +68,21 @@
     {
       "test_name": "invalid_command",
       "description": "Test invalid command error handling",
-      "command": "python3 v2/core/mcp-server/mcp_server.py invalid_command",
+      "command": "python3 v2/core/01-mcp-server/mcp_server.py invalid_command",
       "expected_exit_code": 2,
       "expected_stderr_pattern": ".*invalid choice: 'invalid_command'.*"
     },
     {
       "test_name": "missing_required_arg",
       "description": "Test missing required argument error handling",
-      "command": "python3 v2/core/mcp-server/mcp_server.py search",
+      "command": "python3 v2/core/01-mcp-server/mcp_server.py search",
       "expected_exit_code": 2,
       "expected_stderr_pattern": ".*required: query.*"
     },
     {
       "test_name": "json_output_format",
       "description": "Test JSON output format consistency",
-      "command": "python3 v2/core/mcp-server/mcp_server.py search \"input\" --format json",
+      "command": "python3 v2/core/01-mcp-server/mcp_server.py search \"input\" --format json",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*success.*true.*timestamp.*data.*",
       "expected_stderr": ""
@@ -90,7 +90,7 @@
     {
       "test_name": "table_output_format",
       "description": "Test table output format",
-      "command": "python3 v2/core/mcp-server/mcp_server.py list-registries --format table",
+      "command": "python3 v2/core/01-mcp-server/mcp_server.py list-registries --format table",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*total_registries.*",
       "expected_stderr": ""
@@ -98,7 +98,7 @@
     {
       "test_name": "get_component_command",
       "description": "Test get component details command",
-      "command": "python3 v2/core/mcp-server/mcp_server.py get-component button",
+      "command": "python3 v2/core/01-mcp-server/mcp_server.py get-component button",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*(success.*true.*data.*|success.*false.*error.*not found.*)",
       "expected_stderr": ""
@@ -106,7 +106,7 @@
     {
       "test_name": "extraction_not_implemented",
       "description": "Test extraction command returns not implemented error",
-      "command": "python3 v2/core/mcp-server/mcp_server.py extraction-status",
+      "command": "python3 v2/core/01-mcp-server/mcp_server.py extraction-status",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*not yet implemented.*",
       "expected_stderr": ""

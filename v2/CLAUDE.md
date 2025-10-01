@@ -28,46 +28,48 @@ All component-to-component communication uses CLI interfaces with simple Python 
 - **03-content-collection**: ✅ Complete - Source discovery and content acquisition with CLI interface
 - **04-extractors**: ✅ Complete - CLI wrapper with access to 11 specialized extractors for content extraction + comprehensive user guide
 
-## CLI Examples
+## CLI Examples (Using Command Aliases)
+
+**Setup**: First run `source commands.sh` to enable aliases, or add to your shell profile for persistence.
 ```bash
 # RAG Registry CLI (Working) - Registry-based management
-python3 v2/core/00-rag-registry/registry.py list --format json
-python3 v2/core/00-rag-registry/registry.py info --name shadcn --format json
-python3 v2/core/00-rag-registry/registry.py search --query "button" --limit 5 --format json
-python3 v2/core/00-rag-registry/registry.py status --format json
-python3 v2/core/00-rag-registry/registry.py clean-db --registry shadcn --format json
-python3 v2/core/00-rag-registry/registry.py rebuild-db --registry shadcn --format json
+rag_registry list --format json
+rag_registry info --name shadcn --format json
+rag_registry search --query "button" --limit 5 --format json
+rag_registry status --format json
+rag_registry clean-db --registry shadcn --format json
+rag_registry rebuild-db --registry shadcn --format json
 
 # MCP Server CLI (Working) - AI Assistant Integration
-python3 v2/core/01-mcp-server/mcp_server.py search "button" --limit 10 --format json
-python3 v2/core/01-mcp-server/mcp_server.py get-component dialog --registry shadcn --format json
-python3 v2/core/01-mcp-server/mcp_server.py list-components --type ui --platform reactjs --limit 20 --format json
-python3 v2/core/01-mcp-server/mcp_server.py set-context reactjs --session-id abc123 --format json
-python3 v2/core/01-mcp-server/mcp_server.py list-registries --format json
+mcp_server search "button" --limit 10 --format json
+mcp_server get-component dialog --registry shadcn --format json
+mcp_server list-components --type ui --platform reactjs --limit 20 --format json
+mcp_server set-context reactjs --session-id abc123 --format json
+mcp_server list-registries --format json
 
 # RAG Builder CLI (Working) - Pipeline orchestration
-python3 v2/core/02-rag-builder/rag_builder_cli.py status --format json
-python3 v2/core/02-rag-builder/rag_builder_cli.py list-profiles --format json
-python3 v2/core/02-rag-builder/rag_builder_cli.py check --format json
+rag_builder status --format json
+rag_builder list-profiles --format json
+rag_builder check --format json
 
 # Content Collection CLI (Working) - Source discovery and content acquisition
-python3 v2/03-content-collection/content_collection_cli.py discover --query "react components" --source-type github --limit 10 --format json
-python3 v2/03-content-collection/content_collection_cli.py list-source-types --format json
-python3 v2/03-content-collection/content_collection_cli.py status --format json
+content_collection discover --query "react components" --source-type github --limit 10 --format json
+content_collection list-source-types --format json
+content_collection status --format json
 
 # Extractors CLI (Working) - Content extraction
-python3 v2/04-extractors/extractors_cli.py list-extractors --format json
-python3 v2/04-extractors/extractors_cli.py run-extractor shadcn --format json
-python3 v2/04-extractors/extractors_cli.py run-all-extractors --format json
-python3 v2/04-extractors/extractors_cli.py status --format json
+extractors list-extractors --format json
+extractors run-extractor shadcn --format json
+extractors run-all-extractors --format json
+extractors status --format json
 
 # CLI Tests
 python3 v2/core/00-rag-registry/tests/run.py --verbose
 python3 v2/core/01-mcp-server/tests/run.py --verbose
 python3 v2/03-content-collection/tests/run.py --verbose
 python3 v2/04-extractors/tests/run.py --verbose
-python3 v2/tests/cmd_test_executor.py v2/core/00-rag-registry/tests/cmd_tests.json
-python3 v2/tests/cmd_test_executor.py v2/core/01-mcp-server/tests/mcp_tests.json
-python3 v2/tests/cmd_test_executor.py v2/03-content-collection/tests/content_collection_tests.json
-python3 v2/tests/cmd_test_executor.py v2/04-extractors/tests/extractor_tests.json
+test_executor v2/core/00-rag-registry/tests/cmd_tests.json
+test_executor v2/core/01-mcp-server/tests/mcp_tests.json
+test_executor v2/03-content-collection/tests/content_collection_tests.json
+test_executor v2/04-extractors/tests/extractor_tests.json
 ```

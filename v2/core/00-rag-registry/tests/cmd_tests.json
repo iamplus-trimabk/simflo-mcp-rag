@@ -4,7 +4,7 @@
     {
       "test_name": "list_command",
       "description": "Test list command with JSON output",
-      "command": "python3 v2/core/registry-system/registry.py list",
+      "command": "python3 v2/core/00-rag-registry/registry.py list",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*\\[.*\\].*",
       "expected_stderr": ""
@@ -12,7 +12,7 @@
     {
       "test_name": "info_command",
       "description": "Test info command for existing registry",
-      "command": "python3 v2/core/registry-system/registry.py info --name shadcn_db",
+      "command": "python3 v2/core/00-rag-registry/registry.py info --name shadcn_db",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*\"name\": \"shadcn_db\".*",
       "expected_stderr": ""
@@ -20,7 +20,7 @@
     {
       "test_name": "search_command",
       "description": "Test search command",
-      "command": "python3 v2/core/registry-system/registry.py search --query \"button\" --limit 5",
+      "command": "python3 v2/core/00-rag-registry/registry.py search --query \"button\" --limit 5",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*\"query\": \"button\".*",
       "expected_stderr_pattern": ".*Failed to parse JSON.*"
@@ -28,7 +28,7 @@
     {
       "test_name": "status_command",
       "description": "Test status command",
-      "command": "python3 v2/core/registry-system/registry.py status",
+      "command": "python3 v2/core/00-rag-registry/registry.py status",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*\"total_registries\":.*",
       "expected_stderr": ""
@@ -36,7 +36,7 @@
     {
       "test_name": "help_command",
       "description": "Test main help command",
-      "command": "python3 v2/core/registry-system/registry.py --help",
+      "command": "python3 v2/core/00-rag-registry/registry.py --help",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*SimFlo MCP RAG Registry System CLI.*",
       "expected_stderr": ""
@@ -44,7 +44,7 @@
     {
       "test_name": "table_format",
       "description": "Test table output format",
-      "command": "python3 v2/core/registry-system/registry.py list --format table",
+      "command": "python3 v2/core/00-rag-registry/registry.py list --format table",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*component_count.*platforms.*name.*",
       "expected_stderr": ""
@@ -52,14 +52,14 @@
     {
       "test_name": "error_handling",
       "description": "Test error handling for missing required parameter",
-      "command": "python3 v2/core/registry-system/registry.py info",
+      "command": "python3 v2/core/00-rag-registry/registry.py info",
       "expected_exit_code": 2,
       "expected_stderr_pattern": ".*required: --name.*"
     },
     {
       "test_name": "invalid_command",
       "description": "Test invalid command error handling",
-      "command": "python3 v2/core/registry-system/registry.py invalid_command",
+      "command": "python3 v2/core/00-rag-registry/registry.py invalid_command",
       "expected_exit_code": 2,
       "expected_stderr_pattern": ".*invalid choice: 'invalid_command'.*"
     }

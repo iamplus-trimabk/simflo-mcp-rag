@@ -48,6 +48,13 @@ cd simflo-mcp-rag
 # Make CLI scripts executable
 find v2 -name "*.py" -path "*/cli.py" -exec chmod +x {} \;
 find v2 -name "run.py" -exec chmod +x {} \;
+
+# Setup command aliases (one-time setup)
+source commands.sh
+
+# Or add to your shell profile for persistence
+echo 'source $(pwd)/commands.sh' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 ### Basic Usage
@@ -56,58 +63,61 @@ find v2 -name "run.py" -exec chmod +x {} \;
 
 ```bash
 # Check all component statuses
-python3 v2/core/00-rag-registry/registry.py status
-python3 v2/core/01-mcp-server/mcp_server.py list-registries
-python3 v2/04-extractors/extractors_cli.py status
+rag_registry status
+mcp_server list-registries
+extractors status
+
+# Or use the quick status command
+simflo_status
 ```
 
 #### 2. Component Search (AI Assistant Integration)
 
 ```bash
 # Search for React components
-python3 v2/core/01-mcp-server/mcp_server.py search "react button" --limit 5
+mcp_server search "react button" --limit 5
 
 # Get detailed component information
-python3 v2/core/01-mcp-server/mcp_server.py get-component button --registry shadcn
+mcp_server get-component button --registry shadcn
 ```
 
 #### 3. Content Discovery and Acquisition
 
 ```bash
 # Discover new component libraries
-python3 v2/03-content-collection/content_collection_cli.py discover \
+content_collection discover \
   --query "react component library" \
   --source-type github \
   --limit 10
 
 # List available source types
-python3 v2/03-content-collection/content_collection_cli.py list-source-types
+content_collection list-source-types
 ```
 
 #### 4. Registry Management
 
 ```bash
 # List all available registries
-python3 v2/core/00-rag-registry/registry.py list
+rag_registry list
 
 # Search across all registries
-python3 v2/core/00-rag-registry/registry.py search --query "form input" --limit 5
+rag_registry search --query "form input" --limit 5
 
 # Get registry information
-python3 v2/core/00-rag-registry/registry.py info --name shadcn
+rag_registry info --name shadcn
 ```
 
 #### 5. Content Extraction
 
 ```bash
 # List available extractors
-python3 v2/04-extractors/extractors_cli.py list-extractors
+extractors list-extractors
 
 # Run specific extractor
-python3 v2/04-extractors/extractors_cli.py run-extractor shadcn
+extractors run-extractor shadcn
 
 # Run all extractors
-python3 v2/04-extractors/extractors_cli.py run-all-extractors
+extractors run-all-extractors
 ```
 
 ## 📚 Documentation
@@ -127,6 +137,12 @@ python3 v2/core/00-rag-registry/tests/run.py --verbose
 python3 v2/core/01-mcp-server/tests/run.py --verbose
 python3 v2/03-content-collection/tests/run.py --verbose
 python3 v2/04-extractors/tests/run.py --verbose
+
+# Or use the test executor with aliases
+test_executor v2/core/00-rag-registry/tests/cmd_tests.json
+test_executor v2/core/01-mcp-server/tests/mcp_tests.json
+test_executor v2/03-content-collection/tests/content_collection_tests.json
+test_executor v2/04-extractors/tests/extractor_tests.json
 ```
 
 ### Test Results Summary
@@ -142,7 +158,7 @@ python3 v2/04-extractors/tests/run.py --verbose
 
 ```bash
 # Run specific test file
-python3 v2/tests/cmd_test_executor.py v2/core/01-mcp-server/tests/mcp_tests.json
+test_executor v2/core/01-mcp-server/tests/mcp_tests.json
 
 # Run with output file
 python3 v2/core/00-rag-registry/tests/run.py --output test_results.json
@@ -172,10 +188,10 @@ Each component includes its own `CLAUDE.md` with:
 
 **Key Commands:**
 ```bash
-python3 v2/core/00-rag-registry/registry.py list --format json
-python3 v2/core/00-rag-registry/registry.py search --query "button" --limit 5
-python3 v2/core/00-rag-registry/registry.py info --name shadcn
-python3 v2/core/00-rag-registry/registry.py status
+rag_registry list --format json
+rag_registry search --query "button" --limit 5
+rag_registry info --name shadcn
+rag_registry status
 ```
 
 ### 01-mcp-server: AI Assistant Integration
@@ -184,10 +200,10 @@ python3 v2/core/00-rag-registry/registry.py status
 
 **Key Commands:**
 ```bash
-python3 v2/core/01-mcp-server/mcp_server.py search "button" --limit 10
-python3 v2/core/01-mcp-server/mcp_server.py get-component dialog --registry shadcn
-python3 v2/core/01-mcp-server/mcp_server.py set-context reactjs --session-id abc123
-python3 v2/core/01-mcp-server/mcp_server.py list-registries
+mcp_server search "button" --limit 10
+mcp_server get-component dialog --registry shadcn
+mcp_server set-context reactjs --session-id abc123
+mcp_server list-registries
 ```
 
 ### 02-rag-builder: Pipeline Orchestration
@@ -196,9 +212,9 @@ python3 v2/core/01-mcp-server/mcp_server.py list-registries
 
 **Key Commands:**
 ```bash
-python3 v2/core/02-rag-builder/rag_builder_cli.py status
-python3 v2/core/02-rag-builder/rag_builder_cli.py list-profiles
-python3 v2/core/02-rag-builder/rag_builder_cli.py check
+rag_builder status
+rag_builder list-profiles
+rag_builder check
 ```
 
 ### 03-content-collection: Source Discovery
@@ -207,10 +223,10 @@ python3 v2/core/02-rag-builder/rag_builder_cli.py check
 
 **Key Commands:**
 ```bash
-python3 v2/03-content-collection/content_collection_cli.py discover --query "react components"
-python3 v2/03-content-collection/content_collection_cli.py fetch --sources-file sources.json
-python3 v2/03-content-collection/content_collection_cli.py list-source-types
-python3 v2/03-content-collection/content_collection_cli.py status
+content_collection discover --query "react components"
+content_collection fetch --sources-file sources.json
+content_collection list-source-types
+content_collection status
 ```
 
 ### 04-extractors: Content Extraction
@@ -219,10 +235,10 @@ python3 v2/03-content-collection/content_collection_cli.py status
 
 **Key Commands:**
 ```bash
-python3 v2/04-extractors/extractors_cli.py list-extractors
-python3 v2/04-extractors/extractors_cli.py run-extractor shadcn
-python3 v2/04-extractors/extractors_cli.py run-all-extractors
-python3 v2/04-extractors/extractors_cli.py status
+extractors list-extractors
+extractors run-extractor shadcn
+extractors run-all-extractors
+extractors status
 ```
 
 ## 🎯 CLI-First Benefits
@@ -241,6 +257,53 @@ python3 v2/04-extractors/extractors_cli.py status
 - **Direct Module Calls**: No network overhead between components
 - **Unix Philosophy**: Simple, composable tools
 - **Comprehensive Testing**: CLI interfaces enable thorough testing
+
+## 🚀 Command Aliases
+
+### CLI Shortcuts
+
+This project includes a centralized command alias system for easier CLI usage. After setting up the aliases:
+
+```bash
+# Quick status check
+simflo_status
+
+# Component commands
+rag_registry list
+mcp_server search "button" --limit 5
+extractors list-extractors
+content_collection discover --query "react"
+rag_builder status
+
+# Help
+simflo_help
+```
+
+### Setup
+
+One-time setup:
+```bash
+source commands.sh
+```
+
+For persistence (recommended):
+```bash
+echo 'source $(pwd)/commands.sh' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### Alias Reference
+
+| Alias | Command | Purpose |
+|-------|---------|---------|
+| `rag_registry` | Registry management | List, search, manage RAG databases |
+| `mcp_server` | AI assistant integration | Search components, get details |
+| `rag_builder` | Pipeline orchestration | Build and manage RAG pipelines |
+| `content_collection` | Content discovery | Find and acquire content sources |
+| `extractors` | Content extraction | Run extraction processes |
+| `test_executor` | Test execution | Run test suites |
+| `simflo_status` | Quick status | Check all components at once |
+| `simflo_help` | Command help | Show available commands |
 
 ## 🛠️ Development Guidelines
 

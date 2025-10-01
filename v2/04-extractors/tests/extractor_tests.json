@@ -4,7 +4,7 @@
     {
       "test_name": "help_command",
       "description": "Test main help command",
-      "command": "python3 v2/extractors/extractors_cli.py --help",
+      "command": "python3 v2/04-extractors/extractors_cli.py --help",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*SimFlo MCP RAG - Extractors CLI.*",
       "expected_stderr": ""
@@ -12,7 +12,7 @@
     {
       "test_name": "list_extractors_command",
       "description": "Test list extractors command",
-      "command": "python3 v2/extractors/extractors_cli.py list-extractors --format json",
+      "command": "python3 v2/04-extractors/extractors_cli.py list-extractors --format json",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*success.*true.*total_extractors.*",
       "expected_stderr": ""
@@ -20,7 +20,7 @@
     {
       "test_name": "status_command",
       "description": "Test status command",
-      "command": "python3 v2/extractors/extractors_cli.py status --format json",
+      "command": "python3 v2/04-extractors/extractors_cli.py status --format json",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*success.*true.*extractors_available.*",
       "expected_stderr": ""
@@ -28,7 +28,7 @@
     {
       "test_name": "run_all_extractors_command",
       "description": "Test run all extractors command",
-      "command": "python3 v2/extractors/extractors_cli.py run-all-extractors --format json",
+      "command": "python3 v2/04-extractors/extractors_cli.py run-all-extractors --format json",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*success.*true.*total_extractors.*",
       "expected_stderr": ""
@@ -36,14 +36,14 @@
     {
       "test_name": "invalid_command",
       "description": "Test invalid command error handling",
-      "command": "python3 v2/extractors/extractors_cli.py invalid_command",
+      "command": "python3 v2/04-extractors/extractors_cli.py invalid_command",
       "expected_exit_code": 2,
       "expected_stderr_pattern": ".*invalid choice: 'invalid_command'.*"
     },
     {
       "test_name": "json_output_format",
       "description": "Test JSON output format consistency",
-      "command": "python3 v2/extractors/extractors_cli.py list-extractors --format json",
+      "command": "python3 v2/04-extractors/extractors_cli.py list-extractors --format json",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*success.*true.*timestamp.*data.*",
       "expected_stderr": ""
@@ -51,7 +51,7 @@
     {
       "test_name": "table_output_format",
       "description": "Test table output format",
-      "command": "python3 v2/extractors/extractors_cli.py status --format table",
+      "command": "python3 v2/04-extractors/extractors_cli.py status --format table",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*extractors_available.*",
       "expected_stderr": ""
@@ -59,7 +59,7 @@
     {
       "test_name": "run_extractor_invalid",
       "description": "Test run extractor with invalid name",
-      "command": "python3 v2/extractors/extractors_cli.py run-extractor nonexistent --format json",
+      "command": "python3 v2/04-extractors/extractors_cli.py run-extractor nonexistent --format json",
       "expected_exit_code": 0,
       "expected_stdout_pattern": ".*not found.*Available.*",
       "expected_stderr": ""
