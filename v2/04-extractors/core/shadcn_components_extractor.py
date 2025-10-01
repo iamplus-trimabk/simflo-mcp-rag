@@ -1,4 +1,9 @@
 """
+⚠️  V4 IMPLEMENTATION REQUIRED ⚠️
+
+This extractor is NOT IMPLEMENTED and must be fully implemented in v4.0 or above.
+Current version uses simple extractors instead (shadcn_extractor.py, gluestack_extractor_simple.py).
+
 Shadcn Components Extractor
 
 Specialized extractor for shadcn UI components from the shadcn-ui/ui repository.
