@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLI-First Architecture - Component Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: auto;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .diagram-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            min-height: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .component-box {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 3px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 25px;
+            min-width: 200px;
+            max-width: 250px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            text-align: center;
+        }
+
+        .component-box:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .component-box.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .component-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .component-box.active .component-number {
+            color: white;
+        }
+
+        .component-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .component-subtitle {
+            font-size: 0.85em;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .component-box.active .component-subtitle {
+            opacity: 0.9;
+        }
+
+        .connection-line {
+            flex: 1;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            position: relative;
+            min-width: 60px;
+            margin: 0 15px;
+        }
+
+        .connection-line::before,
+        .connection-line::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+
+        .connection-line::before {
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 6px 0 6px 10px;
+            border-color: transparent transparent transparent #667eea;
+        }
+
+        .connection-line::after {
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 6px 10px 6px 0;
+            border-color: transparent #764ba2 transparent transparent;
+        }
+
+        .data-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .flow-item {
+            background: #f7fafc;
+            padding: 15px 25px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            font-weight: 500;
+            color: #4a5568;
+            transition: all 0.3s ease;
+        }
+
+        .flow-item:hover {
+            background: #edf2f7;
+            transform: translateY(-2px);
+        }
+
+        .flow-arrow {
+            color: #667eea;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .details-panel {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            border: 2px solid #e2e8f0;
+            min-height: 300px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .cli-examples {
+            background: #2d3748;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .cli-command {
+            color: #68d391;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+            margin: 10px 0;
+            padding: 10px;
+            background: #1a202c;
+            border-radius: 6px;
+            border-left: 4px solid #4299e1;
+        }
+
+        .integration-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .integration-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .integration-icon {
+            font-size: 1.5em;
+            margin-bottom: 8px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .legend-foundation {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+        }
+
+        .legend-interface {
+            background: linear-gradient(135deg, #667eea, #5a67d8);
+        }
+
+        .legend-orchestration {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+        }
+
+        .legend-input {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+
+        .legend-processing {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+        }
+
+        @media (max-width: 768px) {
+            .flow-diagram {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .connection-line {
+                width: 3px;
+                height: 40px;
+                min-width: auto;
+                margin: 15px 0;
+            }
+
+            .connection-line::before {
+                left: 50%;
+                top: -8px;
+                transform: translateX(-50%);
+                border-width: 0 6px 10px 6px;
+                border-color: transparent transparent #667eea transparent;
+            }
+
+            .connection-line::after {
+                left: 50%;
+                bottom: -8px;
+                top: auto;
+                transform: translateX(-50%);
+                border-width: 10px 6px 0 6px;
+                border-color: #764ba2 transparent transparent transparent;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CLI-First Architecture</h1>
+            <p>Component Interaction Diagram - Click any component to explore</p>
+        </div>
+
+        <div class="diagram-container">
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color legend-foundation"></div>
+                    <span>Foundation</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color legend-interface"></div>
+                    <span>Interface</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color legend-orchestration"></div>
+                    <span>Orchestration</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color legend-input"></div>
+                    <span>Input</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color legend-processing"></div>
+                    <span>Processing</span>
+                </div>
+            </div>
+
+            <div class="flow-diagram">
+                <div class="component-box" onclick="showComponentDetails('00')" style="border-color: #4299e1;">
+                    <div class="component-number" style="color: #4299e1;">00</div>
+                    <div class="component-title">Registry System</div>
+                    <div class="component-subtitle">Foundation<br>Database Management</div>
+                </div>
+
+                <div class="connection-line"></div>
+
+                <div class="component-box" onclick="showComponentDetails('01')" style="border-color: #667eea;">
+                    <div class="component-number" style="color: #667eea;">01</div>
+                    <div class="component-title">MCP Server</div>
+                    <div class="component-subtitle">AI Interface<br>12 CLI Commands</div>
+                </div>
+
+                <div class="connection-line"></div>
+
+                <div class="component-box" onclick="showComponentDetails('02')" style="border-color: #9f7aea;">
+                    <div class="component-number" style="color: #9f7aea;">02</div>
+                    <div class="component-title">RAG Builder</div>
+                    <div class="component-subtitle">Orchestration<br>Pipeline Management</div>
+                </div>
+
+                <div class="connection-line"></div>
+
+                <div class="component-box" onclick="showComponentDetails('03')" style="border-color: #48bb78;">
+                    <div class="component-number" style="color: #48bb78;">03</div>
+                    <div class="component-title">Content Collection</div>
+                    <div class="component-subtitle">Input<br>Source Discovery</div>
+                </div>
+
+                <div class="connection-line"></div>
+
+                <div class="component-box" onclick="showComponentDetails('04')" style="border-color: #ed8936;">
+                    <div class="component-number" style="color: #ed8936;">04</div>
+                    <div class="component-title">Extractors</div>
+                    <div class="component-subtitle">Processing<br>11 Specialized Extractors</div>
+                </div>
+            </div>
+
+            <div class="data-flow">
+                <div class="flow-item">AI Request</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-item">CLI Command</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-item">JSON Response</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-item">Component Found</div>
+            </div>
+
+            <div class="details-panel">
+                <div id="overview-details">
+                    <h2>CLI-First Architecture Overview</h2>
+                    <p style="font-size: 1.1em; line-height: 1.6; margin-bottom: 20px;">
+                        This architecture demonstrates how CLI-first design can create a maintainable, scalable RAG system.
+                        Each component communicates through standardized JSON responses over direct CLI calls.
+                    </p>
+
+                    <h3>Key Principles</h3>
+                    <ul style="line-height: 1.8; margin-bottom: 20px;">
+                        <li><strong>Direct Communication</strong>: Components call each other directly via CLI, no HTTP overhead</li>
+                        <li><strong>JSON Standardization</strong>: All components return consistent JSON format</li>
+                        <li><strong>Independent Registries</strong>: Each component library has its own isolated database</li>
+                        <li><strong>CLI Testing</strong>: Simple, reliable testing through CLI command validation</li>
+                        <li><strong>Command Aliases</strong>: Maintainable interface through centralized alias system</li>
+                    </ul>
+
+                    <h3>Component Interaction Pattern</h3>
+                    <div class="integration-points">
+                        <div class="integration-card">
+                            <div class="integration-icon">🗄️</div>
+                            <div>Registry System stores all processed content</div>
+                        </div>
+                        <div class="integration-card">
+                            <div class="integration-icon">🤖</div>
+                            <div>MCP Server provides AI assistant interface</div>
+                        </div>
+                        <div class="integration-card">
+                            <div class="integration-icon">🎯</div>
+                            <div>RAG Builder orchestrates pipeline operations</div>
+                        </div>
+                        <div class="integration-card">
+                            <div class="integration-icon">🔍</div>
+                            <div>Content Collection discovers new sources</div>
+                        </div>
+                        <div class="integration-card">
+                            <div class="integration-icon">⚙️</div>
+                            <div>Extractors process raw content into structured data</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="component-00-details" class="hidden">
+                    <h2>00 - Registry System Details</h2>
+                    <p><strong>Purpose:</strong> Foundation layer that manages independent RAG databases for different component libraries.</p>
+
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li>Registry-based organization (shadcn, gluestack, community)</li>
+                        <li>Independent vector databases and file storage</li>
+                        <li>CLI commands for database management</li>
+                        <li>Content organized by extractor type</li>
+                    </ul>
+
+                    <div class="cli-examples">
+                        <div class="cli-command">rag_registry list --format json</div>
+                        <div class="cli-command">rag_registry search --query "button" --limit 10 --format json</div>
+                        <div class="cli-command">rag_registry info --name shadcn --format json</div>
+                        <div class="cli-command">rag_registry rebuild-db --registry shadcn --format json</div>
+                    </div>
+
+                    <h3>Integration Points</h3>
+                    <p>Provides the foundation for all other components - stores processed content from extractors, serves search queries for MCP server, and receives orchestration commands from RAG builder.</p>
+                </div>
+
+                <div id="component-01-details" class="hidden">
+                    <h2>01 - MCP Server Details</h2>
+                    <p><strong>Purpose:</strong> Primary interface for AI assistants, providing 12 CLI commands for component discovery and interaction.</p>
+
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li>Direct CLI interface (no HTTP overhead)</li>
+                        <li>12 comprehensive commands for AI integration</li>
+                        <li>Natural language component search</li>
+                        <li>Platform context management</li>
+                        <li>Structured JSON responses</li>
+                    </ul>
+
+                    <div class="cli-examples">
+                        <div class="cli-command">mcp_server search "modal dialog" --limit 5 --platform reactjs</div>
+                        <div class="cli-command">mcp_server get-component button --registry shadcn</div>
+                        <div class="cli-command">mcp_server set-context reactjs --session-id abc123</div>
+                        <div class="cli-command">mcp_server list-registries</div>
+                    </div>
+
+                    <h3>Integration Points</h3>
+                    <p>Direct interface for AI assistants - queries registry system for components, manages context for intelligent recommendations, and provides the primary user interface for the RAG system.</p>
+                </div>
+
+                <div id="component-02-details" class="hidden">
+                    <h2>02 - RAG Builder Details</h2>
+                    <p><strong>Purpose:</strong> Orchestration layer that coordinates pipeline construction and manages system-wide operations.</p>
+
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li>Pipeline orchestration and coordination</li>
+                        <li>System status monitoring</li>
+                        <li>Configuration management</li>
+                        <li>Health checks and validation</li>
+                        <li>Component lifecycle management</li>
+                    </ul>
+
+                    <div class="cli-examples">
+                        <div class="cli-command">rag_builder status</div>
+                        <div class="cli-command">rag_builder list-profiles</div>
+                        <div class="cli-command">rag_builder check</div>
+                        <div class="cli-command">rag_builder build --config config.json</div>
+                    </div>
+
+                    <h3>Integration Points</h3>
+                    <p>Central coordinator - triggers content collection, manages extractors, updates registries, and provides system-wide status information for monitoring and maintenance.</p>
+                </div>
+
+                <div id="component-03-details" class="hidden">
+                    <h2>03 - Content Collection Details</h2>
+                    <p><strong>Purpose:</strong> Input layer that discovers new component libraries and acquires content from various sources.</p>
+
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li>Multi-source discovery (GitHub, npm, documentation)</li>
+                        <li>Natural language source search</li>
+                        <li>Content fetching and organization</li>
+                        <li>Source metadata extraction</li>
+                        <li>Quality evaluation and filtering</li>
+                    </ul>
+
+                    <div class="cli-examples">
+                        <div class="cli-command">content_collection discover --query "react components" --source-type github --limit 10</div>
+                        <div class="cli-command">content_collection fetch --sources-file sources.json</div>
+                        <div class="cli-command">content_collection list-source-types</div>
+                        <div class="cli-command">content_collection status</div>
+                    </div>
+
+                    <h3>Integration Points</h3>
+                    <p>Feeds the content pipeline - discovers new sources for extractors to process, provides source metadata to RAG builder, and ensures continuous content updates for the system.</p>
+                </div>
+
+                <div id="component-04-details" class="hidden">
+                    <h2>04 - Extractors Details</h2>
+                    <p><strong>Purpose:</strong> Processing layer with 11 specialized extractors that transform raw content into structured, searchable data.</p>
+
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li>11 specialized extractors for different content types</li>
+                        <li>CLI orchestration interface</li>
+                        <li>Batch processing capabilities</li>
+                        <li>Error handling and recovery</li>
+                        <li>Metadata generation and organization</li>
+                    </ul>
+
+                    <div class="cli-examples">
+                        <div class="cli-command">extractors list-extractors</div>
+                        <div class="cli-command">extractors run-extractor shadcn</div>
+                        <div class="cli-command">extractors run-all-extractors</div>
+                        <div class="cli-command">extractors status</div>
+                    </div>
+
+                    <h3>Available Extractors</h3>
+                    <ul>
+                        <li>shadcn, shadcn_hooks, shadcn_components, shadcn_blocks</li>
+                        <li>gluestack, npm_hooks, community</li>
+                        <li>documentation, examples, assets, metadata</li>
+                    </ul>
+
+                    <h3>Integration Points</h3>
+                    <p>Content transformation engine - processes content discovered by content collection, structures it for registry storage, and provides the processed data that MCP server searches through.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentComponent = null;
+
+        function showComponentDetails(componentId) {
+            // Hide all detail panels
+            document.querySelectorAll('[id$="-details"]').forEach(panel => {
+                panel.classList.add('hidden');
+            });
+
+            // Remove active class from all components
+            document.querySelectorAll('.component-box').forEach(box => {
+                box.classList.remove('active');
+            });
+
+            // Show selected details
+            const details = document.getElementById(`component-${componentId}-details`);
+            if (details) {
+                details.classList.remove('hidden');
+            }
+
+            // Add active class to selected component
+            const componentBox = event.currentTarget;
+            componentBox.classList.add('active');
+
+            currentComponent = componentId;
+        }
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key >= '0' && e.key <= '4') {
+                const component = document.querySelector(`.component-box:nth-child(${parseInt(e.key) + 1})`);
+                if (component) {
+                    component.click();
+                }
+            }
+        });
+
+        // Add animation to connection lines on hover
+        document.querySelectorAll('.component-box').forEach(box => {
+            box.addEventListener('mouseenter', () => {
+                const connections = document.querySelectorAll('.connection-line');
+                connections.forEach(conn => {
+                    conn.style.background = 'linear-gradient(90deg, #4299e1, #667eea, #9f7aea, #48bb78, #ed8936)';
+                    conn.style.animation = 'flowAnimation 2s linear infinite';
+                });
+            });
+
+            box.addEventListener('mouseleave', () => {
+                const connections = document.querySelectorAll('.connection-line');
+                connections.forEach(conn => {
+                    conn.style.background = '';
+                    conn.style.animation = '';
+                });
+            });
+        });
+
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes flowAnimation {
+                0% { background-position: 0% 50%; }
+                100% { background-position: 100% 50%; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Show overview by default
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('overview-details').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
