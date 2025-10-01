@@ -24,6 +24,7 @@ from project_context_engine import (
     enhance_search_with_context,
     detect_project_type
 )
+from database_manager import get_database_manager, DatabaseManager
 
 
 @dataclass
@@ -60,14 +61,16 @@ class RegistryManager:
             base_path = str(Path(__file__).parent.parent.parent / "00-rag-registry" / "registries")
         self.base_path = Path(base_path)
         self.registries: Dict[str, RegistryInfo] = {}
-        self.clients: Dict[str, chromadb.Client] = {}
         self.collections: Dict[str, chromadb.Collection] = {}
         self.lock = threading.Lock()
 
-        # Setup logging
+        # Setup logging and dependencies
         self.logger = logging.getLogger(__name__)
         self.context_manager = get_context_manager()
         self.project_context_engine = get_project_context_engine()
+
+        # Initialize centralized database manager
+        self.database_manager = get_database_manager(base_path)
 
         # Initialize registries
         self.discover_registries()
@@ -223,34 +226,22 @@ class RegistryManager:
         return list(platforms)
 
     def initialize_clients(self):
-        """Initialize ChromaDB clients for each registry"""
+        """Initialize ChromaDB collections for each registry using centralized DatabaseManager"""
         for registry_name, registry_info in self.registries.items():
             try:
-                # Create ChromaDB client for this registry
-                client_path = Path(registry_info.path) / "chroma_db"
-                client_path.mkdir(parents=True, exist_ok=True)
-
-                client = chromadb.PersistentClient(
-                    path=str(client_path),
-                    settings=Settings(anonymized_telemetry=False)
-                )
-
-                # Get or create collection with appropriate name
+                # Get collection using centralized database manager
                 if registry_info.registry_type == "component":
-                    collection_name = f"components_{registry_name.replace('_db', '')}"
+                    collection_name = "components"  # Standardized collection name
                 else:  # documentation
-                    collection_name = f"documentation_{registry_name.replace('_docs', '').replace('_db', '')}"
+                    collection_name = "documentation"  # Standardized collection name
 
-                try:
-                    collection = client.get_collection(name=collection_name)
-                except (ValueError, chromadb.errors.NotFoundError):
-                    # Collection doesn't exist, create it
-                    collection = client.create_collection(name=collection_name)
+                collection = self.database_manager.get_database_client(registry_name, collection_name)
 
-                self.clients[registry_name] = client
-                self.collections[registry_name] = collection
-
-                self.logger.info(f"Initialized ChromaDB client for {registry_name} ({registry_info.registry_type})")
+                if collection:
+                    self.collections[registry_name] = collection
+                    self.logger.info(f"Initialized collection for {registry_name} ({registry_info.registry_type})")
+                else:
+                    self.logger.error(f"Failed to get collection for {registry_name}")
 
             except Exception as e:
                 self.logger.error(f"Failed to initialize client for {registry_name}: {e}")
@@ -537,6 +528,183 @@ class RegistryManager:
         # Fallback to registry-level relevance
         return min(0.3 + (registry_priority / 20.0), 0.7)
 
+    def _is_component_match(self, search_name: str, stored_name: str) -> bool:
+        """Check if search name matches stored component name using various strategies"""
+        search_name = search_name.lower().strip()
+        stored_name = stored_name.lower().strip()
+
+        # Exact match
+        if search_name == stored_name:
+            return True
+
+        # Check if search name is contained in stored name
+        if search_name in stored_name or stored_name in search_name:
+            return True
+
+        # Handle registry prefixes (e.g., "shadcn_button" matches "button")
+        prefixes = ["shadcn_", "gluestack_", "radix_", "mui_", "ant_"]
+        clean_stored = stored_name
+        for prefix in prefixes:
+            if stored_name.startswith(prefix):
+                clean_stored = stored_name[len(prefix):]
+                break
+
+        if search_name == clean_stored:
+            return True
+
+        # Handle suffixes and partial matches
+        # Split on common separators and check parts
+        search_parts = search_name.replace('-', ' ').replace('_', ' ').split()
+        stored_parts = stored_name.replace('-', ' ').replace('_', ' ').split()
+
+        # If any part matches exactly
+        for search_part in search_parts:
+            for stored_part in stored_parts:
+                if search_part == stored_part and len(search_part) > 2:  # Only match meaningful parts
+                    return True
+
+        # Handle common variations
+        variations = {
+            'button': 'btn',
+            'dialog': 'modal',
+            'input': 'textfield',
+            'select': 'dropdown',
+            'checkbox': 'check',
+            'radio': 'radiobutton'
+        }
+
+        for standard, variation in variations.items():
+            if (search_name == standard and clean_stored == variation) or \
+               (search_name == variation and clean_stored == standard):
+                return True
+
+        return False
+
+    def _parse_component_from_markdown(self, doc: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
+        """Parse component information from raw markdown content"""
+        try:
+            # Parse the raw markdown content directly
+            lines = doc.split('\n')
+
+            # Extract component information from markdown structure
+            title = ''
+            description = ''
+            installation = ''
+            usage = ''
+            tags = []
+
+            # Parse the markdown content structure
+            current_section = None
+            content_lines = []
+            in_code_block = False
+
+            for line in lines:
+                original_line = line
+                line = line.strip()
+
+                if line.startswith('# '):
+                    title = line[2:].strip()
+                elif line.startswith('## '):
+                    current_section = line[3:].lower()
+                    content_lines = []
+                    in_code_block = False
+                elif line.startswith('```'):
+                    if not in_code_block:
+                        # Start of code block
+                        in_code_block = True
+                        if current_section not in ['installation', 'usage']:
+                            content_lines = []  # Reset for new code block
+                    else:
+                        # End of code block
+                        in_code_block = False
+                        if content_lines:
+                            content = '\n'.join(content_lines)
+                            if current_section == 'installation' and not installation:
+                                installation = content
+                            elif current_section == 'usage' and not usage:
+                                usage = content
+                        content_lines = []
+                elif in_code_block:
+                    # Inside code block - preserve original formatting
+                    content_lines.append(original_line.rstrip())
+                elif line and not line.startswith('```'):
+                    if current_section == 'installation':
+                        if '```bash' not in line:
+                            content_lines.append(line.strip())
+                    elif current_section == 'usage':
+                        if '```tsx' not in line and not line.startswith('```'):
+                            content_lines.append(line.strip())
+                    elif not current_section and not line.startswith('#') and not line.startswith('-') and not line.startswith('**') and not line.startswith('*Extracted'):
+                        # Description content (before any ## sections)
+                        if not description and line.strip():
+                            description = line.strip()
+                    elif '**Tags**:' in line:
+                        # Extract tags from Component Details section
+                        tags_line = line.split('**Tags**:')[-1].strip()
+                        if tags_line:
+                            tags = [tag.strip() for tag in tags_line.split(',')]
+
+            # If installation or usage weren't found in code blocks, try to extract them from content_lines
+            if not installation and content_lines and current_section == 'installation':
+                installation = '\n'.join(content_lines)
+            if not usage and content_lines and current_section == 'usage':
+                usage = '\n'.join(content_lines)
+
+            # Clean up installation and usage formatting
+            if installation and not installation.startswith('```'):
+                installation = f"```bash\n{installation}\n```"
+            if usage and not usage.startswith('```'):
+                usage = f"```tsx\n{usage}\n```"
+
+            # Extract platform from metadata or default to reactjs
+            platform = ['reactjs']  # Default for shadcn
+            if metadata.get('platform'):
+                if isinstance(metadata['platform'], str):
+                    if metadata['platform'].startswith('['):  # JSON array format
+                        try:
+                            platform = json.loads(metadata['platform'])
+                        except:
+                            platform = [metadata['platform']]
+                    else:
+                        platform = [metadata['platform']]
+                elif isinstance(metadata['platform'], list):
+                    platform = metadata['platform']
+
+            # Build component dict from parsed markdown (not from metadata)
+            component = {
+                'name': metadata.get('name', ''),
+                'title': title,
+                'description': description or f"A {metadata.get('name', 'component')} component",
+                'installation': installation,
+                'usage': usage,
+                'tags': tags,
+                'category': 'ui',
+                'registry': metadata.get('registry', ''),
+                'file_path': metadata.get('file_path', ''),
+                'source_file': metadata.get('source_file', ''),
+                'platform': platform,
+                'type': metadata.get('type', 'component')
+            }
+
+            return component
+
+        except Exception as e:
+            self.logger.warning(f"Error parsing component from markdown: {e}")
+            # Fallback to metadata only
+            return {
+                'name': metadata.get('name', ''),
+                'title': metadata.get('title', ''),
+                'description': f"A {metadata.get('name', 'component')} component",
+                'installation': '',
+                'usage': '',
+                'tags': [],
+                'category': metadata.get('type', 'ui'),
+                'registry': metadata.get('registry', ''),
+                'file_path': metadata.get('file_path', ''),
+                'platform': ['reactjs'],
+                'type': metadata.get('type', 'component')
+            }
+
     def _is_context_match(self, registry_name: str, component: Dict[str, Any]) -> bool:
         """Check if component matches current context"""
         current_platform = self.context_manager.get_current_platform()
@@ -577,18 +745,39 @@ class RegistryManager:
             return None
 
         if results and results['documents'] and results['documents'][0]:
-            # Find exact match
+            # First, try exact match
             for doc, metadata in zip(results['documents'][0], results['metadatas'][0] or [{}]):
                 try:
-                    component = json.loads(doc) if isinstance(doc, str) else doc
-                    if component.get('name') == component_name:
+                    # Use metadata instead of trying to parse document as JSON
+                    if metadata.get('name') == component_name:
+                        component = self._parse_component_from_markdown(doc, metadata)
                         return {
                             **component,
                             'registry': registry_name,
                             'found_in_registry': registry_name
                         }
-                except:
-                    continue
+                except Exception as e:
+                    self.logger.error(f"Error processing component for exact match: {e}")
+                    raise e  # Fail fast - don't hide the problem
+
+            # If no exact match, try fuzzy matching
+            for doc, metadata in zip(results['documents'][0], results['metadatas'][0] or [{}]):
+                try:
+                    # Use metadata for component matching
+                    stored_name = metadata.get('name', '')
+
+                    # Try various matching strategies
+                    if self._is_component_match(component_name, stored_name):
+                        component = self._parse_component_from_markdown(doc, metadata)
+                        return {
+                            **component,
+                            'registry': registry_name,
+                            'found_in_registry': registry_name,
+                            'match_type': 'fuzzy'
+                        }
+                except Exception as e:
+                    self.logger.error(f"Error processing component for fuzzy match: {e}")
+                    raise e  # Fail fast - don't hide the problem
 
         # If vector search found nothing, try fallback text search
         self.logger.info(f"Vector search for component '{component_name}' in {registry_name} returned no results, trying fallback")
@@ -659,7 +848,7 @@ class RegistryManager:
                                         content = f.read()
 
                                     # Parse component from markdown
-                                    component = self._parse_component_from_markdown(file_path, content, reg_name)
+                                    component = self._parse_component_from_file(file_path, content, reg_name)
                                     if component:
                                         components.append(component)
 
@@ -941,7 +1130,7 @@ class RegistryManager:
 
                     if filename_match or content_match:
                         # Extract component information from file
-                        component = self._parse_component_from_markdown(file_path, content, registry_name)
+                        component = self._parse_component_from_file(file_path, content, registry_name)
                         if component:
                             # Calculate relevance score based on text matching
                             # Give higher score for exact filename matches
@@ -972,7 +1161,7 @@ class RegistryManager:
             self.logger.error(f"Fallback text search failed for {registry_name}: {e}")
             return []
 
-    def _parse_component_from_markdown(self, file_path: Path, content: str, registry_name: str) -> Optional[Dict[str, Any]]:
+    def _parse_component_from_file(self, file_path: Path, content: str, registry_name: str) -> Optional[Dict[str, Any]]:
         """Parse component information from markdown file"""
         try:
             # Extract basic component info from markdown
@@ -990,18 +1179,20 @@ class RegistryManager:
                     component['title'] = line[2:].strip()
                     break
 
-            # Extract description from first paragraph after title
+            # Extract description from first paragraph after title (before any ## sections)
             description_lines = []
             found_title = False
             for line in lines:
                 if line.startswith('# '):
                     found_title = True
                     continue
-                elif found_title and line.strip() and not line.startswith('#'):
+                elif found_title and line.strip() and not line.startswith('#') and not line.startswith('##') and not line.startswith('-') and not line.startswith('**') and not line.startswith('*Extracted'):
                     if line.strip():
                         description_lines.append(line.strip())
                     else:
                         break  # Stop at empty line
+                elif found_title and line.startswith('##'):
+                    break  # Stop at first section header
 
             if description_lines:
                 component['description'] = ' '.join(description_lines)
@@ -1010,15 +1201,22 @@ class RegistryManager:
             installation_started = False
             installation_lines = []
             for line in lines:
-                if '## Installation' in line or ('```bash' in line and 'npm install' in content):
+                if '## Installation' in line:
                     installation_started = True
-                if installation_started and ('```' in line and not line.startswith('```bash')):
-                    break
-                if installation_started and line.strip():
+                    continue  # Skip the ## Installation line
+                if installation_started and line.startswith('```bash'):
+                    installation_lines.append(line.strip())
+                elif installation_started and line.startswith('```') and not line.startswith('```bash'):
+                    break  # End of installation section
+                elif installation_started and line.strip():
                     installation_lines.append(line.strip())
 
             if installation_lines:
-                component['installation'] = ' '.join(installation_lines)
+                # Join lines and format as code block if not already
+                installation = '\n'.join(installation_lines)
+                if not installation.startswith('```bash'):
+                    installation = f"```bash\n{installation}\n```"
+                component['installation'] = installation
 
             # Extract usage example
             usage_started = False
@@ -1096,91 +1294,21 @@ class RegistryManager:
         return min(score, 1.0)  # Cap at 1.0
 
     def index_registry_files(self, registry_name: str) -> bool:
-        """Index markdown files from registry into vector database"""
+        """Index markdown files from registry into vector database using centralized DatabaseManager"""
         try:
-            registry_info = self.registries.get(registry_name)
-            if not registry_info:
-                self.logger.error(f"Registry '{registry_name}' not found")
-                return False
+            # Use centralized database manager to rebuild the database
+            result = self.database_manager.rebuild_database(registry_name, "components")
 
-            collection = self.collections.get(registry_name)
-            if not collection:
-                self.logger.error(f"No collection found for registry '{registry_name}'")
-                return False
+            if result["success"]:
+                # Refresh the collection reference
+                collection = self.database_manager.get_database_client(registry_name, "components")
+                if collection:
+                    self.collections[registry_name] = collection
 
-            # Clear existing data in collection by getting all IDs and deleting them
-            if collection.count() > 0:
-                self.logger.info(f"Clearing existing data from {registry_name} collection")
-                try:
-                    # Get all existing documents to delete them
-                    existing = collection.get()
-                    if existing and existing.get('ids'):
-                        collection.delete(ids=existing['ids'])
-                        self.logger.info(f"Deleted {len(existing['ids'])} documents from {registry_name}")
-                except Exception as e:
-                    self.logger.warning(f"Failed to clear collection {registry_name}: {e}")
-                    # Continue with indexing even if clearing fails
-
-            # Find markdown files in the files directory
-            files_dir = Path(registry_info.path) / "files"
-            if not files_dir.exists():
-                self.logger.warning(f"Files directory not found for registry {registry_name}: {files_dir}")
-                return False
-
-            # Prepare data for indexing
-            documents = []
-            metadatas = []
-            ids = []
-
-            for file_path in files_dir.rglob("*.md"):
-                try:
-                    with open(file_path, 'r', encoding='utf-8') as f:
-                        content = f.read()
-
-                    # Parse component from markdown
-                    component = self._parse_component_from_markdown(file_path, content, registry_name)
-                    if component:
-                        # Create searchable text from component
-                        search_text = self._create_search_text_from_component(component)
-
-                        # Create metadata
-                        metadata = {
-                            "name": component.get("name", ""),
-                            "title": component.get("title", ""),
-                            "registry": registry_name,
-                            "source_file": component.get("source_file", ""),
-                            "tags": json.dumps(component.get("tags", [])),
-                            "platform": json.dumps(component.get("platform", [])),
-                            "type": "component",
-                            "file_path": str(file_path.relative_to(Path(self.base_path)))
-                        }
-
-                        # Add installation and usage to metadata if available
-                        if component.get("installation"):
-                            metadata["installation"] = component["installation"]
-                        if component.get("usage"):
-                            metadata["usage"] = component["usage"]
-
-                        documents.append(search_text)
-                        metadatas.append(metadata)
-                        ids.append(f"{registry_name}_{component.get('name', file_path.stem)}")
-
-                except Exception as e:
-                    self.logger.warning(f"Failed to process file {file_path}: {e}")
-                    continue
-
-            if documents:
-                # Add to collection in batch
-                collection.add(
-                    documents=documents,
-                    metadatas=metadatas,
-                    ids=ids
-                )
-
-                self.logger.info(f"Indexed {len(documents)} components into {registry_name} vector database")
+                self.logger.info(f"Successfully indexed {registry_name} with {result['documents_processed']} documents")
                 return True
             else:
-                self.logger.warning(f"No components found to index in {registry_name}")
+                self.logger.error(f"Failed to index {registry_name}: {result['error']}")
                 return False
 
         except Exception as e:

@@ -12,9 +12,20 @@ import json
 import sys
 import shutil
 import glob
+import os
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 from datetime import datetime
+
+# Add the rag-builder core directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent / "02-rag-builder" / "core"))
+
+try:
+    from database_manager import get_database_manager
+except ImportError as e:
+    print(f"Error importing DatabaseManager: {e}")
+    print("Make sure v2/core/02-rag-builder/core/ directory exists and contains database_manager.py")
+    sys.exit(1)
 
 
 class RegistryManager:
@@ -28,23 +39,52 @@ class RegistryManager:
         self.registries_dir = Path(registries_dir)
         self.registries_dir.mkdir(parents=True, exist_ok=True)
 
+        # Initialize centralized database manager
+        self.database_manager = get_database_manager(str(self.registries_dir))
+
+        # Initialize logger
+        import logging
+        self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
+
+    def _log_info(self, message: str):
+        """Log info message"""
+        self.logger.info(message)
+
+    def _log_error(self, message: str):
+        """Log error message"""
+        self.logger.error(message)
+
+    def _log_warning(self, message: str):
+        """Log warning message"""
+        self.logger.warning(message)
+
     def list_registries(self) -> List[Dict[str, Any]]:
         """List all available registries"""
         registries = []
 
         for registry_dir in self.registries_dir.iterdir():
             if registry_dir.is_dir() and registry_dir.name != '__pycache__':
-                db_dir = registry_dir / "db"
+                # Use standardized database path: {registry}/chroma_db/
+                db_dir = registry_dir / "chroma_db"
                 files_dir = registry_dir / "files"
+
+                # Count ChromaDB files including sqlite database and collection files
+                db_files = []
+                if db_dir.exists():
+                    db_files.extend(list(db_dir.glob("*.db")))
+                    db_files.extend(list(db_dir.glob("*.sqlite3")))
+                    db_files.extend(list(db_dir.glob("*.marker")))
+                    # Count all ChromaDB collection directory files
+                    db_files.extend(list(db_dir.rglob("*")))
 
                 registry_info = {
                     "name": registry_dir.name,
                     "path": str(registry_dir),
                     "db_exists": db_dir.exists(),
                     "files_exist": files_dir.exists(),
-                    "db_files": list(db_dir.glob("*.db")) if db_dir.exists() else [],
+                    "db_files": db_files,
                     "source_files": list(files_dir.rglob("*")) if files_dir.exists() else [],
-                    "total_db_files": len(list(db_dir.glob("*.db"))) if db_dir.exists() else 0,
+                    "total_db_files": len(db_files),
                     "total_source_files": len(list(files_dir.rglob("*"))) if files_dir.exists() else 0
                 }
                 registries.append(registry_info)
@@ -172,138 +212,31 @@ class RegistryManager:
         }
 
     def rebuild_registry_db(self, registry_name: str) -> Dict[str, Any]:
-        """Rebuild database from source files for a specific registry"""
-        registry_dir = self.registries_dir / registry_name
-
-        if not registry_dir.exists():
-            return {"success": False, "error": f"Registry '{registry_name}' not found"}
-
-        files_dir = registry_dir / "files"
-        db_dir = registry_dir / "db"
-
-        # Ensure db directory exists
-        db_dir.mkdir(parents=True, exist_ok=True)
-
-        # Get all source files
-        source_files = list(files_dir.rglob("*.md")) + list(files_dir.rglob("*.json"))
-
-        if not source_files:
-            return {
-                "success": False,
-                "error": f"No source files found in {registry_name}/files"
-            }
-
-        # Rebuild the vector database using ChromaDB
+        """Rebuild database for a registry using centralized DatabaseManager"""
         try:
-            import chromadb
-            from sentence_transformers import SentenceTransformer
-            import uuid
+            self._log_info(f"Rebuilding database for {registry_name} using DatabaseManager")
 
-            # Initialize sentence transformer model
-            model = SentenceTransformer('all-MiniLM-L6-v2')
+            # Use centralized DatabaseManager
+            result = self.database_manager.rebuild_database(registry_name, "components")
 
-            # Create ChromaDB client
-            client = chromadb.PersistentClient(path=str(db_dir))
-
-            # Delete existing collection if it exists
-            try:
-                client.delete_collection(name="components")
-            except:
-                pass
-
-            # Create new collection
-            collection = client.create_collection(name="components")
-
-            # Process each source file
-            documents = []
-            metadatas = []
-            ids = []
-
-            for source_file in source_files:
-                try:
-                    # Read file content
-                    with open(source_file, 'r', encoding='utf-8') as f:
-                        content = f.read()
-
-                    # Extract metadata from filename
-                    relative_path = source_file.relative_to(files_dir)
-                    registry_type = relative_path.parts[0] if len(relative_path.parts) > 1 else registry_name
-                    component_type = relative_path.parts[1] if len(relative_path.parts) > 2 else "component"
-                    component_name = source_file.stem
-
-                    # Extract title from content
-                    title = content.split('\n')[0].replace('# ', '') if content.startswith('# ') else component_name
-
-                    # Create metadata
-                    metadata = {
-                        "registry": registry_type,
-                        "type": component_type,
-                        "name": component_name,
-                        "title": title,
-                        "file_path": str(relative_path),
-                        "source_file": str(source_file)
-                    }
-
-                    # Extract tags if present
-                    if "**Tags**:" in content:
-                        tags_line = content.split("**Tags**:")[1].split('\n')[0]
-                        metadata["tags"] = tags_line.strip()
-
-                    # Add to batch
-                    documents.append(content)
-                    metadatas.append(metadata)
-                    ids.append(str(uuid.uuid4()))
-
-                except Exception as e:
-                    print(f"Warning: Could not process {source_file}: {e}")
-                    continue
-
-            # Add documents to ChromaDB in batches
-            if documents:
-                batch_size = 100
-                for i in range(0, len(documents), batch_size):
-                    batch_docs = documents[i:i+batch_size]
-                    batch_metas = metadatas[i:i+batch_size]
-                    batch_ids = ids[i:i+batch_size]
-
-                    collection.add(
-                        documents=batch_docs,
-                        metadatas=batch_metas,
-                        ids=batch_ids
-                    )
-
-                # Create vector database file marker
-                db_marker = db_dir / f"{registry_name}_vector_db.marker"
-                with open(db_marker, 'w') as f:
-                    f.write(f"Vector database created at {datetime.now().isoformat()}\n")
-                    f.write(f"Documents processed: {len(documents)}\n")
-                    f.write(f"Registry: {registry_name}\n")
-
-                return {
-                    "success": True,
-                    "registry": registry_name,
-                    "source_files_found": len(source_files),
-                    "documents_processed": len(documents),
-                    "vector_db_created": True,
-                    "collection_name": "components",
-                    "message": f"Successfully rebuilt {registry_name} vector database with {len(documents)} documents"
-                }
+            # Add timestamp for consistency with CLI responses
+            if result["success"]:
+                result["timestamp"] = datetime.now().isoformat()
+                self._log_info(f"Database rebuilt successfully: {result.get('message', 'No message')}")
             else:
-                return {
-                    "success": False,
-                    "registry": registry_name,
-                    "error": "No valid documents could be processed from source files"
-                }
+                self._log_error(f"Database rebuild failed: {result.get('error', 'Unknown error')}")
+                result["timestamp"] = datetime.now().isoformat()
 
-        except ImportError as e:
-            return {
-                "success": False,
-                "error": f"Required dependencies not installed: {e}. Install with: pip install chromadb sentence-transformers"
-            }
+            return result
+
         except Exception as e:
+            error_msg = f"Failed to rebuild database for {registry_name}: {e}"
+            self._log_error(error_msg)
             return {
                 "success": False,
-                "error": f"Failed to rebuild vector database: {str(e)}"
+                "error": str(e),
+                "registry": registry_name,
+                "timestamp": datetime.now().isoformat()
             }
 
     def get_system_status(self) -> Dict[str, Any]:

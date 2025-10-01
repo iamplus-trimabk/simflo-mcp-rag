@@ -135,7 +135,13 @@ class SimpleGluestackExtractor:
 
                 # Extract real component data from the files found
                 for file_path in component_files[:10]:  # Limit to first 10 components
-                    component_name = file_path.stem.replace('index.', '')
+                    # Extract component name from directory structure for gluestack
+                    if file_path.stem == 'index':
+                        # For files like /button/index.tsx, get component name from parent directory
+                        component_name = file_path.parent.name
+                    else:
+                        # For files with actual names like styles.tsx
+                        component_name = file_path.stem.replace('index.', '')
 
                     # Read file content
                     try:
