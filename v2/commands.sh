@@ -7,6 +7,9 @@
 #
 # All commands default to JSON format for structured output and AI integration
 
+# Content Root Environment Variable
+export CONTENT_ROOT="/Users/tbardale/v2/simflo-mcp-rag/content"
+
 # RAG Registry Commands
 alias rag_registry="python3 v2/core/00-rag-registry/registry.py"
 alias rag_registry_list="python3 v2/core/00-rag-registry/registry.py list --format json"
@@ -64,27 +67,37 @@ alias simflo_test="test_registry && test_mcp"
 
 # Helper Functions
 simflo_help() {
-    echo "SimFlo RAG v2 - Command Aliases"
+    echo "SimFlo RAG v2 - Command Aliases (Opinionated: shadcn + gluestack)"
     echo ""
     echo "Core Commands:"
-    echo "  rag_registry_*     - Registry management commands"
+    echo "  rag_registry_*     - Registry management (shadcn + gluestack only)"
     echo "  mcp_*             - MCP server commands (AI assistant integration)"
     echo "  rag_builder_*     - RAG pipeline commands"
     echo "  content_*         - Content collection commands"
-    echo "  extractors_*      - Content extraction commands"
+    echo "  extractors_*      - Content extraction (GitHub CLI based)"
     echo ""
     echo "Status & Testing:"
     echo "  simflo_status     - Show status across all components"
     echo "  simflo_test       - Run core test suites"
     echo "  test_*            - Individual component test commands"
     echo ""
+    echo "Supported Libraries:"
+    echo "  shadcn            - Modern React components (shadcn-ui/ui)"
+    echo "  gluestack         - Cross-platform React/React Native components"
+    echo ""
     echo "Examples:"
     echo "  mcp_search \"button\" --limit 5"
     echo "  rag_registry_search --query \"dialog\""
-    echo "  extractors_run_all"
+    echo "  extractors_run shadcn"
+    echo "  extractors_run gluestack"
     echo "  simflo_status"
     echo ""
-    echo "For full documentation, see v2/CLAUDE.md in each component directory"
+    echo "Environment:"
+    echo "  CONTENT_ROOT      - Content storage path (configurable)"
+    echo "  GitHub CLI        - Required for repository access (gh command)"
+    echo ""
+    echo "For AI assistant integration guide: v2/docs/ai-assistant-integration.md"
+    echo "For full documentation: v2/CLAUDE.md"
 }
 
 # Auto-setup function

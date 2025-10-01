@@ -22,11 +22,11 @@ All component-to-component communication uses CLI interfaces with simple Python 
 - Registry-based organization for RAG databases
 
 ## Completed Components
-- **00-rag-registry**: ✅ Complete - Registry-based organization with CLI management commands
-- **01-mcp-server**: ✅ Complete - CLI-only architecture with 12 commands for AI assistant integration + comprehensive user guide
+- **00-rag-registry**: ✅ Complete - Registry-based organization with CLI management commands (shadcn + gluestack only)
+- **01-mcp-server**: ✅ Complete - CLI-only architecture with 18 commands for AI assistant integration + comprehensive user guide
 - **02-rag-builder**: ✅ Complete - Pipeline orchestration with CLI wrapper
 - **03-content-collection**: ✅ Complete - Source discovery and content acquisition with CLI interface
-- **04-extractors**: ✅ Complete - CLI wrapper with access to 11 specialized extractors for content extraction + comprehensive user guide
+- **04-extractors**: ✅ Complete - CLI wrapper with 2 opinionated extractors (shadcn + gluestack) using GitHub CLI
 
 ## Command Alias System
 
@@ -79,9 +79,10 @@ content_discover --query "react components" --source-type github --limit 10
 content_list_source_types
 content_status
 
-# Extractors CLI (Working) - Content extraction
+# Extractors CLI (Working) - Content extraction (GitHub CLI + opinionated)
 extractors_list
 extractors_run shadcn
+extractors_run gluestack
 extractors_run_all
 extractors_status
 
@@ -92,3 +93,21 @@ test_content              # Content collection tests
 test_extractors           # Extractor tests
 test_all                  # Run all tests
 ```
+
+## Opinionated Approach
+
+SimFlo RAG v2 takes an opinionated approach to component library support:
+
+### Supported Libraries (Only)
+- **shadcn**: Modern React component library with Radix UI primitives
+- **gluestack**: Cross-platform component library (React + React Native)
+
+### Key Features
+- **GitHub CLI Integration**: Uses `gh` command for reliable repository access
+- **Local-First**: Repositories downloaded to `$CONTENT_ROOT/github/{repo-name}`
+- **No Sample Data**: Only real component data from actual repositories
+- **Environment Variables**: Uses `$CONTENT_ROOT` for configurable paths
+
+### Excluded Libraries
+- radix-ui, mui, ant-design, and others are intentionally not supported
+- This opinionated approach ensures focused, high-quality support for the selected libraries

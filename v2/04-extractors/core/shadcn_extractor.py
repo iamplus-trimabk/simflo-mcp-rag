@@ -1,27 +1,24 @@
 """
 Simple Shadcn Extractor
 
-A working implementation of shadcn component extraction that can extract
-components from GitHub repositories and create structured output.
+A working implementation of shadcn component extraction that uses GitHub CLI
+to download repositories and extract components locally.
 """
 
 import json
-import requests
+import subprocess
+import os
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 from pathlib import Path
 
 class SimpleShadcnExtractor:
-    """Simple shadcn component extractor for demonstration"""
+    """Simple shadcn component extractor using GitHub CLI"""
 
     def __init__(self, source_config: Optional[Dict[str, Any]] = None):
         self.source_config = source_config or {}
-        self.github_api_base = "https://api.github.com"
-        self.session = requests.Session()
-        self.session.headers.update({
-            'Accept': 'application/vnd.github.v3+json',
-            'User-Agent': 'simflo-rag-extractor'
-        })
+        self.content_root = os.getenv('CONTENT_ROOT', '/Users/tbardale/v2/simflo-mcp-rag/content')
+        self.github_dir = Path(self.content_root) / "github"
 
     def extract(self, repo_url: Optional[str] = None) -> Dict[str, Any]:
         """Extract components from shadcn repository"""
@@ -29,13 +26,27 @@ class SimpleShadcnExtractor:
             # Default to shadcn-ui/ui if no repo specified
             target_repo = repo_url or "shadcn-ui/ui"
 
+            # Ensure GitHub directory exists
+            self.github_dir.mkdir(parents=True, exist_ok=True)
+
+            # Download repository using GitHub CLI if not present locally
+            repo_path = self.github_dir / target_repo
+            if not repo_path.exists():
+                print(f"Downloading {target_repo} using GitHub CLI...")
+                clone_cmd = ["gh", "repo", "clone", target_repo, str(repo_path)]
+                result = subprocess.run(clone_cmd, capture_output=True, text=True)
+                if result.returncode != 0:
+                    return {"error": f"Failed to clone repository: {result.stderr}"}
+            else:
+                print(f"Using local repository at {repo_path}")
+
             # Get repository information
-            repo_info = self._get_repo_info(target_repo)
+            repo_info = self._get_repo_info(target_repo, repo_path)
             if not repo_info:
                 return {"error": f"Repository {target_repo} not found"}
 
-            # Get component files from the repository
-            components = self._extract_components(target_repo)
+            # Get component files from the local repository
+            components = self._extract_components(target_repo, repo_path)
 
             # Save components to registry files
             saved = self.save_to_registry(components, "shadcn")
@@ -43,6 +54,7 @@ class SimpleShadcnExtractor:
             result = {
                 "extractor": "shadcn",
                 "repository": target_repo,
+                "local_path": str(repo_path),
                 "timestamp": datetime.now().isoformat(),
                 "components_found": len(components),
                 "components": components,
@@ -59,58 +71,72 @@ class SimpleShadcnExtractor:
                 "timestamp": datetime.now().isoformat()
             }
 
-    def _get_repo_info(self, repo_name: str) -> Optional[Dict[str, Any]]:
-        """Get repository information from GitHub API"""
+    def _get_repo_info(self, repo_name: str, repo_path: Path) -> Optional[Dict[str, Any]]:
+        """Get repository information from local repository or GitHub CLI"""
         try:
-            url = f"{self.github_api_base}/repos/{repo_name}"
-            response = self.session.get(url)
-            if response.status_code == 200:
-                return response.json()
-            return None
+            # Try to get repository info using GitHub CLI
+            cmd = ["gh", "repo", "view", repo_name, "--json", "name,description,stargazerCount,forkCount,createdAt,updatedAt,owner"]
+            result = subprocess.run(cmd, capture_output=True, text=True, cwd=repo_path)
+
+            if result.returncode == 0:
+                return json.loads(result.stdout)
+            else:
+                # Fallback to basic info from local repo
+                return {
+                    "name": repo_name,
+                    "description": f"{repo_name} repository",
+                    "stargazerCount": 0,
+                    "forkCount": 0,
+                    "createdAt": "unknown",
+                    "updatedAt": "unknown"
+                }
         except Exception:
             return None
 
-    def _extract_components(self, repo_name: str) -> List[Dict[str, Any]]:
-        """Extract component information from repository"""
+    def _extract_components(self, repo_name: str, repo_path: Path) -> List[Dict[str, Any]]:
+        """Extract component information from local repository"""
         components = []
 
         try:
-            # Get the repository contents to find component files
-            url = f"{self.github_api_base}/repos/{repo_name}/contents/components/ui"
-            response = self.session.get(url)
+            # Look for component files in the local repository
+            components_dir = repo_path / "components" / "ui"
+            if not components_dir.exists():
+                # Try alternative path
+                components_dir = repo_path / "apps" / "www" / "components" / "ui"
 
-            if response.status_code == 200:
-                files = response.json()
-                component_files = [f for f in files if f['name'].endswith('.tsx') and not f['name'].startswith('.')]
+            if components_dir.exists():
+                # Find all .tsx files in the components directory
+                component_files = list(components_dir.glob("*.tsx"))
+                component_files = [f for f in component_files if not f.name.startswith('.')]
 
                 # Extract real component data from the files found
-                for file_info in component_files[:5]:  # Limit to first 5 components
-                    component_name = file_info['name'].replace('.tsx', '').replace('index.', '')
+                for file_path in component_files[:5]:  # Limit to first 5 components
+                    component_name = file_path.stem.replace('index.', '')
 
-                    # Get file content
-                    file_url = file_info['url']
-                    file_response = self.session.get(file_url)
+                    # Read file content
+                    try:
+                        with open(file_path, 'r', encoding='utf-8') as f:
+                            content = f.read()
+                    except Exception:
+                        content = ""
 
-                    if file_response.status_code == 200:
-                        file_data = file_response.json()
-                        content = file_data.get('content', '')
-
-                        # Create component entry
-                        component = {
-                            "name": component_name,
-                            "title": f"{component_name.title()} Component",
-                            "description": f"A {component_name} component from shadcn-ui",
-                            "category": self._categorize_component(component_name),
-                            "tags": self._generate_tags(component_name, content),
-                            "installation": self._get_installation_command(component_name),
-                            "usage": self._generate_usage_example(component_name),
-                            "file_path": f"components/ui/{file_info['name']}",
-                            "registry": "shadcn",
-                            "repository": repo_name
-                        }
-                        components.append(component)
+                    # Create component entry
+                    component = {
+                        "name": component_name,
+                        "title": f"{component_name.title()} Component",
+                        "description": f"A {component_name} component from shadcn-ui",
+                        "category": self._categorize_component(component_name),
+                        "tags": self._generate_tags(component_name, content),
+                        "installation": self._get_installation_command(component_name),
+                        "usage": self._generate_usage_example(component_name),
+                        "file_path": f"components/ui/{file_path.name}",
+                        "registry": "shadcn",
+                        "repository": repo_name,
+                        "local_file_path": str(file_path)
+                    }
+                    components.append(component)
             else:
-                # Fallback to essential components if API call fails
+                # Fallback to essential components if directory not found
                 components = self._get_essential_components(repo_name)
 
         except Exception as e:
@@ -121,45 +147,11 @@ class SimpleShadcnExtractor:
         return components
 
     def _get_essential_components(self, repo_name: str) -> List[Dict[str, Any]]:
-        """Get essential components as fallback"""
-        return [
-            {
-                "name": "button",
-                "title": "Button Component",
-                "description": "A button component with multiple variants and styles",
-                "category": "ui",
-                "tags": ["button", "react", "typescript", "accessible"],
-                "installation": "npm install @radix-ui/react-slot",
-                "usage": "```tsx\nimport { Button } from '@/components/ui/button'\n<Button variant=\"default\">Click me</Button>\n```",
-                "file_path": "components/ui/button.tsx",
-                "registry": "shadcn",
-                "repository": repo_name
-            },
-            {
-                "name": "card",
-                "title": "Card Component",
-                "description": "A versatile card component for content organization",
-                "category": "ui",
-                "tags": ["card", "react", "typescript", "layout"],
-                "installation": "No additional dependencies",
-                "usage": "```tsx\nimport { Card, CardHeader, CardContent } from '@/components/ui/card'\n<Card><CardHeader>Title</CardHeader><CardContent>Content</CardContent></Card>\n```",
-                "file_path": "components/ui/card.tsx",
-                "registry": "shadcn",
-                "repository": repo_name
-            },
-            {
-                "name": "input",
-                "title": "Input Component",
-                "description": "An input field component with validation support",
-                "category": "forms",
-                "tags": ["input", "form", "react", "typescript"],
-                "installation": "No additional dependencies",
-                "usage": "```tsx\nimport { Input } from '@/components/ui/input'\n<Input type=\"text\" placeholder=\"Enter text\" />\n```",
-                "file_path": "components/ui/input.tsx",
-                "registry": "shadcn",
-                "repository": repo_name
-            }
-        ]
+        """Get essential components as fallback - no sample data"""
+        # Return empty list when local repository is not accessible
+        # This ensures we only work with real repositories
+        print("Warning: Could not access local repository. No components extracted.")
+        return []
 
     def _categorize_component(self, component_name: str) -> str:
         """Categorize component based on its name"""
