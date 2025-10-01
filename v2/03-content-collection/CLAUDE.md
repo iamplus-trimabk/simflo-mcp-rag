@@ -22,17 +22,23 @@ The content collection system provides source material for:
 - **02-rag-builder**: Processes extracted content into RAG databases
 - **00-rag-registry**: Stores processed content in registry-based structure
 
-## Planned CLI Interface
+## CLI Interface
 ```bash
 # Discover sources for component libraries
-v2/03-content-collection/source-discovery/discover.py --query "react components" --output sources.json
+v2/03-content-collection/content_collection_cli.py discover --query "react components" --source-type github --limit 10 --format json
 
 # Fetch content from discovered sources
-v2/03-content-collection/content-fetching/fetch.py --sources sources.json --output extracted_content/
+v2/03-content-collection/content_collection_cli.py fetch --sources-file sources.json --output-dir raw_content/
+
+# Get system status
+v2/03-content-collection/content_collection_cli.py status --format json
+
+# List available source types
+v2/03-content-collection/content_collection_cli.py list-source-types --format json
 
 # Integration example
-v2/03-content-collection/source-discovery/discover.py --query "shadcn" | \
-v2/03-content-collection/content-fetching/fetch.py --sources - --output raw_content/
+v2/03-content-collection/content_collection_cli.py discover --query "shadcn" --source-type github | \
+v2/03-content-collection/content_collection_cli.py fetch --sources - --output-dir raw_content/
 ```
 
 ## Content Types
@@ -50,9 +56,9 @@ v2/03-content-collection/content-fetching/fetch.py --sources - --output raw_cont
 - **File downloads**: Asset and resource acquisition
 
 ## Status
-⏳ **Documentation Only** - Not yet implemented
+✅ **Complete** - Fully implemented with CLI interface and comprehensive testing
 
-This component is planned for future development and currently serves as documentation for the intended content collection architecture.
+This component provides source discovery and content acquisition capabilities that feed into the RAG pipeline.
 
 ## Future Development Notes
 

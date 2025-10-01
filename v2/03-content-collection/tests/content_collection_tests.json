@@ -1,0 +1,61 @@
+{
+  "description": "Essential test suite for Content Collection CLI commands",
+  "tests": [
+    {
+      "test_name": "help_command",
+      "description": "Test main help command",
+      "command": "python3 v2/03-content-collection/content_collection_cli.py --help",
+      "expected_exit_code": 0,
+      "expected_stdout_pattern": ".*Content Collection CLI.*Source discovery and content acquisition.*"
+    },
+    {
+      "test_name": "status_command",
+      "description": "Test status command",
+      "command": "python3 v2/03-content-collection/content_collection_cli.py status",
+      "expected_exit_code": 0,
+      "expected_stdout_pattern": ".*success.*true.*component.*03-content-collection.*"
+    },
+    {
+      "test_name": "list_source_types",
+      "description": "Test list source types command",
+      "command": "python3 v2/03-content-collection/content_collection_cli.py list-source-types",
+      "expected_exit_code": 0,
+      "expected_stdout_pattern": ".*available_source_types.*github.*npm.*documentation.*"
+    },
+    {
+      "test_name": "discover_help",
+      "description": "Test discover command help",
+      "command": "python3 v2/03-content-collection/content_collection_cli.py discover --help",
+      "expected_exit_code": 0,
+      "expected_stdout_pattern": ".*discover.*query.*source-type.*limit.*"
+    },
+    {
+      "test_name": "discover_command",
+      "description": "Test discover command with query",
+      "command": "python3 v2/03-content-collection/content_collection_cli.py discover --query \"react components\" --source-type github --limit 5",
+      "expected_exit_code": 0,
+      "expected_stdout_pattern": ".*success.*true.*query.*react components.*sources.*"
+    },
+    {
+      "test_name": "fetch_help",
+      "description": "Test fetch command help",
+      "command": "python3 v2/03-content-collection/content_collection_cli.py fetch --help",
+      "expected_exit_code": 0,
+      "expected_stdout_pattern": ".*fetch.*sources-file.*output-dir.*parallel.*"
+    },
+    {
+      "test_name": "fetch_without_sources",
+      "description": "Test fetch command without sources",
+      "command": "python3 v2/03-content-collection/content_collection_cli.py fetch --output-dir test_output",
+      "expected_exit_code": 0,
+      "expected_stdout_pattern": ".*success.*true.*total_sources.*0.*"
+    },
+    {
+      "test_name": "table_format",
+      "description": "Test table output format",
+      "command": "python3 v2/03-content-collection/content_collection_cli.py status --format table",
+      "expected_exit_code": 0,
+      "expected_stdout_pattern": ".*03-content-collection.*documentation_only.*"
+    }
+  ]
+}
