@@ -71,10 +71,10 @@ All commands return structured JSON:
 Run comprehensive test suite:
 ```bash
 # Run all MCP server tests
-python3 v2/core/mcp-server/tests/run.py --verbose
+python3 v2/core/01-mcp-server/tests/run.py --verbose
 
 # Run specific test file
-python3 v2/tests/cmd_test_executor.py v2/core/mcp-server/tests/mcp_tests.json
+python3 v2/tests/cmd_test_executor.py v2/core/01-mcp-server/tests/mcp_tests.json
 ```
 
 ## Test Coverage
@@ -88,15 +88,15 @@ python3 v2/tests/cmd_test_executor.py v2/core/mcp-server/tests/mcp_tests.json
 AI assistants can use this CLI directly:
 ```bash
 # Example AI assistant integration
-python3 v2/core/mcp-server/mcp_server.py search "modal dialog with form validation" --platform reactjs --limit 5 --format json
+python3 v2/core/01-mcp-server/mcp_server.py search "modal dialog with form validation" --platform reactjs --limit 5 --format json
 ```
 
 Returns structured JSON with component matches, relevance scores, and installation information.
 
 ## Documentation
 
-- **User Guide**: `v2/core/mcp-server/user_guide.md` - Comprehensive usage examples and AI integration patterns
-- **Test Suite**: `v2/core/mcp-server/tests/mcp_tests.json` - 14 comprehensive test cases
+- **User Guide**: `v2/core/01-mcp-server/user_guide.md` - Comprehensive usage examples and AI integration patterns
+- **Test Suite**: `v2/core/01-mcp-server/tests/mcp_tests.json` - 14 comprehensive test cases
 
 ## Key Benefits
 - **Simplicity**: No MCP protocol overhead

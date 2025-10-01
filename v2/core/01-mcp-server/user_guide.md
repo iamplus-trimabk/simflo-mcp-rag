@@ -44,7 +44,7 @@ python3 v2/core/01-mcp-server/mcp_server.py search "form input validation" --for
       {
         "name": "button",
         "type": "component",
-        "registry": "shadcn_db",
+        "registry": "shadcn",
         "relevance_score": 0.95,
         "platform_relevance": 1.0,
         "description": "Accessible button component with variants"
@@ -63,7 +63,7 @@ Retrieve detailed information about a specific component.
 python3 v2/core/01-mcp-server/mcp_server.py get-component button
 
 # Get component from specific registry
-python3 v2/core/01-mcp-server/mcp_server.py get-component dialog --registry shadcn_db
+python3 v2/core/01-mcp-server/mcp_server.py get-component dialog --registry shadcn
 
 # Get component with table output
 python3 v2/core/01-mcp-server/mcp_server.py get-component input --format table
@@ -78,7 +78,7 @@ python3 v2/core/01-mcp-server/mcp_server.py get-component input --format table
     "name": "button",
     "type": "component",
     "description": "Accessible button component with multiple variants",
-    "registry": "shadcn_db",
+    "registry": "shadcn",
     "platform": ["reactjs"],
     "dependencies": ["@radix-ui/react-slot"],
     "install_command": "npx shadcn-ui@latest add button",
@@ -102,7 +102,7 @@ python3 v2/core/01-mcp-server/mcp_server.py list-components --limit 20
 python3 v2/core/01-mcp-server/mcp_server.py list-components --type ui --limit 10
 
 # List components from specific registry with platform filter
-python3 v2/core/01-mcp-server/mcp_server.py list-components --registry shadcn_db --platform reactjs
+python3 v2/core/01-mcp-server/mcp_server.py list-components --registry shadcn --platform reactjs
 ```
 
 **Output Example:**
@@ -112,7 +112,7 @@ python3 v2/core/01-mcp-server/mcp_server.py list-components --registry shadcn_db
   "timestamp": "2025-09-30T21:37:01.043963",
   "data": {
     "type": "ui",
-    "registry": "shadcn_db",
+    "registry": "shadcn",
     "platform": "reactjs",
     "total_count": 25,
     "components": [
@@ -218,8 +218,8 @@ python3 v2/core/01-mcp-server/mcp_server.py list-registries --format table
     "total_registries": 4,
     "registries": [
       {
-        "name": "shadcn_db",
-        "path": "rag_databases/shadcn_db",
+        "name": "shadcn",
+        "path": "rag_databases/shadcn",
         "platform": ["reactjs"],
         "description": "Component registry for shadcn",
         "component_count": 80,
@@ -263,7 +263,7 @@ python3 v2/core/01-mcp-server/mcp_server.py set-context reactjs --session-id ai-
 python3 v2/core/01-mcp-server/mcp_server.py search "form with validation and submit button" --limit 5
 
 # 3. Get detailed information about specific components
-python3 v2/core/01-mcp-server/mcp_server.py get-component form --registry shadcn_db
+python3 v2/core/01-mcp-server/mcp_server.py get-component form --registry shadcn
 
 # 4. List related components
 python3 v2/core/01-mcp-server/mcp_server.py list-components --type ui --platform reactjs
@@ -376,10 +376,10 @@ python3 v2/core/01-mcp-server/mcp_server.py list-components --platform reactnati
 python3 v2/core/01-mcp-server/mcp_server.py list-registries --platform reactjs
 
 # Browse shadcn components
-python3 v2/core/01-mcp-server/mcp_server.py list-components --registry shadcn_db --type ui
+python3 v2/core/01-mcp-server/mcp_server.py list-components --registry shadcn --type ui
 
 # Search for specific patterns
-python3 v2/core/01-mcp-server/mcp_server.py search "accessible form components" --registry shadcn_db
+python3 v2/core/01-mcp-server/mcp_server.py search "accessible form components" --registry shadcn
 ```
 
 ## Troubleshooting

@@ -16,7 +16,7 @@ CLI-First architecture is a design pattern where:
 
 ### Why CLI-First?
 
-Traditional microservices architectures introduce complexity through:
+Traditional microservices architectures can introduce complexity through:
 - HTTP serialization/deserialization overhead
 - Network latency and reliability issues
 - Complex service discovery and load balancing
@@ -24,8 +24,8 @@ Traditional microservices architectures introduce complexity through:
 - Difficult debugging and testing
 
 CLI-First architecture addresses these issues by:
-- **Eliminating network overhead** with direct module calls
-- **Simplifying debugging** with visible command execution
+- **Simplifying communication** with direct module calls
+- **Making debugging visible** through command execution
 - **Enabling loose coupling** through stable CLI interfaces
 - **Supporting natural composition** with Unix pipeline principles
 - **Providing language-agnostic** integration points
@@ -144,34 +144,21 @@ extract_content --extractor-type shadcn | \
 build_rag_database --registry shadcn
 ```
 
-## Benefits Analysis
+## Benefits Overview
 
-### Performance Benefits
+### Key Advantages
 
-| Aspect | Traditional API | CLI-First |
-|--------|----------------|-----------|
-| Network Overhead | HTTP headers, serialization | Direct module calls |
-| Latency | 10-100ms (network) | <1ms (function call) |
-| Memory Usage | Higher (HTTP stacks) | Lower (direct calls) |
-| CPU Usage | Higher (serialization) | Lower (direct objects) |
+**Development Benefits:**
+- **Simplified Debugging**: Command visibility makes issues easier to identify
+- **Straightforward Testing**: CLI commands can be tested directly
+- **Self-Documenting**: Help commands provide built-in documentation
+- **Faster Development**: Direct execution without network setup
 
-### Development Benefits
-
-| Aspect | Traditional API | CLI-First |
-|--------|----------------|-----------|
-| Debugging | Complex (distributed tracing) | Simple (command visibility) |
-| Testing | Integration tests heavy | Unit/test CLI commands |
-| Documentation | API specs required | Self-documenting CLI |
-| Development Speed | Slower (network setup) | Faster (direct execution) |
-
-### Operational Benefits
-
-| Aspect | Traditional API | CLI-First |
-|--------|----------------|-----------|
-| Deployment | Multiple services | Single codebase |
-| Monitoring | Complex (distributed) | Simple (process monitoring) |
-| Scaling | Complex (service scaling) | Simple (process scaling) |
-| Maintenance | High (service dependencies) | Low (process isolation) |
+**Operational Benefits:**
+- **Unified Deployment**: Single codebase instead of multiple services
+- **Simple Monitoring**: Process monitoring instead of distributed tracing
+- **Easy Maintenance**: Process isolation reduces dependency complexity
+- **Natural Composition**: Unix pipeline principles for data flow
 
 ## Component Integration
 
@@ -299,36 +286,36 @@ def run_tests(test_file, verbose=False):
    - Use generic error messages for security
    - Log detailed errors securely
 
-## Performance Optimization
+## Optimization Guidelines
 
-### CLI Optimization
+### CLI Best Practices
 
-1. **Argument Parsing**
+1. **Argument Processing**
    - Use efficient argument parsers
    - Cache parsed arguments when possible
    - Minimize argument processing overhead
 
-2. **JSON Processing**
-   - Use fast JSON libraries
-   - Stream large JSON responses
+2. **JSON Handling**
+   - Use standard JSON libraries
+   - Handle large responses efficiently
    - Minimize serialization overhead
 
 3. **Process Management**
-   - Reuse processes when possible
-   - Minimize process startup time
-   - Use connection pooling for external services
+   - Use subprocess efficiently
+   - Handle timeouts appropriately
+   - Manage resource usage
 
-### Data Flow Optimization
+### Data Flow Practices
 
 1. **Lazy Loading**
    - Load data only when needed
    - Stream large datasets
-   - Implement pagination
+   - Implement pagination where appropriate
 
-2. **Caching**
+2. **Caching Strategies**
    - Cache CLI command results
    - Use memoization for expensive operations
-   - Implement intelligent cache invalidation
+   - Implement appropriate cache invalidation
 
 ## Migration Guide
 
@@ -371,55 +358,43 @@ def run_tests(test_file, verbose=False):
    - Track performance metrics
    - Monitor error rates and patterns
 
-## Future Enhancements
+## Enhancement Opportunities
 
-### Planned Improvements
+### Potential Improvements
 
-1. **Advanced CLI Features**
+1. **CLI Features**
    - Interactive command interfaces
    - Auto-completion support
    - Progress indicators for long operations
 
-2. **Performance Enhancements**
-   - Parallel CLI execution
-   - Result streaming
-   - Smart caching strategies
-
-3. **Developer Experience**
+2. **Developer Experience**
    - Integrated development tools
-   - Debugging utilities
-   - Performance profiling
+   - Enhanced debugging utilities
+   - Better error reporting
 
-### Research Directions
-
-1. **Distributed CLI Patterns**
-   - Multi-machine CLI orchestration
-   - Remote command execution
-   - Distributed result aggregation
-
-2. **Security Enhancements**
+3. **Security**
    - CLI authentication mechanisms
-   - Encrypted command channels
    - Audit logging capabilities
+   - Secure command channels
 
-3. **Monitoring and Observability**
+4. **Monitoring**
    - CLI performance monitoring
    - Resource usage tracking
-   - Automated alerting systems
+   - Error rate monitoring
 
 ## Conclusion
 
-CLI-First architecture offers significant advantages over traditional API-based microservices for certain types of systems, particularly those with:
+CLI-First architecture offers practical advantages for certain types of systems, particularly those with:
 
 - **Simple data transformation requirements**
-- **Need for high performance**
 - **Emphasis on developer productivity**
 - **Requirement for simple deployment**
+- **Natural pipeline composition needs**
 
 The simflo-rag v2 implementation demonstrates that CLI-First architecture can provide:
-- **40% reduction in system complexity**
-- **Significant performance improvements**
-- **Simplified development and testing**
-- **Better resource utilization**
+- **Simplified system complexity**
+- **Straightforward development and testing**
+- **Natural Unix-style composition**
+- **Clear debugging and maintenance**
 
-This architectural pattern represents a viable alternative to traditional microservices, particularly well-suited for data processing pipelines, content management systems, and AI-powered applications.
+This architectural pattern represents a practical alternative to traditional microservices, particularly well-suited for data processing pipelines, content management systems, and RAG applications.

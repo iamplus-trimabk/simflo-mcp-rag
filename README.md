@@ -1,16 +1,6 @@
 # simflo-rag v2: CLI-First RAG Architecture
 
-**A revolutionary CLI-first Retrieval-Augmented Generation system that demonstrates how command-line interfaces can provide superior simplicity, performance, and maintainability compared to traditional API-based microservices.**
-
-## 🎯 Research Overview
-
-**Research Question:** Can a CLI-first architecture provide superior simplicity, performance, and maintainability compared to traditional API-based microservices for RAG systems?
-
-**Answer:** ✅ **YES** - Our implementation validates that CLI-first architecture provides:
-- **40% reduction in system complexity**
-- **100% test coverage with simple CLI testing**
-- **Zero network overhead and sub-millisecond latency**
-- **Natural pipeline composition**
+**A CLI-first Retrieval-Augmented Generation system that demonstrates how command-line interfaces can provide simplicity, maintainability, and natural composition for RAG systems.**
 
 ## 🏗️ Architecture Overview
 
@@ -120,23 +110,12 @@ python3 v2/04-extractors/extractors_cli.py run-extractor shadcn
 python3 v2/04-extractors/extractors_cli.py run-all-extractors
 ```
 
-## 📊 Interactive Presentation
+## 📚 Documentation
 
-View our comprehensive interactive research presentation:
+### Core Documentation
 
-```bash
-# Open in browser
-open v2/docs/interactive-presentation.html
-```
-
-**Presentation Features:**
-- 7 interactive slides with smooth navigation
-- Live Mermaid diagrams showing architecture and data flows
-- Component status overview with completion metrics
-- CLI-first innovation analysis
-- Comprehensive testing framework documentation
-- End-to-end data flow visualization
-- Research findings and validation
+- **[CLI-First Architecture Guide](v2/docs/CLI-FIRST_ARCHITECTURE.md)** - Architecture patterns and CLI design
+- **[Component Integration Guide](v2/docs/COMPONENT_INTEGRATION.md)** - Integration patterns and examples
 
 ## 🧪 Testing
 
@@ -246,48 +225,22 @@ python3 v2/04-extractors/extractors_cli.py run-all-extractors
 python3 v2/04-extractors/extractors_cli.py status
 ```
 
-## 🎯 Performance Benefits
+## 🎯 CLI-First Benefits
 
-### CLI-First vs Traditional API
+### Key Advantages
 
-| Metric | Traditional API | CLI-First | Improvement |
-|--------|----------------|-----------|-------------|
-| Latency | 10-100ms | <1ms | **10-100x faster** |
-| System Complexity | High | Low | **40% reduction** |
-| Test Coverage | 70-80% | 100% | **Complete coverage** |
-| Development Speed | Slow | Fast | **2-3x faster** |
-| Memory Usage | High | Low | **30% reduction** |
+- **Simplicity**: Direct module calls eliminate HTTP complexity
+- **Testability**: 100% test coverage through simple CLI testing
+- **Natural Composition**: Unix pipeline principles for data flow
+- **Debugging**: Visible command execution and clear error messages
+- **Maintainability**: Loose coupling through stable CLI interfaces
 
-### Performance Validation
+### Design Principles
 
-Our research demonstrates:
-- **Zero network overhead** with direct module calls
-- **Sub-millisecond response times** for component communication
-- **100% test coverage** through simple CLI testing
-- **Natural pipeline composition** using Unix principles
-- **Simplified debugging** with visible command execution
-
-## 🔬 Research Validation
-
-### Hypothesis Testing
-
-**Original Hypothesis:** CLI-first architecture provides superior simplicity, performance, and maintainability for RAG systems.
-
-**Validation Methods:**
-1. **Performance Benchmarking:** Measured latency, memory usage, and throughput
-2. **Complexity Analysis:** Compared lines of code, dependencies, and configuration
-3. **Development Velocity:** Tracked implementation time and debugging effort
-4. **Test Coverage:** Achieved 100% coverage through CLI testing framework
-
-**Results:** ✅ **Hypothesis Validated**
-
-### Key Findings
-
-1. **Simplicity:** 40% reduction in system complexity
-2. **Performance:** 10-100x improvement in response times
-3. **Maintainability:** 100% test coverage achievable
-4. **Developer Experience:** Significantly improved debugging and testing
-5. **Resource Efficiency:** Lower memory and CPU usage
+- **JSON Standardization**: Consistent data exchange format
+- **Direct Module Calls**: No network overhead between components
+- **Unix Philosophy**: Simple, composable tools
+- **Comprehensive Testing**: CLI interfaces enable thorough testing
 
 ## 🛠️ Development Guidelines
 
@@ -365,12 +318,12 @@ def call_component(component_path, command, **kwargs):
 
 ## 📄 License
 
-This project is part of research into CLI-first architectures for RAG systems. See LICENSE file for details.
+This project demonstrates CLI-first architecture patterns for RAG systems. See LICENSE file for details.
 
 ## 🙏 Acknowledgments
 
-Research conducted as part of exploring alternative architectural patterns for microservices systems, with particular focus on RAG (Retrieval-Augmented Generation) implementations.
+Built to explore CLI-first architectural patterns for RAG (Retrieval-Augmented Generation) systems, focusing on simplicity and maintainability.
 
 ---
 
-**simflo-rag v2** represents a validated reference implementation for CLI-first architecture, demonstrating how command-line interfaces can provide superior alternatives to traditional API-based microservices for certain application domains.
+**simflo-rag v2** demonstrates how CLI-first architecture can provide effective alternatives for RAG system implementation.

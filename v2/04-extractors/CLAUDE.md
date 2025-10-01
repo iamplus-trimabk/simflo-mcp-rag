@@ -64,10 +64,10 @@ All commands return structured JSON:
 Run test suite:
 ```bash
 # Run all extractor tests
-python3 v2/extractors/tests/run.py
+python3 v2/04-extractors/tests/run.py
 
 # Run specific test file
-python3 v2/tests/cmd_test_executor.py v2/extractors/tests/extractor_tests.json
+python3 v2/tests/cmd_test_executor.py v2/04-extractors/tests/extractor_tests.json
 ```
 
 ## Test Coverage
