@@ -104,11 +104,11 @@
       "expected_stderr": ""
     },
     {
-      "test_name": "extraction_not_implemented",
-      "description": "Test extraction command returns not implemented error",
+      "test_name": "extraction_status_working",
+      "description": "Test extraction command returns working status",
       "command": "python3 v2/core/01-mcp-server/mcp_server.py extraction-status",
       "expected_exit_code": 0,
-      "expected_stdout_pattern": ".*not yet implemented.*",
+      "expected_stdout_pattern": ".*extraction_system.*operational.*",
       "expected_stderr": ""
     },
     {
@@ -120,10 +120,10 @@
     },
     {
       "test_name": "get_component_real_data",
-      "description": "Test get-component with real sample data",
-      "command": "python3 v2/core/01-mcp-server/mcp_server.py get-component sample_button --registry shadcn --format json",
+      "description": "Test get-component with real component data",
+      "command": "python3 v2/core/01-mcp-server/mcp_server.py get-component button --registry shadcn --format json",
       "expected_exit_code": 0,
-      "expected_stdout_pattern": ".*\"name\": \"sample_button\".*\"title\": \"Button Component\".*"
+      "expected_stdout_pattern": ".*\"name\": \"shadcn_button\".*\"title\": \"Button Component\".*"
     }
   ]
 }
