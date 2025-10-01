@@ -19,6 +19,10 @@ sys.path.insert(0, str(project_root))
 
 try:
     from orchestrator import PipelineOrchestrator
+    # Add core directory to path for registry manager import
+    core_path = Path(__file__).parent / "core"
+    sys.path.insert(0, str(core_path))
+    from registry_manager import get_registry_manager
 except ImportError as e:
     # Fallback for when modules are not yet available
     print(f"Import error: {e}", file=sys.stderr)
@@ -156,6 +160,40 @@ def handle_discover_repositories(args) -> str:
         return format_output({"error": str(e)}, args.format, success=False)
 
 
+def handle_index_registries(args) -> str:
+    """Index registry files into vector database"""
+    try:
+        registry_manager = get_registry_manager()
+
+        if args.registry:
+            # Index specific registry
+            success = registry_manager.index_registry_files(args.registry)
+            results = {args.registry: success}
+        else:
+            # Index all registries
+            results = registry_manager.index_all_registries()
+
+        # Count total documents
+        total_docs = 0
+        successful_registries = []
+        for registry, success in results.items():
+            if success:
+                collection = registry_manager.collections.get(registry)
+                if collection:
+                    count = collection.count()
+                    total_docs += count
+                    successful_registries.append(registry)
+
+        return format_output({
+            "message": f"Successfully indexed {total_docs} documents",
+            "successful_registries": successful_registries,
+            "results": results,
+            "total_documents": total_docs
+        }, args.format)
+    except Exception as e:
+        return format_output({"error": str(e)}, args.format, success=False)
+
+
 def handle_status(args) -> str:
     """Generate pipeline status report"""
     try:
@@ -234,6 +272,11 @@ def main():
     discovery_parser.add_argument('keywords', nargs='+', help='Search keywords')
     discovery_parser.add_argument('--limit', type=int, default=10, help='Number of results (default: 10)')
     discovery_parser.set_defaults(func=handle_discover_repositories)
+
+    # Index command
+    index_parser = subparsers.add_parser('index', help='Index registry files into vector database', parents=[parent_parser])
+    index_parser.add_argument('--registry', help='Specific registry to index (optional - indexes all if not provided)')
+    index_parser.set_defaults(func=handle_index_registries)
 
     # Status command
     status_parser = subparsers.add_parser('status', help='Generate pipeline status report', parents=[parent_parser])

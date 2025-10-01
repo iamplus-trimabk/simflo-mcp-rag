@@ -65,25 +65,25 @@ class ContextManager:
         self.registry_mappings = [
             RegistryMapping(
                 platform=PlatformContext.REACT_NATIVE,
-                primary_registries=["gluestack_db"],
-                fallback_registries=["shadcn_db", "radix_db"],
+                primary_registries=["gluestack"],
+                fallback_registries=["shadcn", "radix"],
                 priority=10
             ),
             RegistryMapping(
                 platform=PlatformContext.REACT_JS,
-                primary_registries=["shadcn_db"],
-                fallback_registries=["gluestack_db", "radix_db"],
+                primary_registries=["shadcn"],
+                fallback_registries=["gluestack", "radix"],
                 priority=10
             ),
             RegistryMapping(
                 platform=PlatformContext.AUTO,
-                primary_registries=["gluestack_db", "shadcn_db", "radix_db"],
+                primary_registries=["gluestack", "shadcn", "radix"],
                 fallback_registries=[],
                 priority=5
             ),
             RegistryMapping(
                 platform=PlatformContext.NONE,
-                primary_registries=["gluestack_db", "shadcn_db", "radix_db"],
+                primary_registries=["gluestack", "shadcn", "radix"],
                 fallback_registries=[],
                 priority=1
             )
@@ -186,7 +186,7 @@ class ContextManager:
 
         if not mapping:
             # Default to all registries
-            return ["gluestack_db", "shadcn_db", "radix_db"]
+            return ["gluestack", "shadcn", "radix"]
 
         # Return registries based on priority
         registries = mapping.primary_registries.copy()

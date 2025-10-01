@@ -82,8 +82,16 @@ class RegistryManager:
                 if registry_dir.is_dir():
                     registry_name = registry_dir.name
 
-                    # Handle component registries (ending with _db)
-                    if registry_name.endswith("_db"):
+                    # Handle all directories as potential registries
+                    # Check for registry structure (db/ and files/ directories)
+                    db_dir = registry_dir / "db"
+                    files_dir = registry_dir / "files"
+
+                    if db_dir.exists() or files_dir.exists():
+                        self._discover_registry_from_structure(registry_dir, registry_name)
+
+                    # Handle component registries (ending with _db) - legacy support
+                    elif registry_name.endswith("_db"):
                         components_file = registry_dir / "components.json"
                         config_file = registry_dir / "config.json"
 
@@ -100,6 +108,46 @@ class RegistryManager:
 
         except Exception as e:
             self.logger.error(f"Failed to discover registries: {e}")
+
+    def _discover_registry_from_structure(self, registry_dir: Path, registry_name: str):
+        """Discover registry from directory structure (db/ and files/)"""
+        try:
+            # Count source files
+            source_files = []
+            files_dir = registry_dir / "files"
+            if files_dir.exists():
+                for file_path in files_dir.rglob("*.md"):
+                    source_files.append(file_path)
+                for file_path in files_dir.rglob("*.json"):
+                    source_files.append(file_path)
+
+            # Determine platform support based on registry name
+            platforms = ["reactjs", "reactnative", "web"]
+            if "shadcn" in registry_name.lower():
+                platforms = ["reactjs", "web"]
+            elif "gluestack" in registry_name.lower():
+                platforms = ["reactjs", "reactnative", "web"]
+            elif "community" in registry_name.lower():
+                platforms = ["reactjs", "reactnative", "web", "vue", "angular"]
+            elif "radix" in registry_name.lower():
+                platforms = ["reactjs", "web"]
+
+            registry_info = RegistryInfo(
+                name=registry_name,
+                path=str(registry_dir),
+                platform=platforms,
+                description=f"Component registry for {registry_name}",
+                component_count=len(source_files),
+                last_updated=registry_dir.stat().st_mtime if registry_dir.exists() else 0,
+                is_active=True,
+                registry_type="component"
+            )
+
+            self.registries[registry_name] = registry_info
+            self.logger.info(f"Discovered registry from structure: {registry_name} with {len(source_files)} files")
+
+        except Exception as e:
+            self.logger.error(f"Failed to discover registry {registry_name} from structure: {e}")
 
     def _discover_component_registry(self, registry_dir: Path, components_file: Path):
         """Discover a component registry"""
@@ -235,10 +283,12 @@ class RegistryManager:
         for registry_name in registries:
             if registry_name in self.collections:
                 try:
+                    # Calculate limit per registry, ensuring at least 1 result per registry
+                    per_registry_limit = max(1, limit // len(registries)) if len(registries) > 1 else limit
                     results = self._search_single_registry(
                         registry_name,
                         query,
-                        limit=limit // len(registries) if len(registries) > 1 else limit
+                        limit=per_registry_limit
                     )
                     all_results.extend(results)
                 except Exception as e:
@@ -366,6 +416,11 @@ class RegistryManager:
             self.logger.warning(f"Vector search failed for {registry_name}: {e}")
             return []
 
+        # If vector search returns no results, try fallback text search
+        if not results or not results['documents'] or not results['documents'][0]:
+            self.logger.info(f"Vector search empty for {registry_name}, trying fallback text search")
+            return self._fallback_text_search(registry_name, query, limit)
+
         search_results: List[SearchResult] = []
 
         if results and results['documents']:
@@ -378,12 +433,37 @@ class RegistryManager:
                 if not doc or (isinstance(doc, str) and doc.strip() == ''):
                     continue
 
-                # Parse document back to component data
+                # Reconstruct component data from metadata (since vector DB stores search text, not JSON)
                 try:
-                    component = json.loads(doc) if isinstance(doc, str) else doc
+                    # Build component dictionary from metadata
+                    component = {
+                        "name": metadata.get("name", ""),
+                        "title": metadata.get("title", ""),
+                        "registry": metadata.get("registry", registry_name),
+                        "source_file": metadata.get("source_file", ""),
+                        "type": metadata.get("type", "component"),
+                        "file_path": metadata.get("file_path", "")
+                    }
 
-                    # Skip if component is not a dictionary
-                    if not isinstance(component, dict):
+                    # Parse JSON fields from metadata
+                    try:
+                        component["tags"] = json.loads(metadata.get("tags", "[]"))
+                    except:
+                        component["tags"] = []
+
+                    try:
+                        component["platform"] = json.loads(metadata.get("platform", "[]"))
+                    except:
+                        component["platform"] = []
+
+                    # Add installation and usage if available
+                    if metadata.get("installation"):
+                        component["installation"] = metadata["installation"]
+                    if metadata.get("usage"):
+                        component["usage"] = metadata["usage"]
+
+                    # Skip if component name is empty
+                    if not component.get("name"):
                         continue
 
                     # Calculate relevance scores
@@ -402,11 +482,8 @@ class RegistryManager:
 
                     search_results.append(search_result)
 
-                except json.JSONDecodeError as e:
-                    self.logger.warning(f"Failed to parse JSON for search result {i}: {e}")
-                    continue
                 except Exception as e:
-                    self.logger.warning(f"Failed to process search result {i}: {e}")
+                    self.logger.warning(f"Failed to process vector search result {i}: {e}")
                     continue
 
         return search_results
@@ -510,6 +587,20 @@ class RegistryManager:
                 except:
                     continue
 
+        # If vector search found nothing, try fallback text search
+        self.logger.info(f"Vector search for component '{component_name}' in {registry_name} returned no results, trying fallback")
+        fallback_results = self._fallback_text_search(registry_name, component_name, 10)
+
+        for result in fallback_results:
+            if result.component.get('name') == component_name:
+                return {
+                    **result.component,
+                    'registry': registry_name,
+                    'found_in_registry': registry_name,
+                    'relevance_score': result.relevance_score,
+                    'platform_relevance': result.platform_relevance
+                }
+
         return None
 
     def list_components(
@@ -529,7 +620,8 @@ class RegistryManager:
         for reg_name in registries_to_check:
             if reg_name in self.registries:
                 registry_info = self.registries[reg_name]
-                # Load components from file (simplified approach)
+
+                # First try to load from components.json file
                 components_file = Path(registry_info.path) / "components.json"
                 if components_file.exists():
                     try:
@@ -550,6 +642,30 @@ class RegistryManager:
                                 })
                     except Exception as e:
                         self.logger.error(f"Failed to load components from {reg_name}: {e}")
+                else:
+                    # Fallback: search for markdown files in the files directory
+                    files_dir = Path(registry_info.path) / "files"
+                    if files_dir.exists():
+                        try:
+                            for file_path in files_dir.rglob("*.md"):
+                                if len(components) >= limit:
+                                    break
+
+                                try:
+                                    with open(file_path, 'r', encoding='utf-8') as f:
+                                        content = f.read()
+
+                                    # Parse component from markdown
+                                    component = self._parse_component_from_markdown(file_path, content, reg_name)
+                                    if component:
+                                        components.append(component)
+
+                                except Exception as e:
+                                    self.logger.warning(f"Failed to parse component from {file_path}: {e}")
+                                    continue
+
+                        except Exception as e:
+                            self.logger.error(f"Failed to scan files directory for {reg_name}: {e}")
 
         return components[:limit]
 
@@ -793,6 +909,328 @@ class RegistryManager:
     def get_context_engine_stats(self) -> Dict[str, Any]:
         """Get context engine statistics"""
         return self.project_context_engine.get_context_stats()
+
+    def _fallback_text_search(self, registry_name: str, query: str, limit: int) -> List[SearchResult]:
+        """Fallback text search when vector search is empty"""
+        try:
+            registry_info = self.registries.get(registry_name)
+            if not registry_info:
+                return []
+
+            # Search through the files directory for markdown files
+            files_dir = Path(registry_info.path) / "files"
+            if not files_dir.exists():
+                self.logger.warning(f"Files directory not found for registry {registry_name}: {files_dir}")
+                return []
+
+            query_lower = query.lower()
+            search_results: List[SearchResult] = []
+
+            # Recursively search through markdown files
+            for file_path in files_dir.rglob("*.md"):
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        content = f.read()
+
+                    # Simple text matching - also check filename for exact component name matches
+                    filename_match = file_path.stem.lower() == query_lower
+                    content_match = query_lower in content.lower()
+
+                    if filename_match or content_match:
+                        # Extract component information from file
+                        component = self._parse_component_from_markdown(file_path, content, registry_name)
+                        if component:
+                            # Calculate relevance score based on text matching
+                            # Give higher score for exact filename matches
+                            if filename_match:
+                                relevance_score = 1.0  # Perfect match for component name
+                            else:
+                                relevance_score = self._calculate_text_relevance(query_lower, content, component)
+
+                            search_result = SearchResult(
+                                registry=registry_name,
+                                component=component,
+                                relevance_score=relevance_score,
+                                context_match=self._is_context_match(registry_name, component),
+                                platform_relevance=self._calculate_platform_relevance(registry_name, component),
+                                distance=None  # No vector distance in text search
+                            )
+                            search_results.append(search_result)
+
+                except Exception as e:
+                    self.logger.warning(f"Failed to search file {file_path}: {e}")
+                    continue
+
+            # Sort by relevance score and limit results
+            search_results.sort(key=lambda x: x.relevance_score, reverse=True)
+            return search_results[:limit]
+
+        except Exception as e:
+            self.logger.error(f"Fallback text search failed for {registry_name}: {e}")
+            return []
+
+    def _parse_component_from_markdown(self, file_path: Path, content: str, registry_name: str) -> Optional[Dict[str, Any]]:
+        """Parse component information from markdown file"""
+        try:
+            # Extract basic component info from markdown
+            lines = content.split('\n')
+            component = {}
+
+            # Default component name from filename
+            component['name'] = file_path.stem
+            component['registry'] = registry_name
+            component['source_file'] = str(file_path.relative_to(Path(self.base_path)))
+
+            # Extract title from first # header
+            for line in lines:
+                if line.startswith('# '):
+                    component['title'] = line[2:].strip()
+                    break
+
+            # Extract description from first paragraph after title
+            description_lines = []
+            found_title = False
+            for line in lines:
+                if line.startswith('# '):
+                    found_title = True
+                    continue
+                elif found_title and line.strip() and not line.startswith('#'):
+                    if line.strip():
+                        description_lines.append(line.strip())
+                    else:
+                        break  # Stop at empty line
+
+            if description_lines:
+                component['description'] = ' '.join(description_lines)
+
+            # Extract installation instructions
+            installation_started = False
+            installation_lines = []
+            for line in lines:
+                if '## Installation' in line or ('```bash' in line and 'npm install' in content):
+                    installation_started = True
+                if installation_started and ('```' in line and not line.startswith('```bash')):
+                    break
+                if installation_started and line.strip():
+                    installation_lines.append(line.strip())
+
+            if installation_lines:
+                component['installation'] = ' '.join(installation_lines)
+
+            # Extract usage example
+            usage_started = False
+            usage_lines = []
+            for line in lines:
+                if '## Usage' in line:
+                    usage_started = True
+                    continue
+                elif usage_started and line.startswith('##'):
+                    break
+                elif usage_started and (line.startswith('```') or line.strip()):
+                    usage_lines.append(line)
+
+            if usage_lines:
+                component['usage'] = '\n'.join(usage_lines)
+
+            # Add some default tags based on content
+            tags = []
+            content_lower = content.lower()
+            if 'button' in content_lower:
+                tags.append('button')
+            if 'dialog' in content_lower or 'modal' in content_lower:
+                tags.append('dialog')
+            if 'react' in content_lower:
+                tags.append('react')
+            if 'typescript' in content_lower or 'tsx' in content_lower:
+                tags.append('typescript')
+            if 'accessible' in content_lower or 'accessibility' in content_lower:
+                tags.append('accessible')
+
+            component['tags'] = tags
+            component['platform'] = ['reactjs']  # Default platform
+
+            return component
+
+        except Exception as e:
+            self.logger.warning(f"Failed to parse component from {file_path}: {e}")
+            return None
+
+    def _calculate_text_relevance(self, query_lower: str, content: str, component: Dict[str, Any]) -> float:
+        """Calculate relevance score based on text matching"""
+        score = 0.0
+        content_lower = content.lower()
+
+        # Name matches are worth more
+        if 'name' in component:
+            component_name = component['name'].lower()
+            if query_lower in component_name:
+                score += 0.8
+            elif component_name in query_lower:
+                score += 0.6
+
+        # Title matches
+        if 'title' in component:
+            title_lower = component['title'].lower()
+            if query_lower in title_lower:
+                score += 0.7
+
+        # Description matches
+        if 'description' in component:
+            desc_lower = component['description'].lower()
+            if query_lower in desc_lower:
+                score += 0.5
+
+        # Count occurrences in content (but cap the contribution)
+        occurrences = content_lower.count(query_lower)
+        score += min(occurrences * 0.1, 0.3)
+
+        # Tag matches
+        if 'tags' in component and isinstance(component['tags'], list):
+            for tag in component['tags']:
+                if query_lower in tag.lower():
+                    score += 0.2
+
+        return min(score, 1.0)  # Cap at 1.0
+
+    def index_registry_files(self, registry_name: str) -> bool:
+        """Index markdown files from registry into vector database"""
+        try:
+            registry_info = self.registries.get(registry_name)
+            if not registry_info:
+                self.logger.error(f"Registry '{registry_name}' not found")
+                return False
+
+            collection = self.collections.get(registry_name)
+            if not collection:
+                self.logger.error(f"No collection found for registry '{registry_name}'")
+                return False
+
+            # Clear existing data in collection by getting all IDs and deleting them
+            if collection.count() > 0:
+                self.logger.info(f"Clearing existing data from {registry_name} collection")
+                try:
+                    # Get all existing documents to delete them
+                    existing = collection.get()
+                    if existing and existing.get('ids'):
+                        collection.delete(ids=existing['ids'])
+                        self.logger.info(f"Deleted {len(existing['ids'])} documents from {registry_name}")
+                except Exception as e:
+                    self.logger.warning(f"Failed to clear collection {registry_name}: {e}")
+                    # Continue with indexing even if clearing fails
+
+            # Find markdown files in the files directory
+            files_dir = Path(registry_info.path) / "files"
+            if not files_dir.exists():
+                self.logger.warning(f"Files directory not found for registry {registry_name}: {files_dir}")
+                return False
+
+            # Prepare data for indexing
+            documents = []
+            metadatas = []
+            ids = []
+
+            for file_path in files_dir.rglob("*.md"):
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        content = f.read()
+
+                    # Parse component from markdown
+                    component = self._parse_component_from_markdown(file_path, content, registry_name)
+                    if component:
+                        # Create searchable text from component
+                        search_text = self._create_search_text_from_component(component)
+
+                        # Create metadata
+                        metadata = {
+                            "name": component.get("name", ""),
+                            "title": component.get("title", ""),
+                            "registry": registry_name,
+                            "source_file": component.get("source_file", ""),
+                            "tags": json.dumps(component.get("tags", [])),
+                            "platform": json.dumps(component.get("platform", [])),
+                            "type": "component",
+                            "file_path": str(file_path.relative_to(Path(self.base_path)))
+                        }
+
+                        # Add installation and usage to metadata if available
+                        if component.get("installation"):
+                            metadata["installation"] = component["installation"]
+                        if component.get("usage"):
+                            metadata["usage"] = component["usage"]
+
+                        documents.append(search_text)
+                        metadatas.append(metadata)
+                        ids.append(f"{registry_name}_{component.get('name', file_path.stem)}")
+
+                except Exception as e:
+                    self.logger.warning(f"Failed to process file {file_path}: {e}")
+                    continue
+
+            if documents:
+                # Add to collection in batch
+                collection.add(
+                    documents=documents,
+                    metadatas=metadatas,
+                    ids=ids
+                )
+
+                self.logger.info(f"Indexed {len(documents)} components into {registry_name} vector database")
+                return True
+            else:
+                self.logger.warning(f"No components found to index in {registry_name}")
+                return False
+
+        except Exception as e:
+            self.logger.error(f"Failed to index registry {registry_name}: {e}")
+            return False
+
+    def _create_search_text_from_component(self, component: Dict[str, Any]) -> str:
+        """Create searchable text from component dictionary"""
+        parts = []
+
+        # Add name and title
+        if component.get("name"):
+            parts.append(f"Name: {component['name']}")
+        if component.get("title"):
+            parts.append(f"Title: {component['title']}")
+
+        # Add description
+        if component.get("description"):
+            parts.append(f"Description: {component['description']}")
+
+        # Add tags
+        if component.get("tags"):
+            tags_str = " ".join(component["tags"]) if isinstance(component["tags"], list) else str(component["tags"])
+            parts.append(f"Tags: {tags_str}")
+
+        # Add platform info
+        if component.get("platform"):
+            platform_str = " ".join(component["platform"]) if isinstance(component["platform"], list) else str(component["platform"])
+            parts.append(f"Platform: {platform_str}")
+
+        # Add installation info
+        if component.get("installation"):
+            parts.append(f"Installation: {component['installation']}")
+
+        # Add usage info
+        if component.get("usage"):
+            parts.append(f"Usage: {component['usage']}")
+
+        # Add source file
+        if component.get("source_file"):
+            parts.append(f"Source: {component['source_file']}")
+
+        return "\n".join(parts)
+
+    def index_all_registries(self) -> Dict[str, bool]:
+        """Index all registries into vector database"""
+        results = {}
+
+        for registry_name in self.registries.keys():
+            self.logger.info(f"Indexing registry: {registry_name}")
+            results[registry_name] = self.index_registry_files(registry_name)
+
+        return results
 
 
 # Global registry manager instance

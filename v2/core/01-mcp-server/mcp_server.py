@@ -189,10 +189,24 @@ def handle_list_registries(args) -> str:
 
         registries = registry_manager.get_available_registries(platform=platform_context)
 
+        # Convert RegistryInfo objects to dictionaries for JSON serialization
+        registries_data = []
+        for reg in registries:
+            registries_data.append({
+                "name": reg.name,
+                "path": reg.path,
+                "platforms": reg.platform,
+                "description": reg.description,
+                "component_count": reg.component_count,
+                "last_updated": reg.last_updated,
+                "is_active": reg.is_active,
+                "registry_type": reg.registry_type
+            })
+
         return format_output({
             "platform": getattr(args, 'platform', None),
-            "total_registries": len(registries),
-            "registries": registries
+            "total_registries": len(registries_data),
+            "registries": registries_data
         }, args.format)
 
     except Exception as e:
