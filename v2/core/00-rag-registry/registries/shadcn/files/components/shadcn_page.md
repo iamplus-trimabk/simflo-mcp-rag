@@ -22,7 +22,7 @@ import { Page } from "@/components/ui/page"
 - **File Path**: components/ui/page.tsx
 - **Registry**: shadcn
 
-**Source Repository**: [View on GitHub](https://github.com/shadcn-ui/ui/tree/main/components/ui/page.tsx)
+**Source Repository**: [View on GitHub](https://github.com/https://github.com/shadcn-ui/ui/tree/main/components/ui/page.tsx)
 
 ---
-*Extracted by SimFlo RAG on 2025-10-01 23:17:35*
+*Extracted by SimFlo RAG on 2025-10-02 02:45:13*

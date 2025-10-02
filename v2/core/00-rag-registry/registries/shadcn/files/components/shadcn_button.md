@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button"
 - **File Path**: components/ui/button.tsx
 - **Registry**: shadcn
 
-**Source Repository**: [View on GitHub](https://github.com/shadcn-ui/ui/tree/main/components/ui/button.tsx)
+**Source Repository**: [View on GitHub](https://github.com/https://github.com/shadcn-ui/ui/tree/main/components/ui/button.tsx)
 
 ---
-*Extracted by SimFlo RAG on 2025-10-01 23:17:35*
+*Extracted by SimFlo RAG on 2025-10-02 02:45:13*
