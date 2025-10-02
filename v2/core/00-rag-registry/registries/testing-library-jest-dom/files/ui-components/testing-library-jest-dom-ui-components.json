@@ -1,0 +1,905 @@
+[
+  {
+    "name": "toAppearBefore",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-appear-before.js",
+    "description": "Component: toAppearBefore",
+    "usage_examples": [
+      ",\n            'element',\n            'secondElement',\n          ),\n          '',\n          `Received: ${makeDocumentPositionErrorString(documentPosition)}`,\n        ].join('\\n')\n      },\n    }\n  }\n}\n\nexport function toAppearBefore(element, secondElement) {\n  return checkToAppear('toAppearBefore', DOCUMENT_POSITION_FOLLOWING).apply(\n    this,\n    [element, secondElement],\n  )\n}\n\nexport function toAppearAfter(element, secondElement) {\n  return checkToAppear('toAppearAfter', DOCUMENT_POSITION_PRECEDING).apply(\n    this,\n    [element, secondElement],\n  )\n}"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 56,
+      "context_length": 558,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toAppearAfter",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-appear-before.js",
+    "description": "Component: toAppearAfter",
+    "usage_examples": [
+      "},\n    }\n  }\n}\n\nexport function toAppearBefore(element, secondElement) {\n  return checkToAppear('toAppearBefore', DOCUMENT_POSITION_FOLLOWING).apply(\n    this,\n    [element, secondElement],\n  )\n}\n\nexport function toAppearAfter(element, secondElement) {\n  return checkToAppear('toAppearAfter', DOCUMENT_POSITION_PRECEDING).apply(\n    this,\n    [element, secondElement],\n  )\n}"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 63,
+      "context_length": 374,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toBeChecked",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-be-checked.js",
+    "description": "Component: toBeChecked",
+    "usage_examples": [
+      "import {roles} from 'aria-query'\nimport {checkHtmlElement, toSentence} from './utils'\n\nexport function toBeChecked(element) {\n  checkHtmlElement(element, toBeChecked, this)\n\n  const isValidInput = () => {\n    return (\n      element.tagName.toLowerCase() === 'input' &&\n      ['checkbox', 'radio'].includes(element.type)\n    )\n  }\n\n  const isValidAriaElement = () => {\n    return (\n      roleSupportsChecked(element.getAttribute('role')) &&\n      ['true', 'false'].includes(element.getAttribute('aria-checked'))\n    )\n  }\n\n  if (!isValidInput() && !isValidAriaElement()) {\n    return {\n      pass: false,\n      messa"
+    ],
+    "dependencies": [
+      "aria-query"
+    ],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 4,
+      "context_length": 615,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.55,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toBeDisabled",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-be-disabled.js",
+    "description": "Component: toBeDisabled",
+    "usage_examples": [
+      "AncestorDisabled(parent))\n  )\n}\n\nfunction isElementOrAncestorDisabled(element) {\n  return (\n    canElementBeDisabled(element) &&\n    (isElementDisabled(element) || isAncestorDisabled(element))\n  )\n}\n\nexport function toBeDisabled(element) {\n  checkHtmlElement(element, toBeDisabled, this)\n\n  const isDisabled = isElementOrAncestorDisabled(element)\n\n  return {\n    pass: isDisabled,\n    message: () => {\n      const is = isDisabled ? 'is' : 'is not'\n      return [\n        this.utils.matcherHint(\n          `${this.isNot ? '.not' : ''}.toBeDisabled`,\n          'element',\n          '',\n        ),\n        '',\n        `Received element ${is} disabled:`,\n        `  ${this.utils.printReceived(element.cloneNode(false))}`,\n      ].joi"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 71,
+      "context_length": 729,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toBeEnabled",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-be-disabled.js",
+    "description": "Component: toBeEnabled",
+    "usage_examples": [
+      "'element',\n          '',\n        ),\n        '',\n        `Received element ${is} disabled:`,\n        `  ${this.utils.printReceived(element.cloneNode(false))}`,\n      ].join('\\n')\n    },\n  }\n}\n\nexport function toBeEnabled(element) {\n  checkHtmlElement(element, toBeEnabled, this)\n\n  const isEnabled = !isElementOrAncestorDisabled(element)\n\n  return {\n    pass: isEnabled,\n    message: () => {\n      const is = isEnabled ? 'is' : 'is not'\n      return [\n        this.utils.matcherHint(\n          `${this.isNot ? '.not' : ''}.toBeEnabled`,\n          'element',\n          '',\n        ),\n        '',\n        `Received element ${is} enabled:`,\n        `  ${this.utils.printReceived(element.cloneNode(false))}`,\n      ].join('\\n"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 94,
+      "context_length": 720,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toBeEmptyDOMElement",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-be-empty-dom-element.js",
+    "description": "Component: toBeEmptyDOMElement",
+    "usage_examples": [
+      "import {checkHtmlElement} from './utils'\n\nexport function toBeEmptyDOMElement(element) {\n  checkHtmlElement(element, toBeEmptyDOMElement, this)\n\n  return {\n    pass: isEmptyElement(element),\n    message: () => {\n      return [\n        this.utils.matcherHint(\n          `${this.isNot ? '.not' : ''}.toBeEmptyDOMElement`,\n          'element',\n          '',\n        ),\n        '',\n        'Received:',\n        `  ${this.utils.printReceived(element.innerHTML)}`,\n      ].join('\\n')\n    },\n  }\n}\n\n/**\n * Identifies if an element doesn't contain child nodes (excluding comments)\n * \u2139"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 3,
+      "context_length": 577,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toBeEmpty",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-be-empty.js",
+    "description": "Component: toBeEmpty",
+    "usage_examples": [
+      "import {checkHtmlElement, deprecate} from './utils'\n\nexport function toBeEmpty(element) {\n  deprecate(\n    'toBeEmpty',\n    'Please use instead toBeEmptyDOMElement for finding empty nodes in the DOM.',\n  )\n  checkHtmlElement(element, toBeEmpty, this)\n\n  return {\n    pass: element.innerHTML === '',\n    message: () => {\n      return [\n        this.utils.matcherHint(\n          `${this.isNot ? '.not' : ''}.toBeEmpty`,\n          'element',\n          '',\n        ),\n        '',\n        'Received:',\n        `  ${this.utils.printReceived(element.innerHTML)}`,\n      ].join('\\n')"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 3,
+      "context_length": 575,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toBeInTheDocument",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-be-in-the-document.js",
+    "description": "Component: toBeInTheDocument",
+    "usage_examples": [
+      "import {checkHtmlElement} from './utils'\n\nexport function toBeInTheDocument(element) {\n  if (element !== null || !this.isNot) {\n    checkHtmlElement(element, toBeInTheDocument, this)\n  }\n\n  const pass =\n    element === null\n      ? false\n      : element.ownerDocument === element.getRootNode({composed: true})\n\n  const errorFound = () => {\n    return `expected document not to contain element, found ${this.utils.stringify(\n      element.cloneNode(true),\n    )} instead`\n  }\n  const errorNotFound = () => {\n    return `element could not be found in the document`\n  }\n\n  return"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 3,
+      "context_length": 576,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toBeInTheDOM",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-be-in-the-dom.js",
+    "description": "Component: toBeInTheDOM",
+    "usage_examples": [
+      "import {checkHtmlElement, deprecate} from './utils'\n\nexport function toBeInTheDOM(element, container) {\n  deprecate(\n    'toBeInTheDOM',\n    'Please use toBeInTheDocument for searching the entire document and toContainElement for searching a specific container.',\n  )\n\n  if (element) {\n    checkHtmlElement(element, toBeInTheDOM, this)\n  }\n\n  if (container) {\n    checkHtmlElement(container, toBeInTheDOM, this)\n  }\n\n  return {\n    pass: container ? container.contains(element) : !!element,\n    message: () => {\n      return [\n        this.utils.matcherHint(\n          `${this.isNot"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 3,
+      "context_length": 582,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toBeInvalid",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-be-invalid.js",
+    "description": "Component: toBeInvalid",
+    "usage_examples": [
+      "aveAriaInvalid = isElementHavingAriaInvalid(element)\n  if (isSupportsValidityMethod(element)) {\n    return isHaveAriaInvalid || !element.checkValidity()\n  } else {\n    return isHaveAriaInvalid\n  }\n}\n\nexport function toBeInvalid(element) {\n  checkHtmlElement(element, toBeInvalid, this)\n\n  const isInvalid = isElementInvalid(element)\n\n  return {\n    pass: isInvalid,\n    message: () => {\n      const is = isInvalid ? 'is' : 'is not'\n      return [\n        this.utils.matcherHint(\n          `${this.isNot ? '.not' : ''}.toBeInvalid`,\n          'element',\n          '',\n        ),\n        '',\n        `Received element ${is} currently invalid:`,\n        `  ${this.utils.printReceived(element.cloneNode(false))}`,\n      ].join('\\n')"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 25,
+      "context_length": 728,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toBeValid",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-be-invalid.js",
+    "description": "Component: toBeValid",
+    "usage_examples": [
+      "element',\n          '',\n        ),\n        '',\n        `Received element ${is} currently invalid:`,\n        `  ${this.utils.printReceived(element.cloneNode(false))}`,\n      ].join('\\n')\n    },\n  }\n}\n\nexport function toBeValid(element) {\n  checkHtmlElement(element, toBeValid, this)\n\n  const isValid = !isElementInvalid(element)\n\n  return {\n    pass: isValid,\n    message: () => {\n      const is = isValid ? 'is' : 'is not'\n      return [\n        this.utils.matcherHint(\n          `${this.isNot ? '.not' : ''}.toBeValid`,\n          'element',\n          '',\n        ),\n        '',\n        `Received element ${is} currently valid:`,\n        `  ${this.utils.printReceived(element.cloneNode(false))}`,\n      ].join('\\n')\n    },\n  }"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 48,
+      "context_length": 726,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toBePartiallyChecked",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-be-partially-checked.js",
+    "description": "Component: toBePartiallyChecked",
+    "usage_examples": [
+      "import {checkHtmlElement} from './utils'\n\nexport function toBePartiallyChecked(element) {\n  checkHtmlElement(element, toBePartiallyChecked, this)\n\n  const isValidInput = () => {\n    return (\n      element.tagName.toLowerCase() === 'input' && element.type === 'checkbox'\n    )\n  }\n\n  const isValidAriaElement = () => {\n    return element.getAttribute('role') === 'checkbox'\n  }\n\n  if (!isValidInput() && !isValidAriaElement()) {\n    return {\n      pass: false,\n      message: () =>\n        'only inputs with type=\"checkbox\" or elements with role=\"checkbox\" and a valid aria-checke"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 3,
+      "context_length": 579,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toBePartiallyPressed",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-be-partially-pressed.js",
+    "description": "Component: toBePartiallyPressed",
+    "usage_examples": [
+      "import {checkHtmlElement, getMessage} from './utils'\n\nexport function toBePartiallyPressed(element) {\n  checkHtmlElement(element, toBePartiallyPressed, this)\n\n  const roles = (element.getAttribute('role') || '')\n    .split(' ')\n    .map(role => role.trim())\n\n  const isButton =\n    element.tagName.toLowerCase() === 'button' ||\n    (element.tagName.toLowerCase() === 'input' && element.type === 'button') ||\n    roles.includes('button')\n\n  const pressedAttribute = element.getAttribute('aria-pressed')\n\n  const isValidAriaElement =\n    pressedAttribute === 'true' ||\n    pressedAttribute ==="
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 3,
+      "context_length": 591,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toBePressed",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-be-pressed.js",
+    "description": "Component: toBePressed",
+    "usage_examples": [
+      "import {checkHtmlElement, getMessage} from './utils'\n\nexport function toBePressed(element) {\n  checkHtmlElement(element, toBePressed, this)\n\n  const roles = (element.getAttribute('role') || '')\n    .split(' ')\n    .map(role => role.trim())\n\n  const isButton =\n    element.tagName.toLowerCase() === 'button' ||\n    (element.tagName.toLowerCase() === 'input' && element.type === 'button') ||\n    roles.includes('button')\n\n  const pressedAttribute = element.getAttribute('aria-pressed')\n\n  const isValidAriaElement =\n    pressedAttribute === 'true' || pressedAttribute === 'false'\n\n  i"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 3,
+      "context_length": 582,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toBeRequired",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-be-required.js",
+    "description": "Component: toBeRequired",
+    "usage_examples": [
+      "ute('aria-required') === 'true' &&\n    (ARIA_FORM_TAGS.includes(getTag(element)) ||\n      (element.hasAttribute('role') &&\n        SUPPORTED_ARIA_ROLES.includes(element.getAttribute('role'))))\n  )\n}\n\nexport function toBeRequired(element) {\n  checkHtmlElement(element, toBeRequired, this)\n\n  const isRequired =\n    isRequiredOnFormTagsExceptInput(element) ||\n    isRequiredOnSupportedInput(element) ||\n    isElementRequiredByARIA(element)\n\n  return {\n    pass: isRequired,\n    message: () => {\n      const is = isRequired ? 'is' : 'is not'\n      return [\n        this.utils.matcherHint(\n          `${this.isNot ? '.not' : ''}.toBeRequired`,\n          'element',\n          '',\n        ),\n        '',\n        `Received element ${is}"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 52,
+      "context_length": 729,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toBeVisible",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-be-visible.js",
+    "description": "Component: toBeVisible",
+    "usage_examples": [
+      "reviousElement) {\n  return (\n    isStyleVisible(element) &&\n    isAttributeVisible(element, previousElement) &&\n    (!element.parentElement || isElementVisible(element.parentElement, element))\n  )\n}\n\nexport function toBeVisible(element) {\n  checkHtmlElement(element, toBeVisible, this)\n  const isInDocument =\n    element.ownerDocument === element.getRootNode({composed: true})\n  const isVisible = isInDocument && isElementVisible(element)\n  return {\n    pass: isVisible,\n    message: () => {\n      const is = isVisible ? 'is' : 'is not'\n      return [\n        this.utils.matcherHint(\n          `${this.isNot ? '.not' : ''}.toBeVisible`,\n          'element',\n          '',\n        ),\n        '',\n        `Received element ${is} v"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 40,
+      "context_length": 728,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toContainElement",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-contain-element.js",
+    "description": "Component: toContainElement",
+    "usage_examples": [
+      "import {checkHtmlElement} from './utils'\n\nexport function toContainElement(container, element) {\n  checkHtmlElement(container, toContainElement, this)\n\n  if (element !== null) {\n    checkHtmlElement(element, toContainElement, this)\n  }\n\n  return {\n    pass: container.contains(element),\n    message: () => {\n      return [\n        this.utils.matcherHint(\n          `${this.isNot ? '.not' : ''}.toContainElement`,\n          'element',\n          'element',\n        ),\n        '',\n        // eslint-disable-next-line new-cap\n        this.utils.RECEIVED_COLOR(`${this.utils.strin"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 3,
+      "context_length": 575,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toContainHTML",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-contain-html.js",
+    "description": "Component: toContainHTML",
+    "usage_examples": [
+      "rt {checkHtmlElement} from './utils'\n\nfunction getNormalizedHtml(container, htmlText) {\n  const div = container.ownerDocument.createElement('div')\n  div.innerHTML = htmlText\n  return div.innerHTML\n}\n\nexport function toContainHTML(container, htmlText) {\n  checkHtmlElement(container, toContainHTML, this)\n\n  if (typeof htmlText !== 'string') {\n    throw new Error(`.toContainHTML() expects a string value, got ${htmlText}`)\n  }\n\n  return {\n    pass: container.outerHTML.includes(getNormalizedHtml(container, htmlText)),\n    message: () => {\n      return [\n        this.utils.matcherHint(\n          `${this.isNot ? '.not' : ''}.toContainHTML`,\n          'element',\n          '',\n        ),\n        'Expected:',\n        // eslint-dis"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 9,
+      "context_length": 730,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toHaveAccessibleDescription",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-have-accessible-description.js",
+    "description": "Component: toHaveAccessibleDescription",
+    "usage_examples": [
+      "import {computeAccessibleDescription} from 'dom-accessibility-api'\nimport {checkHtmlElement, getMessage} from './utils'\n\nexport function toHaveAccessibleDescription(\n  htmlElement,\n  expectedAccessibleDescription,\n) {\n  checkHtmlElement(htmlElement, toHaveAccessibleDescription, this)\n  const actualAccessibleDescription = computeAccessibleDescription(htmlElement)\n  const missingExpectedValue = arguments.length === 1\n\n  let pass = false\n  if (missingExpectedValue) {\n    // When called without an expected value we only want to validate that the element has an\n    // accessible description, whatever it may be.\n    pass = actualAccessibleDescription !== ''\n  } e"
+    ],
+    "dependencies": [
+      "dom-accessibility-api"
+    ],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 4,
+      "context_length": 665,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.55,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toHaveAccessibleErrorMessage",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-have-accessible-errormessage.js",
+    "description": "Component: toHaveAccessibleErrorMessage",
+    "usage_examples": [
+      ", getMessage, normalize} from './utils'\n\nconst ariaInvalidName = 'aria-invalid'\nconst validStates = ['false']\n\n// See `aria-errormessage` spec at https://www.w3.org/TR/wai-aria-1.2/#aria-errormessage\nexport function toHaveAccessibleErrorMessage(\n  htmlElement,\n  expectedAccessibleErrorMessage,\n) {\n  checkHtmlElement(htmlElement, toHaveAccessibleErrorMessage, this)\n  const to = this.isNot ? 'not to' : 'to'\n  const method = this.isNot\n    ? '.not.toHaveAccessibleErrorMessage'\n    : '.toHaveAccessibleErrorMessage'\n\n  // Enforce Valid Id\n  const errormessageId = htmlElement.getAttribute('aria-errormessage')\n  const errormessageIdInvalid = !!errormessageId && /\\s+/.test(errormessageId)\n\n  if (errormessageIdInvalid) {\n    return {\n      pass"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 7,
+      "context_length": 745,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toHaveAccessibleName",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-have-accessible-name.js",
+    "description": "Component: toHaveAccessibleName",
+    "usage_examples": [
+      "import {computeAccessibleName} from 'dom-accessibility-api'\nimport {checkHtmlElement, getMessage} from './utils'\n\nexport function toHaveAccessibleName(htmlElement, expectedAccessibleName) {\n  checkHtmlElement(htmlElement, toHaveAccessibleName, this)\n  const actualAccessibleName = computeAccessibleName(htmlElement)\n  const missingExpectedValue = arguments.length === 1\n\n  let pass = false\n  if (missingExpectedValue) {\n    // When called without an expected value we only want to validate that the element has an\n    // accessible name, whatever it may be.\n    pass = actualAccessibleName !== ''\n  } else {\n    pass =\n      expectedAccessibleName ins"
+    ],
+    "dependencies": [
+      "dom-accessibility-api"
+    ],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 4,
+      "context_length": 651,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.55,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toHaveAttribute",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-have-attribute.js",
+    "description": "Component: toHaveAttribute",
+    "usage_examples": [
+      "getAttributeComment(stringify, name, value) {\n  return value === undefined\n    ? `element.hasAttribute(${stringify(name)})`\n    : `element.getAttribute(${stringify(name)}) === ${stringify(value)}`\n}\n\nexport function toHaveAttribute(htmlElement, name, expectedValue) {\n  checkHtmlElement(htmlElement, toHaveAttribute, this)\n  const isExpectedValuePresent = expectedValue !== undefined\n  const hasAttribute = htmlElement.hasAttribute(name)\n  const receivedValue = htmlElement.getAttribute(name)\n  return {\n    pass: isExpectedValuePresent\n      ? hasAttribute && this.equals(receivedValue, expectedValue)\n      : hasAttribute,\n    message: () => {\n      const to = this.isNot ? 'not to' : 'to'\n      const receivedAttribute = hasAttri"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 13,
+      "context_length": 732,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toHaveClass",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-have-class.js",
+    "description": "Component: toHaveClass",
+    "usage_examples": [
+      "et, superset) {\n  return subset.every(strOrRegexp =>\n    typeof strOrRegexp === 'string'\n      ? superset.includes(strOrRegexp)\n      : superset.some(className => strOrRegexp.test(className)),\n  )\n}\n\nexport function toHaveClass(htmlElement, ...params) {\n  checkHtmlElement(htmlElement, toHaveClass, this)\n  const {expectedClassNames, options} = getExpectedClassNamesAndOptions(params)\n\n  const received = splitClassNames(htmlElement.getAttribute('class'))\n  const expected = expectedClassNames.reduce(\n    (acc, className) =>\n      acc.concat(\n        typeof className === 'string' || !className\n          ? splitClassNames(className)\n          : className,\n      ),\n    [],\n  )\n\n  const hasRegExp = expected.some(className => c"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 30,
+      "context_length": 728,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toHaveDescription",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-have-description.js",
+    "description": "Component: toHaveDescription",
+    "usage_examples": [
+      "import {checkHtmlElement, getMessage, normalize, deprecate} from './utils'\n\n// See algoritm: https://www.w3.org/TR/accname-1.1/#mapping_additional_nd_description\nexport function toHaveDescription(htmlElement, checkWith) {\n  deprecate(\n    'toHaveDescription',\n    'Please use toHaveAccessibleDescription.',\n  )\n\n  checkHtmlElement(htmlElement, toHaveDescription, this)\n\n  const expectsDescription = checkWith !== undefined\n\n  const descriptionIDRaw = htmlElement.getAttribute('aria-describedby') || ''\n  const descriptionIDs = descriptionIDRaw.split(/\\s+/).filter(Boolean)\n  let description = ''\n  if (descriptionIDs.length > 0) {\n    const document = htmlElement.ownerDocument\n    const descript"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 4,
+      "context_length": 696,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toHaveDisplayValue",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-have-display-value.js",
+    "description": "Component: toHaveDisplayValue",
+    "usage_examples": [
+      "import {checkHtmlElement, getMessage} from './utils'\n\nexport function toHaveDisplayValue(htmlElement, expectedValue) {\n  checkHtmlElement(htmlElement, toHaveDisplayValue, this)\n  const tagName = htmlElement.tagName.toLowerCase()\n\n  if (!['select', 'input', 'textarea'].includes(tagName)) {\n    throw new Error(\n      '.toHaveDisplayValue() currently supports only input, textarea or select elements, try with another matcher instead.',\n    )\n  }\n\n  if (tagName === 'input' && ['radio', 'checkbox'].includes(htmlElement.type)) {\n    throw new Error(\n      `.toHaveDisplayValue() currently d"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 3,
+      "context_length": 589,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toHaveErrorMessage",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-have-errormessage.js",
+    "description": "Component: toHaveErrorMessage",
+    "usage_examples": [
+      "import {checkHtmlElement, getMessage, normalize, deprecate} from './utils'\n\n// See aria-errormessage spec https://www.w3.org/TR/wai-aria-1.2/#aria-errormessage\nexport function toHaveErrorMessage(htmlElement, checkWith) {\n  deprecate('toHaveErrorMessage', 'Please use toHaveAccessibleErrorMessage.')\n  checkHtmlElement(htmlElement, toHaveErrorMessage, this)\n\n  if (\n    !htmlElement.hasAttribute('aria-invalid') ||\n    htmlElement.getAttribute('aria-invalid') === 'false'\n  ) {\n    const not = this.isNot ? '.not' : ''\n\n    return {\n      pass: false,\n      message: () => {\n        return getMessage(\n          this,\n          this.utils.matcherHint(`${not}.toHaveErrorMessage`, 'element', ''),"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 4,
+      "context_length": 694,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toHaveFocus",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-have-focus.js",
+    "description": "Component: toHaveFocus",
+    "usage_examples": [
+      "import {checkHtmlElement} from './utils'\n\nexport function toHaveFocus(element) {\n  checkHtmlElement(element, toHaveFocus, this)\n\n  return {\n    pass: element.ownerDocument.activeElement === element,\n    message: () => {\n      return [\n        this.utils.matcherHint(\n          `${this.isNot ? '.not' : ''}.toHaveFocus`,\n          'element',\n          '',\n        ),\n        '',\n        ...(this.isNot\n          ? [\n              'Received element is focused:',\n              `  ${this.utils.printReceived(element)}`,\n            ]\n          : [\n              'Expected e"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 3,
+      "context_length": 570,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toHaveFormValues",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-have-form-values.js",
+    "description": "Component: toHaveFormValues",
+    "usage_examples": [
+      "Array.from(container.elements).map(element => element.name)\n  return names.reduce(\n    (obj, name) => ({\n      ...obj,\n      [getPureName(name)]: getFormValue(container, name),\n    }),\n    {},\n  )\n}\n\nexport function toHaveFormValues(formElement, expectedValues) {\n  checkHtmlElement(formElement, toHaveFormValues, this)\n  if (!formElement.elements) {\n    // TODO: Change condition to use instanceof against the appropriate element classes instead\n    throw new Error('toHaveFormValues must be called on a form or a fieldset')\n  }\n  const formValues = getAllFormValues(formElement)\n  return {\n    pass: Object.entries(expectedValues).every(([name, expectedValue]) =>\n      compareAsSet(formValues[name], expectedValue),\n    ),\n    mes"
+    ],
+    "dependencies": [
+      "css.escape"
+    ],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 62,
+      "context_length": 733,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.55,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toHaveRole",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-have-role.js",
+    "description": "Component: toHaveRole",
+    "usage_examples": [
+      "import {elementRoles} from 'aria-query'\nimport {checkHtmlElement, getMessage} from './utils'\n\nconst elementRoleList = buildElementRoleList(elementRoles)\n\nexport function toHaveRole(htmlElement, expectedRole) {\n  checkHtmlElement(htmlElement, toHaveRole, this)\n\n  const actualRoles = getExplicitOrImplicitRoles(htmlElement)\n  const pass = actualRoles.some(el => el === expectedRole)\n\n  return {\n    pass,\n\n    message: () => {\n      const to = this.isNot ? 'not to' : 'to'\n      return getMessage(\n        this,\n        this.utils.matcherHint(\n          `${this.isNot ? '.not' : ''}.${toHaveRole.name}`,\n          'element',\n          '',\n        ),\n        `Expected element ${to}"
+    ],
+    "dependencies": [
+      "aria-query"
+    ],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 6,
+      "context_length": 680,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.55,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toHaveSelection",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-have-selection.js",
+    "description": "Component: toHaveSelection",
+    "usage_examples": [
+      "Checks if the element has the string selected.\n *\n * @param htmlElement {HTMLElement} The html element to check the selection for.\n * @param expectedSelection {String} The selection as a string.\n */\nexport function toHaveSelection(htmlElement, expectedSelection) {\n  checkHtmlElement(htmlElement, toHaveSelection, this)\n\n  const expectsSelection = expectedSelection !== undefined\n\n  if (expectsSelection && typeof expectedSelection !== 'string') {\n    throw new Error(`expected selection must be a string or undefined`)\n  }\n\n  const receivedSelection = getSelection(htmlElement)\n\n  return {\n    pass: expectsSelection\n      ? compareAsSet(receivedSelection, expectedSelection)\n      : Boolean(receivedSelection),\n    message: () =>"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 81,
+      "context_length": 731,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toHaveStyle",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-have-style.js",
+    "description": "Component: toHaveStyle",
+    "usage_examples": [
+      "t = diffFn(printoutStyles(expected), printoutStyles(received))\n  // Remove the \"+ Received\" annotation because this is a one-way diff\n  return diffOutput.replace(`${pico.red('+ Received')}\\n`, '')\n}\n\nexport function toHaveStyle(htmlElement, css) {\n  checkHtmlElement(htmlElement, toHaveStyle, this)\n  const parsedCSS =\n    typeof css === 'object' ? css : parseCSS(css, toHaveStyle, this)\n  const {getComputedStyle} = htmlElement.ownerDocument.defaultView\n\n  const expected = getStyleDeclaration(htmlElement.ownerDocument, parsedCSS)\n  const received = getComputedStyle(htmlElement)\n\n  return {\n    pass: isSubset(expected, received),\n    message: () => {\n      const matcher = `${this.isNot ? '.not' : ''}.toHaveStyle`\n      ret"
+    ],
+    "dependencies": [
+      "picocolors"
+    ],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 56,
+      "context_length": 728,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.55,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toHaveTextContent",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-have-text-content.js",
+    "description": "Component: toHaveTextContent",
+    "usage_examples": [
+      "import {getMessage, checkNode, matches, normalize} from './utils'\n\nexport function toHaveTextContent(\n  node,\n  checkWith,\n  options = {normalizeWhitespace: true},\n) {\n  checkNode(node, toHaveTextContent, this)\n\n  const textContent = options.normalizeWhitespace\n    ? normalize(node.textContent)\n    : node.textContent.replace(/\\u00a0/g, ' ') // Replace &nbsp; with normal spaces\n\n  const checkingWithEmptyString = textContent !== '' && checkWith === ''\n\n  return {\n    pass: !checkingWithEmptyString && matches(textContent, checkWith),\n    message: () => {\n      const to = this.isNot ? 'not to' : 't"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 3,
+      "context_length": 601,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "toHaveValue",
+    "type": "component",
+    "category": "ui-components",
+    "file_path": "src/to-have-value.js",
+    "description": "Component: toHaveValue",
+    "usage_examples": [
+      "import {\n  checkHtmlElement,\n  compareAsSet,\n  getMessage,\n  getSingleElementValue,\n} from './utils'\n\nexport function toHaveValue(htmlElement, expectedValue) {\n  checkHtmlElement(htmlElement, toHaveValue, this)\n\n  if (\n    htmlElement.tagName.toLowerCase() === 'input' &&\n    ['checkbox', 'radio'].includes(htmlElement.type)\n  ) {\n    throw new Error(\n      'input with type=checkbox or type=radio cannot be used with .toHaveValue(). Use .toBeChecked() for type=checkbox or .toHaveFormValues() instead',\n    )\n  }\n\n  const receivedValue = getSingleElementValue(htmlElement)\n  const expectsValue = expectedValue !== undefined\n\n  le"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 8,
+      "context_length": 630,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  }
+]

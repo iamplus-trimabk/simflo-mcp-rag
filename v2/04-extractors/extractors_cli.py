@@ -89,7 +89,7 @@ def handle_run_extractor(args) -> str:
 
         # Run extraction using the simple factory
         print(f"Running {args.name} extractor...")
-        result = factory.run_extractor(args.name)
+        result = factory.run_extractor(args.name, getattr(args, 'repository_url', None))
 
         if "error" in result:
             return format_output(result, args.format, success=False)
@@ -175,6 +175,89 @@ def handle_status(args) -> str:
         return format_output({"error": str(e)}, args.format, success=False)
 
 
+def handle_detect_repository(args) -> str:
+    """Detect repository type and recommend extractors"""
+    try:
+        factory = SimpleExtractorFactory()
+
+        if not args.repository_url:
+            return format_output({
+                "error": "Repository URL is required"
+            }, args.format, success=False)
+
+        detection = factory.detect_repository_type(args.repository_url)
+
+        data = {
+            "repository": args.repository_url,
+            "detection": detection,
+            "message": "Repository type detection completed"
+        }
+
+        return format_output(data, args.format)
+
+    except Exception as e:
+        return format_output({"error": str(e)}, args.format, success=False)
+
+
+def handle_extract_repository(args) -> str:
+    """Smart extraction from any repository"""
+    try:
+        factory = SimpleExtractorFactory()
+
+        if not args.repository_url:
+            return format_output({
+                "error": "Repository URL is required"
+            }, args.format, success=False)
+
+        print(f"Analyzing repository: {args.repository_url}")
+
+        # Smart extraction with auto-detection
+        result = factory.smart_extract(
+            args.repository_url,
+            getattr(args, 'force_extractor', None)
+        )
+
+        if "error" in result:
+            return format_output(result, args.format, success=False)
+
+        data = {
+            "repository": args.repository_url,
+            "extraction": result,
+            "message": f"Repository extraction completed using {result.get('detection', {}).get('recommended_extractor', 'unknown')} extractor"
+        }
+
+        return format_output(data, args.format)
+
+    except Exception as e:
+        return format_output({"error": str(e)}, args.format, success=False)
+
+
+def handle_extract_all_applicable(args) -> str:
+    """Run all applicable extractors for a repository"""
+    try:
+        factory = SimpleExtractorFactory()
+
+        if not args.repository_url:
+            return format_output({
+                "error": "Repository URL is required"
+            }, args.format, success=False)
+
+        print(f"Running all applicable extractors for: {args.repository_url}")
+
+        result = factory.run_all_applicable_extractors(args.repository_url)
+
+        data = {
+            "repository": args.repository_url,
+            "extraction_results": result,
+            "message": f"Completed extraction using {result.get('total_extractors', 0)} extractors ({result.get('successful_extractions', 0)} successful)"
+        }
+
+        return format_output(data, args.format)
+
+    except Exception as e:
+        return format_output({"error": str(e)}, args.format, success=False)
+
+
 def main():
     """Main CLI entry point"""
     parser = argparse.ArgumentParser(
@@ -186,6 +269,12 @@ Examples:
   %(prog)s run-extractor shadcn --format json
   %(prog)s run-all-extractors --format json
   %(prog)s status --format json
+
+Universal Repository Extraction (NEW):
+  %(prog)s detect-repository --repository-url "https://github.com/microsoft/playwright"
+  %(prog)s extract-repository --repository-url "https://github.com/microsoft/playwright"
+  %(prog)s extract-repository --repository-url "https://github.com/microsoft/playwright" --force-extractor typescript
+  %(prog)s extract-all-applicable --repository-url "https://github.com/microsoft/playwright"
 
 For comprehensive usage guide, see:
   v2/extractors/user_guide.md
@@ -201,11 +290,28 @@ For comprehensive usage guide, see:
     # Run extractor command
     run_parser = subparsers.add_parser('run-extractor', help='Run a specific extractor')
     run_parser.add_argument('name', help='Extractor name to run')
+    run_parser.add_argument('--repository-url', help='Repository URL for language-based extractors')
     run_parser.add_argument('--format', choices=['json', 'table'], default='json', help='Output format (default: json)')
 
     # Run all extractors command
     run_all_parser = subparsers.add_parser('run-all-extractors', help='Run all available extractors')
     run_all_parser.add_argument('--format', choices=['json', 'table'], default='json', help='Output format (default: json)')
+
+    # Detect repository command
+    detect_parser = subparsers.add_parser('detect-repository', help='Detect repository type and recommend extractors')
+    detect_parser.add_argument('--repository-url', required=True, help='Repository URL to analyze')
+    detect_parser.add_argument('--format', choices=['json', 'table'], default='json', help='Output format (default: json)')
+
+    # Extract repository command (NEW Universal extraction)
+    extract_parser = subparsers.add_parser('extract-repository', help='Smart extraction from any repository')
+    extract_parser.add_argument('--repository-url', required=True, help='Repository URL to extract from')
+    extract_parser.add_argument('--force-extractor', help='Force specific extractor instead of auto-detection')
+    extract_parser.add_argument('--format', choices=['json', 'table'], default='json', help='Output format (default: json)')
+
+    # Extract all applicable command
+    extract_all_parser = subparsers.add_parser('extract-all-applicable', help='Run all applicable extractors for a repository')
+    extract_all_parser.add_argument('--repository-url', required=True, help='Repository URL to extract from')
+    extract_all_parser.add_argument('--format', choices=['json', 'table'], default='json', help='Output format (default: json)')
 
     # Status command
     status_parser = subparsers.add_parser('status', help='Get extractor system status')
@@ -221,6 +327,12 @@ For comprehensive usage guide, see:
         print(handle_run_extractor(args))
     elif args.command == 'run-all-extractors':
         print(handle_run_all_extractors(args))
+    elif args.command == 'detect-repository':
+        print(handle_detect_repository(args))
+    elif args.command == 'extract-repository':
+        print(handle_extract_repository(args))
+    elif args.command == 'extract-all-applicable':
+        print(handle_extract_all_applicable(args))
     elif args.command == 'status':
         print(handle_status(args))
     elif args.command is None:

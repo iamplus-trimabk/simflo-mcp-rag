@@ -69,35 +69,44 @@ alias simflo_test="test_registry && test_mcp"
 simflo_help() {
     echo "SimFlo RAG v2 - Command Aliases (Opinionated: shadcn + gluestack)"
     echo ""
-    echo "Core Commands:"
+    echo "🚀 SimFlo RAG Commands (sm_ prefix):"
+    echo "  sm_learn          - Learn SimFlo RAG architecture (self-documenting)"
+    echo "  sm_guide          - Get AI assistant complete guide"
+    echo "  sm_commands       - Get CLI commands reference"
+    echo "  sm_search \"query\" - Search SimFlo RAG documentation"
+    echo "  sm_get \"doc-name\" - Get specific documentation"
+    echo "  sm_registries     - List all registries (including simflo-rag)"
+    echo ""
+    echo "🔧 Core Commands:"
     echo "  rag_registry_*     - Registry management (shadcn + gluestack only)"
     echo "  mcp_*             - MCP server commands (AI assistant integration)"
     echo "  rag_builder_*     - RAG pipeline commands"
     echo "  content_*         - Content collection commands"
     echo "  extractors_*      - Content extraction (GitHub CLI based)"
     echo ""
-    echo "Status & Testing:"
+    echo "📊 Status & Testing:"
     echo "  simflo_status     - Show status across all components"
     echo "  simflo_test       - Run core test suites"
     echo "  test_*            - Individual component test commands"
     echo ""
-    echo "Supported Libraries:"
+    echo "📚 Supported Libraries:"
     echo "  shadcn            - Modern React components (shadcn-ui/ui)"
     echo "  gluestack         - Cross-platform React/React Native components"
     echo ""
-    echo "Examples:"
+    echo "💡 Examples:"
+    echo "  sm_learn                    # Learn about SimFlo RAG"
+    echo "  sm_search \"architecture\"    # Search architecture docs"
+    echo "  sm_get \"ai-assistant-complete-guide\" --registry simflo-rag"
     echo "  mcp_search \"button\" --limit 5"
-    echo "  rag_registry_search --query \"dialog\""
     echo "  extractors_run shadcn"
-    echo "  extractors_run gluestack"
     echo "  simflo_status"
     echo ""
-    echo "Environment:"
+    echo "🌍 Environment:"
     echo "  CONTENT_ROOT      - Content storage path (configurable)"
     echo "  GitHub CLI        - Required for repository access (gh command)"
     echo ""
-    echo "For AI assistant integration guide: v2/docs/ai-assistant-integration.md"
-    echo "For full documentation: v2/CLAUDE.md"
+    echo "📖 For AI assistant integration guide: v2/docs/ai-assistant-integration.md"
+    echo "📖 For full documentation: v2/CLAUDE.md"
 }
 
 # Auto-setup function
@@ -115,9 +124,68 @@ simflo_setup() {
     echo "Use 'simflo_help' for command reference"
 }
 
+# SimFlo RAG Specific Commands (sm_ prefix)
+alias sm_search="python3 v2/core/01-mcp-server/mcp_server.py search --format json"
+alias sm_get="python3 v2/core/01-mcp-server/mcp_server.py get-component --format json"
+alias sm_list="python3 v2/core/01-mcp-server/mcp_server.py list-components --format json"
+alias sm_registries="python3 v2/core/01-mcp-server/mcp_server.py list-registries --format json"
+alias sm_set_context="python3 v2/core/01-mcp-server/mcp_server.py set-context --format json"
+alias sm_get_context="python3 v2/core/01-mcp-server/mcp_server.py get-context --format json"
+
+# SimFlo RAG Self-Documentation Commands
+alias sm_learn="python3 v2/core/01-mcp-server/mcp_server.py get-component simflo-rag-complete-architecture --registry simflo-rag --format json"
+alias sm_guide="python3 v2/core/01-mcp-server/mcp_server.py get-component ai-assistant-complete-guide --registry simflo-rag --format json"
+alias sm_commands="python3 v2/core/01-mcp-server/mcp_server.py get-component cli-commands-complete-reference --registry simflo-rag --format json"
+
+# SimFlo RAG Registry Management Commands
+alias sm_create_registry="python3 v2/core/00-rag-registry/registry.py create --format json"
+alias sm_rebuild_registry="python3 v2/core/00-rag-registry/registry.py rebuild-db --format json"
+alias sm_list_registry_info="python3 v2/core/00-rag-registry/registry.py info --format json"
+alias sm_registry_status="python3 v2/core/00-rag-registry/registry.py status --format json"
+
+# SimFlo RAG Content Processing Commands
+alias sm_discover_content="python3 v2/core/03-content-collection/content_collection_cli.py discover --format json"
+alias sm_fetch_content="python3 v2/core/03-content-collection/content_collection_cli.py fetch --format json"
+alias sm_run_extractors="python3 v2/04-extractors/extractors_cli.py run-all-extractors --format json"
+alias sm_extract_pdf="python3 v2/04-extractors/extractors_cli.py run-extractor pdf-extractor --format json"
+
+# AI Assistant Quick Start Function
+sm_ai_help() {
+    echo "SimFlo RAG v2 - AI Assistant Quick Start"
+    echo ""
+    echo "🎓 Learn SimFlo RAG (Self-Documenting System):"
+    echo "  sm_learn          - Get complete system architecture"
+    echo "  sm_guide          - Get AI assistant comprehensive guide"
+    echo "  sm_commands       - Get complete CLI command reference"
+    echo ""
+    echo "🔍 Search Documentation:"
+    echo "  sm_search \"architecture\" --limit 5      # Search architecture docs"
+    echo "  sm_search \"CLI commands\" --limit 10     # Search command reference"
+    echo "  sm_search \"registry system\"             # Search registry info"
+    echo ""
+    echo "📄 Get Specific Documents:"
+    echo "  sm_get \"ai-assistant-complete-guide\" --registry simflo-rag"
+    echo "  sm_get \"setup-and-installation-guide\" --registry simflo-rag"
+    echo "  sm_get \"simflo-rag-complete-architecture\" --registry simflo-rag"
+    echo ""
+    echo "🔧 Registry Operations:"
+    echo "  sm_registries     - List all registries (includes simflo-rag)"
+    echo "  sm_list --type ui --platform reactjs    # List UI components"
+    echo ""
+    echo "💡 Example AI Assistant Workflow:"
+    echo "  1. sm_learn                    # Learn about SimFlo RAG"
+    echo "  2. sm_search \"registry\"        # Search for registry info"
+    echo "  3. sm_get \"ai-assistant-complete-guide\"  # Get detailed guide"
+    echo "  4. sm_registries               # See available registries"
+    echo ""
+    echo "✨ The 'sm_' prefix indicates SimFlo RAG specific commands"
+    echo "📖 All commands output JSON for easy AI integration"
+}
+
 # Export functions
 export -f simflo_help
 export -f simflo_setup
+export -f sm_ai_help
 
 echo "SimFlo RAG v2 command aliases loaded"
-echo "Type 'simflo_help' for command reference or 'simflo_setup' to test the system"
+echo "Type 'simflo_help' for command reference, 'sm_ai_help' for AI assistant guide, or 'simflo_setup' to test the system"
