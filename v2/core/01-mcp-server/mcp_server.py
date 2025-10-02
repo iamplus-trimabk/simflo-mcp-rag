@@ -721,6 +721,407 @@ def handle_list_registry_sources(args) -> str:
         }, args.format, success=False)
 
 
+def handle_create_registry_from_source(args) -> str:
+    """Create a new registry from source URL with automated workflow"""
+    try:
+        import subprocess
+        from pathlib import Path
+        import time
+
+        project_root = Path(__file__).parent.parent.parent.parent
+        start_time = time.time()
+
+        # Step 1: Detect repository type and extractor
+        print("🔍 Detecting repository type and extractor...", file=sys.stderr)
+        detect_cmd = [
+            "python3", str(project_root / "v2/04-extractors/extractors_cli.py"),
+            "detect-repository", "--repository-url", args.source, "--format", "json"
+        ]
+
+        detect_result = subprocess.run(detect_cmd, capture_output=True, text=True, cwd=project_root)
+        if detect_result.returncode != 0:
+            return format_output({
+                "error": f"Repository detection failed: {detect_result.stderr}",
+                "source": args.source,
+                "registry_name": args.name
+            }, args.format, success=False)
+
+        detect_data = json.loads(detect_result.stdout)
+        if not detect_data.get("success"):
+            return format_output({
+                "error": f"Repository detection failed: {detect_data.get('data', {}).get('error', 'Unknown error')}",
+                "source": args.source,
+                "registry_name": args.name
+            }, args.format, success=False)
+
+        detection_info = detect_data["data"]["detection"]
+        recommended_extractor = detection_info.get("recommended_extractor")
+
+        # Step 2: Extract content using universal extractor (creates registry structure automatically)
+        print(f"🚀 Extracting content using {recommended_extractor} extractor...", file=sys.stderr)
+        extract_cmd = [
+            "python3", str(project_root / "v2/04-extractors/extractors_cli.py"),
+            "extract-repository", "--repository-url", args.source, "--format", "json"
+        ]
+
+        if hasattr(args, 'extractor') and args.extractor:
+            extract_cmd.extend(["--force-extractor", args.extractor])
+
+        extract_result = subprocess.run(extract_cmd, capture_output=True, text=True, cwd=project_root)
+        if extract_result.returncode != 0:
+            return format_output({
+                "error": f"Content extraction failed: {extract_result.stderr}",
+                "source": args.source,
+                "registry_name": args.name,
+                "extractor": recommended_extractor
+            }, args.format, success=False)
+
+        extract_data = json.loads(extract_result.stdout)
+        if not extract_data.get("success"):
+            return format_output({
+                "error": f"Content extraction failed: {extract_data.get('data', {}).get('error', 'Unknown error')}",
+                "source": args.source,
+                "registry_name": args.name,
+                "extractor": recommended_extractor
+            }, args.format, success=False)
+
+        extraction_result = extract_data["data"]["extraction"]
+        elements_extracted = extraction_result.get("elements_found", 0)
+
+        # Step 4: Build registry database
+        print("🔨 Building registry database...", file=sys.stderr)
+        build_cmd = [
+            "python3", str(project_root / "v2/core/00-rag-registry/registry.py"),
+            "rebuild-db", "--registry", args.name, "--format", "json"
+        ]
+
+        build_result = subprocess.run(build_cmd, capture_output=True, text=True, cwd=project_root)
+        if build_result.returncode != 0:
+            return format_output({
+                "error": f"Database building failed: {build_result.stderr}",
+                "source": args.source,
+                "registry_name": args.name,
+                "extractor": recommended_extractor
+            }, args.format, success=False)
+
+        # Step 5: Verify registry functionality
+        print("✅ Verifying registry functionality...", file=sys.stderr)
+        verify_cmd = [
+            "python3", str(project_root / "v2/core/01-mcp-server/mcp_server.py"),
+            "list-registries", "--format", "json"
+        ]
+
+        verify_result = subprocess.run(verify_cmd, capture_output=True, text=True, cwd=project_root)
+        registry_verified = False
+        if verify_result.returncode == 0:
+            try:
+                verify_data = json.loads(verify_result.stdout)
+                registries = verify_data.get("data", {}).get("registries", [])
+                registry_verified = any(reg.get("name") == args.name for reg in registries)
+            except:
+                pass
+
+        end_time = time.time()
+        processing_time = round(end_time - start_time, 2)
+
+        # Return comprehensive result
+        result_data = {
+            "registry_created": True,
+            "registry_name": args.name,
+            "source": args.source,
+            "processing_time_seconds": processing_time,
+            "steps_completed": [
+                "Repository type detection",
+                "Content extraction (creates registry automatically)",
+                "Database building",
+                "Registry verification"
+            ],
+            "extraction_details": {
+                "recommended_extractor": recommended_extractor,
+                "used_extractor": getattr(args, 'extractor', recommended_extractor),
+                "extraction_type": detection_info.get("extraction_type"),
+                "quality": detection_info.get("quality"),
+                "confidence": detection_info.get("confidence"),
+                "elements_extracted": elements_extracted
+            },
+            "registry_status": {
+                "verified": registry_verified,
+                "database_built": True,
+                "ready_for_search": registry_verified
+            },
+            "workflow_summary": {
+                "total_steps": 4,
+                "steps_successful": 4 if registry_verified else 3,
+                "success_rate": "100%" if registry_verified else "75%",
+                "source_type": detection_info.get("extraction_type", "unknown")
+            }
+        }
+
+        if not registry_verified:
+            result_data["warning"] = "Registry created but verification failed - manual verification recommended"
+
+        message = f"Successfully created registry '{args.name}' from source '{args.source}' with {elements_extracted} elements extracted"
+
+        return format_output(result_data, args.format)
+
+    except Exception as e:
+        return format_output({
+            "error": f"Registry creation workflow failed: {str(e)}",
+            "source": getattr(args, 'source', 'unknown'),
+            "registry_name": getattr(args, 'name', 'unknown')
+        }, args.format, success=False)
+
+
+def handle_add_source_to_registry(args) -> str:
+    """Add content from new source to existing registry"""
+    try:
+        import subprocess
+        from pathlib import Path
+        import time
+
+        project_root = Path(__file__).parent.parent.parent.parent
+        start_time = time.time()
+
+        # Step 1: Verify registry exists
+        print(f"🔍 Verifying registry '{args.registry}' exists...", file=sys.stderr)
+        verify_cmd = [
+            "python3", str(project_root / "v2/core/00-rag-registry/registry.py"),
+            "info", "--name", args.registry, "--format", "json"
+        ]
+
+        verify_result = subprocess.run(verify_cmd, capture_output=True, text=True, cwd=project_root)
+        if verify_result.returncode != 0:
+            return format_output({
+                "error": f"Registry '{args.registry}' not found or not accessible",
+                "source": args.source,
+                "registry_name": args.registry
+            }, args.format, success=False)
+
+        # Step 2: Detect repository type
+        print("🔍 Detecting repository type...", file=sys.stderr)
+        detect_cmd = [
+            "python3", str(project_root / "v2/04-extractors/extractors_cli.py"),
+            "detect-repository", "--repository-url", args.source, "--format", "json"
+        ]
+
+        detect_result = subprocess.run(detect_cmd, capture_output=True, text=True, cwd=project_root)
+        if detect_result.returncode != 0:
+            return format_output({
+                "error": f"Repository detection failed: {detect_result.stderr}",
+                "source": args.source,
+                "registry_name": args.registry
+            }, args.format, success=False)
+
+        detect_data = json.loads(detect_result.stdout)
+        if not detect_data.get("success"):
+            return format_output({
+                "error": f"Repository detection failed: {detect_data.get('data', {}).get('error', 'Unknown error')}",
+                "source": args.source,
+                "registry_name": args.registry
+            }, args.format, success=False)
+
+        detection_info = detect_data["data"]["detection"]
+        recommended_extractor = detection_info.get("recommended_extractor")
+
+        # Step 3: Extract content
+        print(f"🚀 Extracting content using {recommended_extractor} extractor...", file=sys.stderr)
+        extract_cmd = [
+            "python3", str(project_root / "v2/04-extractors/extractors_cli.py"),
+            "extract-repository", "--repository-url", args.source, "--format", "json"
+        ]
+
+        if hasattr(args, 'extractor') and args.extractor:
+            extract_cmd.extend(["--force-extractor", args.extractor])
+
+        extract_result = subprocess.run(extract_cmd, capture_output=True, text=True, cwd=project_root)
+        if extract_result.returncode != 0:
+            return format_output({
+                "error": f"Content extraction failed: {extract_result.stderr}",
+                "source": args.source,
+                "registry_name": args.registry,
+                "extractor": recommended_extractor
+            }, args.format, success=False)
+
+        extract_data = json.loads(extract_result.stdout)
+        if not extract_data.get("success"):
+            return format_output({
+                "error": f"Content extraction failed: {extract_data.get('data', {}).get('error', 'Unknown error')}",
+                "source": args.source,
+                "registry_name": args.registry,
+                "extractor": recommended_extractor
+            }, args.format, success=False)
+
+        extraction_result = extract_data["data"]["extraction"]
+        elements_extracted = extraction_result.get("elements_found", 0)
+
+        # Step 4: Rebuild registry database with new content
+        print("🔨 Rebuilding registry database with new content...", file=sys.stderr)
+        build_cmd = [
+            "python3", str(project_root / "v2/core/00-rag-registry/registry.py"),
+            "rebuild-db", "--registry", args.registry, "--format", "json"
+        ]
+
+        build_result = subprocess.run(build_cmd, capture_output=True, text=True, cwd=project_root)
+        if build_result.returncode != 0:
+            return format_output({
+                "error": f"Database rebuild failed: {build_result.stderr}",
+                "source": args.source,
+                "registry_name": args.registry
+            }, args.format, success=False)
+
+        end_time = time.time()
+        processing_time = round(end_time - start_time, 2)
+
+        result_data = {
+            "source_added": True,
+            "registry_name": args.registry,
+            "new_source": args.source,
+            "processing_time_seconds": processing_time,
+            "steps_completed": [
+                "Registry verification",
+                "Repository type detection",
+                "Content extraction",
+                "Database rebuild"
+            ],
+            "extraction_details": {
+                "recommended_extractor": recommended_extractor,
+                "used_extractor": getattr(args, 'extractor', recommended_extractor),
+                "extraction_type": detection_info.get("extraction_type"),
+                "elements_extracted": elements_extracted
+            },
+            "update_summary": {
+                "total_steps": 4,
+                "steps_successful": 4,
+                "success_rate": "100%",
+                "new_elements_added": elements_extracted
+            }
+        }
+
+        message = f"Successfully added source '{args.source}' to registry '{args.registry}' with {elements_extracted} new elements"
+
+        return format_output(result_data, args.format)
+
+    except Exception as e:
+        return format_output({
+            "error": f"Failed to add source to registry: {str(e)}",
+            "source": getattr(args, 'source', 'unknown'),
+            "registry_name": getattr(args, 'registry', 'unknown')
+        }, args.format, success=False)
+
+
+def handle_create_and_extract(args) -> str:
+    """Create registry and extract with explicit extractor control"""
+    try:
+        import subprocess
+        from pathlib import Path
+        import time
+
+        project_root = Path(__file__).parent.parent.parent.parent
+        start_time = time.time()
+
+        # Validate extractor
+        valid_extractors = ["shadcn", "gluestack", "typescript", "python", "language-documentation", "configuration"]
+        if args.extractor not in valid_extractors:
+            return format_output({
+                "error": f"Invalid extractor '{args.extractor}'. Valid extractors: {', '.join(valid_extractors)}",
+                "source": args.source,
+                "registry_name": args.name,
+                "requested_extractor": args.extractor
+            }, args.format, success=False)
+
+        print(f"🎯 Creating registry '{args.name}' with explicit extractor '{args.extractor}'...", file=sys.stderr)
+
+        # Step 1: Extract content with specified extractor (creates registry structure automatically)
+        print(f"🚀 Extracting content using '{args.extractor}' extractor...", file=sys.stderr)
+        extract_cmd = [
+            "python3", str(project_root / "v2/04-extractors/extractors_cli.py"),
+            "extract-repository", "--repository-url", args.source, "--force-extractor", args.extractor, "--format", "json"
+        ]
+
+        extract_result = subprocess.run(extract_cmd, capture_output=True, text=True, cwd=project_root)
+        if extract_result.returncode != 0:
+            return format_output({
+                "error": f"Content extraction failed: {extract_result.stderr}",
+                "source": args.source,
+                "registry_name": args.name,
+                "extractor": args.extractor
+            }, args.format, success=False)
+
+        extract_data = json.loads(extract_result.stdout)
+        if not extract_data.get("success"):
+            return format_output({
+                "error": f"Content extraction failed: {extract_data.get('data', {}).get('error', 'Unknown error')}",
+                "source": args.source,
+                "registry_name": args.name,
+                "extractor": args.extractor
+            }, args.format, success=False)
+
+        extraction_result = extract_data["data"]["extraction"]
+        elements_extracted = extraction_result.get("elements_found", 0)
+
+        # Step 2: Build registry database
+        print("🔨 Building registry database...", file=sys.stderr)
+        build_cmd = [
+            "python3", str(project_root / "v2/core/00-rag-registry/registry.py"),
+            "rebuild-db", "--registry", args.name, "--format", "json"
+        ]
+
+        build_result = subprocess.run(build_cmd, capture_output=True, text=True, cwd=project_root)
+        if build_result.returncode != 0:
+            return format_output({
+                "error": f"Database building failed: {build_result.stderr}",
+                "source": args.source,
+                "registry_name": args.name,
+                "extractor": args.extractor
+            }, args.format, success=False)
+
+        # Step 3: Verify functionality
+        print("✅ Verifying registry functionality...", file=sys.stderr)
+        verify_cmd = [
+            "python3", str(project_root / "v2/core/01-mcp-server/mcp_server.py"),
+            "search", "test", "--limit", "1", "--format", "json"
+        ]
+
+        verify_result = subprocess.run(verify_cmd, capture_output=True, text=True, cwd=project_root)
+        registry_verified = verify_result.returncode == 0
+
+        end_time = time.time()
+        processing_time = round(end_time - start_time, 2)
+
+        result_data = {
+            "registry_created": True,
+            "registry_name": args.name,
+            "source": args.source,
+            "extractor_used": args.extractor,
+            "processing_time_seconds": processing_time,
+            "steps_completed": [
+                "Content extraction (explicit, creates registry automatically)",
+                "Database building",
+                "Registry verification"
+            ],
+            "extraction_summary": {
+                "elements_extracted": elements_extracted,
+                "extractor_type": "specialized" if args.extractor in ["shadcn", "gluestack"] else "language-based",
+                "extraction_quality": "high" if args.extractor in ["shadcn", "gluestack"] else "good"
+            },
+            "verification_status": {
+                "verified": registry_verified,
+                "database_built": True,
+                "ready_for_search": registry_verified
+            }
+        }
+
+        return format_output(result_data, args.format)
+
+    except Exception as e:
+        return format_output({
+            "error": f"Create and extract workflow failed: {str(e)}",
+            "source": getattr(args, 'source', 'unknown'),
+            "registry_name": getattr(args, 'name', 'unknown'),
+            "extractor": getattr(args, 'extractor', 'unknown')
+        }, args.format, success=False)
+
+
 def main():
     """Main CLI entry point"""
     parser = argparse.ArgumentParser(
@@ -808,6 +1209,25 @@ For comprehensive usage guide and AI integration patterns, see:
     sources_parser.add_argument('registry', help='Registry name')
     sources_parser.add_argument('--format', choices=['json', 'table'], default='json', help='Output format (default: json)')
 
+    # Enhanced Registry Creation Commands
+    create_registry_parser = subparsers.add_parser('create-registry-from-source', help='Create registry from source URL (automated workflow)')
+    create_registry_parser.add_argument('--name', required=True, help='Registry name to create')
+    create_registry_parser.add_argument('--source', required=True, help='Source repository URL')
+    create_registry_parser.add_argument('--extractor', help='Force specific extractor (overrides auto-detection)')
+    create_registry_parser.add_argument('--format', choices=['json', 'table'], default='json', help='Output format (default: json)')
+
+    add_source_parser = subparsers.add_parser('add-source-to-registry', help='Add content from new source to existing registry')
+    add_source_parser.add_argument('--registry', required=True, help='Existing registry name')
+    add_source_parser.add_argument('--source', required=True, help='Source repository URL')
+    add_source_parser.add_argument('--extractor', help='Force specific extractor (overrides auto-detection)')
+    add_source_parser.add_argument('--format', choices=['json', 'table'], default='json', help='Output format (default: json)')
+
+    create_extract_parser = subparsers.add_parser('create-and-extract', help='Create registry with explicit extractor control')
+    create_extract_parser.add_argument('--name', required=True, help='Registry name to create')
+    create_extract_parser.add_argument('--source', required=True, help='Source repository URL')
+    create_extract_parser.add_argument('--extractor', required=True, choices=['shadcn', 'gluestack', 'typescript', 'python', 'language-documentation', 'configuration'], help='Specific extractor to use')
+    create_extract_parser.add_argument('--format', choices=['json', 'table'], default='json', help='Output format (default: json)')
+
     # Parse arguments
     args = parser.parse_args()
 
@@ -829,6 +1249,10 @@ For comprehensive usage guide and AI integration patterns, see:
         'clear-extraction-data': handle_clear_extraction_data,
         'search-by-category': handle_search_by_category,
         'list-registry-sources': handle_list_registry_sources,
+        # Enhanced Registry Creation Commands
+        'create-registry-from-source': handle_create_registry_from_source,
+        'add-source-to-registry': handle_add_source_to_registry,
+        'create-and-extract': handle_create_and_extract,
     }
 
     handler = command_handlers.get(args.command)

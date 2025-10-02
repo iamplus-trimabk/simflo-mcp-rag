@@ -167,15 +167,59 @@ class DatabaseManager:
 
             for source_file in source_files:
                 try:
+                    relative_path = source_file.relative_to(self.get_registry_files_path(registry_name))
+
                     with open(source_file, 'r', encoding='utf-8') as f:
-                        content = f.read()
+                        if source_file.suffix == '.json':
+                            # Parse JSON file and extract meaningful content
+                            try:
+                                json_data = json.load(f)
+                                if isinstance(json_data, list):
+                                    # Handle large lists efficiently
+                                    self.logger.info(f"Processing large JSON file with {len(json_data)} items: {source_file.name}")
+
+                                    # If list is too large (>1000 items), sample important items
+                                    if len(json_data) > 1000:
+                                        # Sample first 500 items and prioritize items with descriptions
+                                        sampled_items = []
+
+                                        # First, add items with descriptions (higher quality)
+                                        for item in json_data:
+                                            if len(sampled_items) >= 500:
+                                                break
+                                            if isinstance(item, dict) and item.get('description') and item['description'].strip():
+                                                sampled_items.append(item)
+
+                                        # If still need more items, add from the beginning
+                                        for item in json_data:
+                                            if len(sampled_items) >= 1000:
+                                                break
+                                            if item not in sampled_items:
+                                                sampled_items.append(item)
+
+                                        content = json.dumps(sampled_items, indent=2)
+                                        self.logger.info(f"Sampled {len(sampled_items)} items from {len(json_data)} total items")
+                                    else:
+                                        content = json.dumps(json_data, indent=2)
+                                elif isinstance(json_data, dict):
+                                    # Convert JSON to readable text for search
+                                    content = json.dumps(json_data, indent=2)
+                                else:
+                                    content = str(json_data)
+                            except json.JSONDecodeError:
+                                # If JSON parsing fails, read as raw text
+                                f.seek(0)  # Reset file pointer
+                                content = f.read()
+                        else:
+                            # Read text files normally
+                            content = f.read()
 
                     # Simple, clean metadata
-                    relative_path = source_file.relative_to(self.get_registry_files_path(registry_name))
                     metadata = {
                         "name": source_file.stem,
                         "registry": registry_name,
                         "source_file": str(relative_path),
+                        "file_type": source_file.suffix[1:] if source_file.suffix else "unknown",
                         "type": "component",
                         "timestamp": datetime.now().isoformat()
                     }
@@ -231,7 +275,7 @@ class DatabaseManager:
                 # Database doesn't exist, try to create it from source files
                 files_path = self.get_registry_files_path(registry_name)
                 if files_path.exists():
-                    source_files = list(files_path.rglob("*.md"))
+                    source_files = list(files_path.rglob("*.md")) + list(files_path.rglob("*.json"))
                     if source_files:
                         create_result = self.create_database(registry_name, source_files, collection_name)
                         if not create_result["success"]:
@@ -273,8 +317,8 @@ class DatabaseManager:
             if not files_path.exists():
                 return {"success": False, "error": f"Source files directory not found for {registry_name}"}
 
-            # Get all source files
-            source_files = list(files_path.rglob("*.md"))
+            # Get all source files (support both .md and .json files)
+            source_files = list(files_path.rglob("*.md")) + list(files_path.rglob("*.json"))
             if not source_files:
                 return {"success": False, "error": f"No source files found for {registry_name}"}
 

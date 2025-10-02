@@ -276,5 +276,283 @@
       "web"
     ],
     "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "Matchers",
+    "type": "type",
+    "category": "types",
+    "file_path": "types/bun.d.ts",
+    "description": "Type: Matchers",
+    "usage_examples": [
+      "import {type expect} from 'bun:test'\nimport {type TestingLibraryMatchers} from './matchers'\n\nexport {}\ndeclare module 'bun:test' {\n  interface Matchers<T = any>\n    extends TestingLibraryMatchers<\n      ReturnType<typeof expect.stringContaining>,\n      T\n    > {}\n}"
+    ],
+    "dependencies": [
+      "bun:test"
+    ],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "typescript",
+      "line_number": 6,
+      "context_length": 265,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.55,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "Matchers",
+    "type": "type",
+    "category": "types",
+    "file_path": "types/jest-globals.d.ts",
+    "description": "Type: Matchers",
+    "usage_examples": [
+      "import {type expect} from '@jest/globals'\nimport {type TestingLibraryMatchers} from './matchers'\n\nexport {}\ndeclare module '@jest/expect' {\n  export interface Matchers<R extends void | Promise<void>>\n    extends TestingLibraryMatchers<\n      ReturnType<typeof expect.stringContaining>,\n      R\n    > {}\n}"
+    ],
+    "dependencies": [
+      "@jest/globals"
+    ],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "typescript",
+      "line_number": 6,
+      "context_length": 304,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.55,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "Matchers",
+    "type": "type",
+    "category": "types",
+    "file_path": "types/jest-globals.d.ts",
+    "description": "Type: Matchers",
+    "usage_examples": [
+      "import {type expect} from '@jest/globals'\nimport {type TestingLibraryMatchers} from './matchers'\n\nexport {}\ndeclare module '@jest/expect' {\n  export interface Matchers<R extends void | Promise<void>>\n    extends TestingLibraryMatchers<\n      ReturnType<typeof expect.stringContaining>,\n      R\n    > {}\n}"
+    ],
+    "dependencies": [
+      "@jest/globals"
+    ],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "typescript",
+      "line_number": 6,
+      "context_length": 304,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.55,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "Matchers",
+    "type": "type",
+    "category": "types",
+    "file_path": "types/jest.d.ts",
+    "description": "Type: Matchers",
+    "usage_examples": [
+      "/// <reference types=\"jest\" />\n\nimport {type TestingLibraryMatchers} from './matchers'\n\ndeclare global {\n  namespace jest {\n    interface Matchers<R = void, T = {}>\n      extends TestingLibraryMatchers<\n        ReturnType<typeof expect.stringContaining>,\n        R\n      > {}\n  }\n}"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "typescript",
+      "line_number": 7,
+      "context_length": 281,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "MatchersStandalone",
+    "type": "type",
+    "category": "types",
+    "file_path": "types/matchers-standalone.d.ts",
+    "description": "Type: MatchersStandalone",
+    "usage_examples": [
+      "ny, ...rest: string[]) : MatcherReturnType\n  toHaveClass(\n    expected: any,\n    className: string,\n    options?: {exact: boolean},\n  ) : MatcherReturnType\n}\n\ndeclare namespace matchersStandalone {\n  type MatchersStandalone = {\n    [T in keyof _TLM<any, void>]: (\n      expected: any,\n      ...rest: Parameters<_TLM<any, void>[T]>\n    ) => MatcherReturnType\n  } & OverloadedMatchers\n\n  type TestingLibraryMatchers<E, R> = _TLM<E, R>\n}\n\ndeclare const matchersStandalone: matchersStandalone.MatchersStandalone &\n  Record<string, any>\nexport = matchersStandalone"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "typescript",
+      "line_number": 18,
+      "context_length": 559,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "MatcherReturnType",
+    "type": "type",
+    "category": "types",
+    "file_path": "types/matchers-standalone.d.ts",
+    "description": "Type: MatcherReturnType",
+    "usage_examples": [
+      "import {type TestingLibraryMatchers as _TLM} from './matchers'\n\ninterface MatcherReturnType {\n  pass: boolean\n  message: () => string\n}\n\ninterface OverloadedMatchers {\n  toHaveClass(expected: any, ...rest: string[]) : MatcherReturnType\n  toHaveClass(\n    expected: any,\n    className: string,\n    options?: {exact: boolean},\n  ) : MatcherReturnType\n}\n\ndeclare namespace matchersStandalone {\n  type MatchersStandalone = {\n    [T in keyof _TLM<any, void>]: (\n      expected: any,\n      ...rest: Parameters<_TLM<any, void>[T]>\n    ) => MatcherReturnType\n  } & OverloadedMatchers\n\n  type Testing"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "typescript",
+      "line_number": 3,
+      "context_length": 591,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "OverloadedMatchers",
+    "type": "type",
+    "category": "types",
+    "file_path": "types/matchers-standalone.d.ts",
+    "description": "Type: OverloadedMatchers",
+    "usage_examples": [
+      "import {type TestingLibraryMatchers as _TLM} from './matchers'\n\ninterface MatcherReturnType {\n  pass: boolean\n  message: () => string\n}\n\ninterface OverloadedMatchers {\n  toHaveClass(expected: any, ...rest: string[]) : MatcherReturnType\n  toHaveClass(\n    expected: any,\n    className: string,\n    options?: {exact: boolean},\n  ) : MatcherReturnType\n}\n\ndeclare namespace matchersStandalone {\n  type MatchersStandalone = {\n    [T in keyof _TLM<any, void>]: (\n      expected: any,\n      ...rest: Parameters<_TLM<any, void>[T]>\n    ) => MatcherReturnType\n  } & OverloadedMatchers\n\n  type TestingLibraryMatchers<E, R> = _TLM<E, R>\n}\n\ndeclare const matchersStandalone: ma"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "typescript",
+      "line_number": 8,
+      "context_length": 665,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "TestingLibraryMatchers",
+    "type": "type",
+    "category": "types",
+    "file_path": "types/matchers.d.ts",
+    "description": "Type: TestingLibraryMatchers",
+    "usage_examples": [
+      "import {type ARIARole} from 'aria-query'\n\ndeclare namespace matchers {\n  interface TestingLibraryMatchers<E, R> {\n    /**\n     * @deprecated\n     * since v1.9.0\n     * @description\n     * Assert whether a value is a DOM element, or not. Contrary to what its name implies, this matcher only checks\n     * that you passed to it a valid DOM element.\n     *\n     * It does not have a clear definition of what \"the DOM\" is. Therefore, it does not check whether that element\n     * is contained anywhere.\n     * @see\n     * [testing-library/jest-dom#toBeInTheDom](https://github.com/testing-library/jest-dom#toB"
+    ],
+    "dependencies": [
+      "aria-query"
+    ],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "typescript",
+      "line_number": 4,
+      "context_length": 605,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.55,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "Assertion",
+    "type": "type",
+    "category": "types",
+    "file_path": "types/vitest.d.ts",
+    "description": "Type: Assertion",
+    "usage_examples": [
+      "import 'vitest'\nimport {type TestingLibraryMatchers} from './matchers'\n\ndeclare module 'vitest' {\n  interface Assertion<T = any>\n    extends TestingLibraryMatchers<\n      any,\n      T\n    > {}\n  interface AsymmetricMatchersContaining\n    extends TestingLibraryMatchers<\n      any,\n      any\n    > {}\n}"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "typescript",
+      "line_number": 5,
+      "context_length": 301,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "AsymmetricMatchersContaining",
+    "type": "type",
+    "category": "types",
+    "file_path": "types/vitest.d.ts",
+    "description": "Type: AsymmetricMatchersContaining",
+    "usage_examples": [
+      "import 'vitest'\nimport {type TestingLibraryMatchers} from './matchers'\n\ndeclare module 'vitest' {\n  interface Assertion<T = any>\n    extends TestingLibraryMatchers<\n      any,\n      T\n    > {}\n  interface AsymmetricMatchersContaining\n    extends TestingLibraryMatchers<\n      any,\n      any\n    > {}\n}"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "typescript",
+      "line_number": 10,
+      "context_length": 301,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
   }
 ]

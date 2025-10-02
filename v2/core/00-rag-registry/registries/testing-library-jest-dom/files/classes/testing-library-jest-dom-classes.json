@@ -446,5 +446,453 @@
       "web"
     ],
     "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "extends",
+    "type": "class",
+    "category": "classes",
+    "file_path": "src/__tests__/to-be-disabled.js",
+    "description": "Class: extends",
+    "usage_examples": [
+      "import document from './helpers/document'\nimport {render} from './helpers/test-utils'\n\nconst window = document.defaultView\n\nwindow.customElements.define(\n  'custom-element',\n  class extends window.HTMLElement {},\n)\n\ntest('.toBeDisabled', () => {\n  const {queryByTestId} = render(`\n    <div>\n      <button disabled={true} data-testid=\"button-element\">x</button>\n      <textarea disabled={true} data-testid=\"textarea-element\"></textarea>\n      <input type=\"checkbox\" disabled={true} data-testid=\"input-element\" />\n\n      <fieldset disabled={true} data-testid=\"fieldset-element\">\n        <button data-testid=\"fieldset-child-element\">x</button>\n      </fieldset>\n\n      <div disabled={true} da"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 8,
+      "context_length": 689,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "extends",
+    "type": "class",
+    "category": "classes",
+    "file_path": "src/__tests__/to-be-in-the-document.js",
+    "description": "Class: extends",
+    "usage_examples": [
+      "peError} from '../utils'\nimport document from './helpers/document'\n\ntest('.toBeInTheDocument', () => {\n  const window = document.defaultView\n\n  window.customElements.define(\n    'custom-element',\n    class extends window.HTMLElement {\n      constructor() {\n        super()\n        this.attachShadow({mode: 'open'}).innerHTML =\n          '<div data-testid=\"custom-element-child\"></div>'\n      }\n    },\n  )\n\n  document.body.innerHTML = `\n    <span data-testid=\"html-element\"><span>Html Element</span></span>\n    <svg data-testid=\"svg-element\"></svg>\n    <custom-element data-testid=\"custom-element\"></custom-element>`\n\n  const htmlElement = document.querySelector('[data-testid=\"html-element\"]')\n  const svgElement"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 9,
+      "context_length": 712,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "must",
+    "type": "class",
+    "category": "classes",
+    "file_path": "src/__tests__/to-have-class.js",
+    "description": "Class: must",
+    "usage_examples": [
+      "() =>\n    expect(queryByTestId('svg-spinner')).toHaveClass('wise'),\n  ).toThrowError()\n  expect(() =>\n    expect(queryByTestId('delete-button')).toHaveClass(),\n  ).toThrowError(/At least one expected class must be provided/)\n  expect(() =>\n    expect(queryByTestId('delete-button')).toHaveClass(''),\n  ).toThrowError(/At least one expected class must be provided/)\n  expect(() => expect(queryByTestId('no-classes')).toHaveClass()).toThrowError(\n    /At least one expected class must be provided/,\n  )\n  expect(() =>\n    expect(queryByTestId('delete-button')).not.toHaveClass(),\n  ).toThrowError(/(none)/)\n  expect(() =>\n    expect(queryByTestId('delete-button')).not.toHaveClass('  '),\n  ).toThrowError(/(none)"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 81,
+      "context_length": 710,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "must",
+    "type": "class",
+    "category": "classes",
+    "file_path": "src/__tests__/to-have-class.js",
+    "description": "Class: must",
+    "usage_examples": [
+      "n')).toHaveClass(),\n  ).toThrowError(/At least one expected class must be provided/)\n  expect(() =>\n    expect(queryByTestId('delete-button')).toHaveClass(''),\n  ).toThrowError(/At least one expected class must be provided/)\n  expect(() => expect(queryByTestId('no-classes')).toHaveClass()).toThrowError(\n    /At least one expected class must be provided/,\n  )\n  expect(() =>\n    expect(queryByTestId('delete-button')).not.toHaveClass(),\n  ).toThrowError(/(none)/)\n  expect(() =>\n    expect(queryByTestId('delete-button')).not.toHaveClass('  '),\n  ).toThrowError(/(none)/)\n})\n\ntest('.toHaveClass with regular expressions', () => {\n  const {queryByTestId} = renderElementWithClasses()\n\n  expect(queryByTestId('d"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 84,
+      "context_length": 710,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "must",
+    "type": "class",
+    "category": "classes",
+    "file_path": "src/__tests__/to-have-class.js",
+    "description": "Class: must",
+    "usage_examples": [
+      "-button')).toHaveClass(''),\n  ).toThrowError(/At least one expected class must be provided/)\n  expect(() => expect(queryByTestId('no-classes')).toHaveClass()).toThrowError(\n    /At least one expected class must be provided/,\n  )\n  expect(() =>\n    expect(queryByTestId('delete-button')).not.toHaveClass(),\n  ).toThrowError(/(none)/)\n  expect(() =>\n    expect(queryByTestId('delete-button')).not.toHaveClass('  '),\n  ).toThrowError(/(none)/)\n})\n\ntest('.toHaveClass with regular expressions', () => {\n  const {queryByTestId} = renderElementWithClasses()\n\n  expect(queryByTestId('delete-button')).toHaveClass(/btn/)\n  expect(queryByTestId('delete-button')).toHaveClass(/danger/)\n  expect(queryByTestId('delete-but"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 86,
+      "context_length": 710,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "individually",
+    "type": "class",
+    "category": "classes",
+    "file_path": "src/__tests__/to-have-class.js",
+    "description": "Class: individually",
+    "usage_examples": [
+      "/\\bbtn/,\n  )\n\n  // It does not match with \"btn extra\", even though it is a substring of the\n  // class \"btn extra btn-danger\". This is because the regular expression is\n  // matched against each class individually.\n  expect(queryByTestId('delete-button')).not.toHaveClass(/btn extra/)\n\n  expect(() =>\n    expect(queryByTestId('delete-button')).not.toHaveClass(/danger/),\n  ).toThrowError()\n\n  expect(() =>\n    expect(queryByTestId('delete-button')).toHaveClass(/dangerous/),\n  ).toThrowError()\n})\n\ntest('.toHaveClass with exact mode option', () => {\n  const {queryByTestId} = renderElementWithClasses()\n\n  expect(queryByTestId('delete-button')).toHaveClass('btn extra btn-danger', {\n    exact: true,\n  })\n  expect"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 110,
+      "context_length": 713,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "FakeObject",
+    "type": "class",
+    "category": "classes",
+    "file_path": "src/__tests__/utils.js",
+    "description": "Class: FakeObject",
+    "usage_examples": [
+      "> {\n      checkHtmlElement(\n        () => {},\n        () => {},\n        assertionContext,\n      )\n    }).toThrow(HtmlElementTypeError)\n  })\n\n  it('throws for almost element-like objects', () => {\n    class FakeObject {}\n    expect(() => {\n      checkHtmlElement(\n        {\n          ownerDocument: {\n            defaultView: {HTMLElement: FakeObject, SVGElement: FakeObject},\n          },\n        },\n        () => {},\n        assertionContext,\n      )\n    }).toThrow(HtmlElementTypeError)\n  })\n})\n\ndescribe('checkNode', () => {\n  let assertionContext\n  beforeAll(() => {\n    expect.extend({\n      fakeMatcher() {\n        assertionContext = this\n\n        return {pass: true}\n      },\n    })\n\n    expect(true).fakeMatc"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 85,
+      "context_length": 716,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "FakeObject",
+    "type": "class",
+    "category": "classes",
+    "file_path": "src/__tests__/utils.js",
+    "description": "Class: FakeObject",
+    "usage_examples": [
+      "expect(() => {\n      checkNode(\n        () => {},\n        () => {},\n        assertionContext,\n      )\n    }).toThrow(NodeTypeError)\n  })\n\n  it('throws for almost element-like objects', () => {\n    class FakeObject {}\n    expect(() => {\n      checkNode(\n        {\n          ownerDocument: {\n            defaultView: {Node: FakeObject, SVGElement: FakeObject},\n          },\n        },\n        () => {},\n        assertionContext,\n      )\n    }).toThrow(NodeTypeError)\n  })\n})\n\ndescribe('toSentence', () => {\n  it('turns array into string of comma separated list with default last word connector', () => {\n    expect(toSentence(['one', 'two', 'three'])).toBe('one, two and three')\n  })\n\n  it('supports custom word con"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 173,
+      "context_length": 713,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "names",
+    "type": "class",
+    "category": "classes",
+    "file_path": "src/to-have-class.js",
+    "description": "Class: names",
+    "usage_examples": [
+      "),\n    [],\n  )\n\n  const hasRegExp = expected.some(className => className instanceof RegExp)\n  if (options.exact && hasRegExp) {\n    throw new Error('Exact option does not support RegExp expected class names')\n  }\n\n  if (options.exact) {\n    return {\n      pass: isSubset(expected, received) && expected.length === received.length,\n      message: () => {\n        const to = this.isNot ? 'not to' : 'to'\n        return getMessage(\n          this,\n          this.utils.matcherHint(\n            `${this.isNot ? '.not' : ''}.toHaveClass`,\n            'element',\n            this.utils.printExpected(expected.join(' ')),\n          ),\n          `Expected the element ${to} have EXACTLY defined classes`,"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 47,
+      "context_length": 696,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "must",
+    "type": "class",
+    "category": "classes",
+    "file_path": "src/to-have-class.js",
+    "description": "Class: must",
+    "usage_examples": [
+      "'Received',\n                received.join(' '),\n              )\n            : [\n                this.utils.matcherHint(`.toHaveClass`, 'element'),\n                'At least one expected class must be provided.',\n              ].join('\\n'),\n      }\n}"
+    ],
+    "dependencies": [],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 104,
+      "context_length": 249,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.5,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "GenericTypeError",
+    "type": "class",
+    "category": "classes",
+    "file_path": "src/utils.js",
+    "description": "Class: GenericTypeError",
+    "usage_examples": [
+      "import redent from 'redent'\nimport {parse} from '@adobe/css-tools'\n\nclass GenericTypeError extends Error {\n  constructor(expectedString, received, matcherFn, context) {\n    super()\n\n    /* istanbul ignore next */\n    if (Error.captureStackTrace) {\n      Error.captureStackTrace(this, matcherFn)\n    }\n    let withType = ''\n    try {\n      withType = context.utils.printWithType(\n        'Received',\n        received,\n        context.utils.printReceived,\n      )\n    } catch (e) {\n      // Can throw for Document:\n      // https://github.com/jsdom/jsdom/issues/2304\n    }\n    this.message ="
+    ],
+    "dependencies": [
+      "redent",
+      "@adobe/css-tools"
+    ],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 4,
+      "context_length": 589,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.6000000000000001,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "HtmlElementTypeError",
+    "type": "class",
+    "category": "classes",
+    "file_path": "src/utils.js",
+    "description": "Class: HtmlElementTypeError",
+    "usage_examples": [
+      "),\n      '',\n      // eslint-disable-next-line new-cap\n      `${context.utils.RECEIVED_COLOR(\n        'received',\n      )} value must ${expectedString}.`,\n      withType,\n    ].join('\\n')\n  }\n}\n\nclass HtmlElementTypeError extends GenericTypeError {\n  constructor(...args) {\n    super('be an HTMLElement or an SVGElement', ...args)\n  }\n}\n\nclass NodeTypeError extends GenericTypeError {\n  constructor(...args) {\n    super('be a Node', ...args)\n  }\n}\n\nfunction checkHasWindow(htmlElement, ErrorClass, ...args) {\n  if (\n    !htmlElement ||\n    !htmlElement.ownerDocument ||\n    !htmlElement.ownerDocument.defaultView\n  ) {\n    throw new ErrorClass(htmlElement, ...args)\n  }\n}\n\nfunction checkNode(node, ...args) {\n  checkHasWi"
+    ],
+    "dependencies": [
+      "redent",
+      "@adobe/css-tools"
+    ],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 39,
+      "context_length": 721,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.6000000000000001,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "NodeTypeError",
+    "type": "class",
+    "category": "classes",
+    "file_path": "src/utils.js",
+    "description": "Class: NodeTypeError",
+    "usage_examples": [
+      "pectedString}.`,\n      withType,\n    ].join('\\n')\n  }\n}\n\nclass HtmlElementTypeError extends GenericTypeError {\n  constructor(...args) {\n    super('be an HTMLElement or an SVGElement', ...args)\n  }\n}\n\nclass NodeTypeError extends GenericTypeError {\n  constructor(...args) {\n    super('be a Node', ...args)\n  }\n}\n\nfunction checkHasWindow(htmlElement, ErrorClass, ...args) {\n  if (\n    !htmlElement ||\n    !htmlElement.ownerDocument ||\n    !htmlElement.ownerDocument.defaultView\n  ) {\n    throw new ErrorClass(htmlElement, ...args)\n  }\n}\n\nfunction checkNode(node, ...args) {\n  checkHasWindow(node, NodeTypeError, ...args)\n  const window = node.ownerDocument.defaultView\n\n  if (!(node instanceof window.Node)) {\n    throw ne"
+    ],
+    "dependencies": [
+      "redent",
+      "@adobe/css-tools"
+    ],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 45,
+      "context_length": 719,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.6000000000000001,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "InvalidCSSError",
+    "type": "class",
+    "category": "classes",
+    "file_path": "src/utils.js",
+    "description": "Class: InvalidCSSError",
+    "usage_examples": [
+      "rDocument.defaultView\n\n  if (\n    !(htmlElement instanceof window.HTMLElement) &&\n    !(htmlElement instanceof window.SVGElement)\n  ) {\n    throw new HtmlElementTypeError(htmlElement, ...args)\n  }\n}\n\nclass InvalidCSSError extends Error {\n  constructor(received, matcherFn, context) {\n    super()\n\n    /* istanbul ignore next */\n    if (Error.captureStackTrace) {\n      Error.captureStackTrace(this, matcherFn)\n    }\n    this.message = [\n      received.message,\n      '',\n      // eslint-disable-next-line new-cap\n      context.utils.RECEIVED_COLOR(`Failing css:`),\n      // eslint-disable-next-line new-cap\n      context.utils.RECEIVED_COLOR(`${received.css}`),\n    ].join('\\n')\n  }\n}\n\nfunction parseCSS(css, ...args) {"
+    ],
+    "dependencies": [
+      "redent",
+      "@adobe/css-tools"
+    ],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "javascript",
+      "line_number": 82,
+      "context_length": 719,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.6000000000000001,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "role",
+    "type": "class",
+    "category": "classes",
+    "file_path": "types/matchers.d.ts",
+    "description": "Class: role",
+    "usage_examples": [
+      "semantics](https://www.w3.org/TR/html-aria/).\n     *\n     * Note: roles are matched literally by string equality, without inheriting\n     * from the ARIA role hierarchy. As a result, querying a superclass role\n     * like 'checkbox' will not include elements with a subclass role like\n     * 'switch'.\n     *\n     * @example\n     * <button data-testid=\"button\">Continue</button>\n     * <div role=\"button\" data-testid=\"button-explicit\">Continue</button>\n     * <button role=\"switch button\" data-testid=\"button-explicit-multiple\">Continue</button>\n     * <a href=\"/about\" data-testid=\"link\">About</a>\n     * <a data-testid=\"link-invalid\">Invalid link<a/>\n     *\n     * expect(getByTestId('button')).toHaveRole('"
+    ],
+    "dependencies": [
+      "aria-query"
+    ],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "typescript",
+      "line_number": 598,
+      "context_length": 709,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.55,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
+  },
+  {
+    "name": "role",
+    "type": "class",
+    "category": "classes",
+    "file_path": "types/matchers.d.ts",
+    "description": "Class: role",
+    "usage_examples": [
+      "es are matched literally by string equality, without inheriting\n     * from the ARIA role hierarchy. As a result, querying a superclass role\n     * like 'checkbox' will not include elements with a subclass role like\n     * 'switch'.\n     *\n     * @example\n     * <button data-testid=\"button\">Continue</button>\n     * <div role=\"button\" data-testid=\"button-explicit\">Continue</button>\n     * <button role=\"switch button\" data-testid=\"button-explicit-multiple\">Continue</button>\n     * <a href=\"/about\" data-testid=\"link\">About</a>\n     * <a data-testid=\"link-invalid\">Invalid link<a/>\n     *\n     * expect(getByTestId('button')).toHaveRole('button')\n     * expect(getByTestId('button-explicit')).toHaveRole('but"
+    ],
+    "dependencies": [
+      "aria-query"
+    ],
+    "peer_dependencies": [],
+    "installation": "# Found in testing-library/jest-dom",
+    "metadata": {
+      "extractor": "typescript",
+      "repository": "testing-library/jest-dom",
+      "file_type": "typescript",
+      "line_number": 599,
+      "context_length": 710,
+      "has_jsdoc": false
+    },
+    "quality_score": 0.55,
+    "platform": [
+      "nodejs",
+      "web"
+    ],
+    "registry": "testing-library/jest-dom"
   }
 ]

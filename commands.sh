@@ -36,6 +36,11 @@ alias mcp_clear_extraction_data="python3 v2/core/01-mcp-server/mcp_server.py cle
 alias mcp_search_by_category="python3 v2/core/01-mcp-server/mcp_server.py search-by-category --format json"
 alias mcp_list_registry_sources="python3 v2/core/01-mcp-server/mcp_server.py list-registry-sources --format json"
 
+# Enhanced MCP Registry Creation Commands (NEW!)
+alias mcp_create_registry="python3 v2/core/01-mcp-server/mcp_server.py create-registry-from-source --format json"
+alias mcp_add_source="python3 v2/core/01-mcp-server/mcp_server.py add-source-to-registry --format json"
+alias mcp_create_extract="python3 v2/core/01-mcp-server/mcp_server.py create-and-extract --format json"
+
 # RAG Builder Commands
 alias rag_builder="python3 v2/core/02-rag-builder/rag_builder_cli.py"
 alias rag_builder_status="python3 v2/core/02-rag-builder/rag_builder_cli.py status --format json"
@@ -106,6 +111,9 @@ simflo_help() {
     echo "  extractors_run shadcn"
     echo "  extractors_detect --repository-url \"https://github.com/microsoft/TypeScript\""
     echo "  extractors_extract --repository-url \"https://github.com/testing-library/jest-dom\""
+    echo "  mcp_create_registry --name playwright --source \"https://github.com/microsoft/playwright\""
+    echo "  mcp_add_source --registry playwright --source \"https://github.com/microsoft/playwright-docs\""
+    echo "  mcp_create_extract --name my-typescript-registry --source \"https://github.com/microsoft/TypeScript\" --extractor typescript"
     echo "  simflo_status"
     echo ""
     echo "🌍 Environment:"
