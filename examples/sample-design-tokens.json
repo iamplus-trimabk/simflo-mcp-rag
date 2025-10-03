@@ -1,0 +1,512 @@
+{
+  "colors": [
+    {
+      "name": "primary-50",
+      "value": "#EFF6FF",
+      "type": "color",
+      "category": "primary",
+      "description": "Very light primary color for backgrounds",
+      "variants": {
+        "dark": "#DBEAFE"
+      },
+      "opacity": 1.0,
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "primary-100",
+      "value": "#DBEAFE",
+      "type": "color",
+      "category": "primary",
+      "description": "Light primary color",
+      "variants": {
+        "dark": "#BFDBFE"
+      },
+      "opacity": 1.0,
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "primary-500",
+      "value": "#3B82F6",
+      "type": "color",
+      "category": "primary",
+      "description": "Primary brand color for main elements",
+      "variants": {
+        "light": "#60A5FA",
+        "dark": "#2563EB"
+      },
+      "opacity": 1.0,
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "primary-700",
+      "value": "#1D4ED8",
+      "type": "color",
+      "category": "primary",
+      "description": "Dark primary color for hover states",
+      "variants": {
+        "light": "#2563EB",
+        "dark": "#1E40AF"
+      },
+      "opacity": 1.0,
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "secondary-500",
+      "value": "#10B981",
+      "type": "color",
+      "category": "secondary",
+      "description": "Success color for positive feedback",
+      "variants": {
+        "light": "#34D399",
+        "dark": "#059669"
+      },
+      "opacity": 1.0,
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "error-500",
+      "value": "#EF4444",
+      "type": "color",
+      "category": "feedback",
+      "description": "Error color for warnings and errors",
+      "variants": {
+        "light": "#F87171",
+        "dark": "#DC2626"
+      },
+      "opacity": 1.0,
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "warning-500",
+      "value": "#F59E0B",
+      "type": "color",
+      "category": "feedback",
+      "description": "Warning color for attention states",
+      "variants": {
+        "light": "#FBBF24",
+        "dark": "#D97706"
+      },
+      "opacity": 1.0,
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "neutral-100",
+      "value": "#F3F4F6",
+      "type": "color",
+      "category": "neutral",
+      "description": "Very light neutral for backgrounds",
+      "variants": {
+        "dark": "#E5E7EB"
+      },
+      "opacity": 1.0,
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "neutral-500",
+      "value": "#6B7280",
+      "type": "color",
+      "category": "neutral",
+      "description": "Medium neutral for text and borders",
+      "variants": {
+        "light": "#9CA3AF",
+        "dark": "#4B5563"
+      },
+      "opacity": 1.0,
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "neutral-900",
+      "value": "#111827",
+      "type": "color",
+      "category": "neutral",
+      "description": "Very dark neutral for text",
+      "variants": {
+        "light": "#1F2937",
+        "dark": "#000000"
+      },
+      "opacity": 1.0,
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "white",
+      "value": "#FFFFFF",
+      "type": "color",
+      "category": "neutral",
+      "description": "Pure white color",
+      "opacity": 1.0,
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "black",
+      "value": "#000000",
+      "type": "color",
+      "category": "neutral",
+      "description": "Pure black color",
+      "opacity": 1.0,
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    }
+  ],
+  "typography": [
+    {
+      "name": "heading-1",
+      "font_family": "Inter",
+      "font_size": 32,
+      "font_weight": 700,
+      "line_height": 1.2,
+      "letter_spacing": -0.5,
+      "category": "heading",
+      "text_transform": "none",
+      "description": "Main page headings",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "heading-2",
+      "font_family": "Inter",
+      "font_size": 24,
+      "font_weight": 600,
+      "line_height": 1.3,
+      "letter_spacing": -0.25,
+      "category": "heading",
+      "text_transform": "none",
+      "description": "Secondary headings and section titles",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "heading-3",
+      "font_family": "Inter",
+      "font_size": 20,
+      "font_weight": 600,
+      "line_height": 1.4,
+      "letter_spacing": -0.25,
+      "category": "heading",
+      "text_transform": "none",
+      "description": "Tertiary headings and card titles",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "body-large",
+      "font_family": "Inter",
+      "font_size": 18,
+      "font_weight": 400,
+      "line_height": 1.5,
+      "letter_spacing": 0,
+      "category": "body",
+      "text_transform": "none",
+      "description": "Large body text for emphasis",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "body-regular",
+      "font_family": "Inter",
+      "font_size": 16,
+      "font_weight": 400,
+      "line_height": 1.5,
+      "letter_spacing": 0,
+      "category": "body",
+      "text_transform": "none",
+      "description": "Standard body text",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "body-small",
+      "font_family": "Inter",
+      "font_size": 14,
+      "font_weight": 400,
+      "line_height": 1.4,
+      "letter_spacing": 0,
+      "category": "body",
+      "text_transform": "none",
+      "description": "Small body text for secondary content",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "caption",
+      "font_family": "Inter",
+      "font_size": 12,
+      "font_weight": 400,
+      "line_height": 1.3,
+      "letter_spacing": 0.25,
+      "category": "caption",
+      "text_transform": "none",
+      "description": "Caption text for labels and metadata",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "button-large",
+      "font_family": "Inter",
+      "font_size": 16,
+      "font_weight": 600,
+      "line_height": 1.5,
+      "letter_spacing": 0.5,
+      "category": "label",
+      "text_transform": "none",
+      "description": "Large button text",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "button-small",
+      "font_family": "Inter",
+      "font_size": 14,
+      "font_weight": 600,
+      "line_height": 1.4,
+      "letter_spacing": 0.5,
+      "category": "label",
+      "text_transform": "none",
+      "description": "Small button text",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "spacing-xs",
+      "value": 4,
+      "unit": "px",
+      "category": "padding",
+      "scale_position": 1,
+      "description": "Extra small spacing",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "spacing-sm",
+      "value": 8,
+      "unit": "px",
+      "category": "padding",
+      "scale_position": 2,
+      "description": "Small spacing",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "spacing-md",
+      "value": 16,
+      "unit": "px",
+      "category": "margin",
+      "scale_position": 3,
+      "description": "Medium spacing",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "spacing-lg",
+      "value": 24,
+      "unit": "px",
+      "category": "margin",
+      "scale_position": 4,
+      "description": "Large spacing",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "spacing-xl",
+      "value": 32,
+      "unit": "px",
+      "category": "margin",
+      "scale_position": 5,
+      "description": "Extra large spacing",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "spacing-2xl",
+      "value": 48,
+      "unit": "px",
+      "category": "margin",
+      "scale_position": 6,
+      "description": "Double extra large spacing",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "spacing-3xl",
+      "value": 64,
+      "unit": "px",
+      "category": "margin",
+      "scale_position": 7,
+      "description": "Triple extra large spacing",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    }
+  ],
+  "shadows": [
+    {
+      "name": "shadow-sm",
+      "offset_x": 0,
+      "offset_y": 1,
+      "blur": 2,
+      "spread": 0,
+      "color": "#000000",
+      "opacity": 0.05,
+      "type": "drop-shadow",
+      "description": "Small shadow for subtle elevation",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "shadow-md",
+      "offset_x": 0,
+      "offset_y": 4,
+      "blur": 6,
+      "spread": 0,
+      "color": "#000000",
+      "opacity": 0.1,
+      "type": "drop-shadow",
+      "description": "Medium shadow for cards and elevated elements",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "shadow-lg",
+      "offset_x": 0,
+      "offset_y": 10,
+      "blur": 15,
+      "spread": 0,
+      "color": "#000000",
+      "opacity": 0.1,
+      "type": "drop-shadow",
+      "description": "Large shadow for prominent elements",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "shadow-xl",
+      "offset_x": 0,
+      "offset_y": 20,
+      "blur": 25,
+      "spread": 0,
+      "color": "#000000",
+      "opacity": 0.15,
+      "type": "drop-shadow",
+      "description": "Extra large shadow for modals and overlays",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    }
+  ],
+  "border_radius": [
+    {
+      "name": "radius-none",
+      "value": 0,
+      "unit": "px",
+      "corners": "all",
+      "description": "No border radius",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "radius-sm",
+      "value": 4,
+      "unit": "px",
+      "corners": "all",
+      "description": "Small border radius for subtle rounding",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "radius-md",
+      "value": 8,
+      "unit": "px",
+      "corners": "all",
+      "description": "Medium border radius for cards and buttons",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "radius-lg",
+      "value": 12,
+      "unit": "px",
+      "corners": "all",
+      "description": "Large border radius for prominent elements",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "radius-xl",
+      "value": 16,
+      "unit": "px",
+      "corners": "all",
+      "description": "Extra large border radius for modern design",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "name": "radius-full",
+      "value": 9999,
+      "unit": "px",
+      "corners": "all",
+      "description": "Fully rounded for avatars and circular elements",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    }
+  ],
+  "created_at": "2024-10-03T10:00:00Z",
+  "updated_at": "2024-10-03T10:00:00Z",
+  "version": "1.0.0",
+  "metadata": {
+    "design_system": "TaskFlow Design System",
+    "description": "Complete design tokens for TaskFlow mobile app",
+    "total_colors": 12,
+    "total_typography": 9,
+    "total_spacing": 7,
+    "total_shadows": 4,
+    "total_border_radius": 6
+  }
+}

@@ -1,0 +1,375 @@
+{
+  "id": "task_detail_screen",
+  "name": "Task Detail Screen",
+  "type": "mobile_app",
+  "layout_grid": {
+    "type": "flex",
+    "columns": null,
+    "gutter_width": 16,
+    "margin": 24,
+    "max_width": 375
+  },
+  "breakpoints": [
+    {
+      "name": "mobile",
+      "min_width": 375,
+      "max_width": 414,
+      "description": "Mobile phone screens"
+    }
+  ],
+  "component_instances": [
+    {
+      "id": "detail_header",
+      "component_id": "header_component",
+      "name": "Detail Header",
+      "properties": {
+        "title": "Task Details",
+        "show_back_button": true,
+        "back_destination": "home_screen",
+        "actions": ["edit", "delete"]
+      },
+      "position": {"x": 0, "y": 0},
+      "size": {"width": 375, "height": 88},
+      "children": ["back_button", "header_title", "edit_button", "delete_button"],
+      "parent_id": null
+    },
+    {
+      "id": "back_button",
+      "component_id": "icon_button",
+      "name": "Back Button",
+      "properties": {
+        "icon": "arrow_back",
+        "variant": "ghost",
+        "size": "md"
+      },
+      "position": {"x": 24, "y": 44},
+      "size": {"width": 24, "height": 24},
+      "children": [],
+      "parent_id": "detail_header"
+    },
+    {
+      "id": "header_title",
+      "component_id": "text_heading",
+      "name": "Header Title",
+      "properties": {
+        "text": "Task Details",
+        "style": "heading-2",
+        "align": "center"
+      },
+      "position": {"x": 68, "y": 44},
+      "size": {"width": 239, "height": 32},
+      "children": [],
+      "parent_id": "detail_header"
+    },
+    {
+      "id": "edit_button",
+      "component_id": "icon_button",
+      "name": "Edit Button",
+      "properties": {
+        "icon": "edit",
+        "variant": "ghost",
+        "size": "md"
+      },
+      "position": {"x": 307, "y": 44},
+      "size": {"width": 24, "height": 24},
+      "children": [],
+      "parent_id": "detail_header"
+    },
+    {
+      "id": "delete_button",
+      "component_id": "icon_button",
+      "name": "Delete Button",
+      "properties": {
+        "icon": "delete",
+        "variant": "ghost",
+        "size": "md"
+      },
+      "position": {"x": 347, "y": 44},
+      "size": {"width": 24, "height": 24},
+      "children": [],
+      "parent_id": "detail_header"
+    },
+    {
+      "id": "task_content",
+      "component_id": "scroll_container",
+      "name": "Task Content",
+      "properties": {
+        "scrollable": true,
+        "padding_horizontal": 0,
+        "padding_vertical": 16,
+        "show_scroll_indicator": true
+      },
+      "position": {"x": 24, "y": 104},
+      "size": {"width": 327, "height": 608},
+      "children": [
+        "task_title_input",
+        "task_description_area",
+        "priority_selector",
+        "due_date_picker",
+        "assignee_selector",
+        "tags_input",
+        "task_status",
+        "created_info",
+        "modified_info",
+        "save_button",
+        "cancel_button"
+      ],
+      "parent_id": null
+    },
+    {
+      "id": "task_title_input",
+      "component_id": "input_field",
+      "name": "Task Title Input",
+      "properties": {
+        "type": "text",
+        "label": "Task Title",
+        "placeholder": "Enter task title",
+        "value": "Complete project proposal",
+        "required": true,
+        "size": "lg",
+        "max_length": 100
+      },
+      "position": {"x": 0, "y": 16},
+      "size": {"width": 327, "height": 64},
+      "children": [],
+      "parent_id": "task_content"
+    },
+    {
+      "id": "task_description_area",
+      "component_id": "textarea_field",
+      "name": "Task Description Area",
+      "properties": {
+        "label": "Description",
+        "placeholder": "Enter task description",
+        "value": "Finalize the Q4 project proposal and send to client for review",
+        "required": false,
+        "rows": 4,
+        "max_length": 500
+      },
+      "position": {"x": 0, "y": 96},
+      "size": {"width": 327, "height": 120},
+      "children": [],
+      "parent_id": "task_content"
+    },
+    {
+      "id": "priority_selector",
+      "component_id": "segmented_control",
+      "name": "Priority Selector",
+      "properties": {
+        "label": "Priority",
+        "options": [
+          {"value": "low", "label": "Low"},
+          {"value": "medium", "label": "Medium"},
+          {"value": "high", "label": "High"},
+          {"value": "critical", "label": "Critical"}
+        ],
+        "selected_value": "high",
+        "required": true
+      },
+      "position": {"x": 0, "y": 232},
+      "size": {"width": 327, "height": 56},
+      "children": [],
+      "parent_id": "task_content"
+    },
+    {
+      "id": "due_date_picker",
+      "component_id": "date_picker",
+      "name": "Due Date Picker",
+      "properties": {
+        "label": "Due Date",
+        "value": "2024-10-15",
+        "min_date": "2024-10-03",
+        "required": true
+      },
+      "position": {"x": 0, "y": 304},
+      "size": {"width": 327, "height": 56},
+      "children": [],
+      "parent_id": "task_content"
+    },
+    {
+      "id": "assignee_selector",
+      "component_id": "select_field",
+      "name": "Assignee Selector",
+      "properties": {
+        "label": "Assignee",
+        "placeholder": "Select assignee",
+        "value": "john_doe",
+        "required": false,
+        "options": [
+          {"value": "john_doe", "label": "John Doe"},
+          {"value": "jane_smith", "label": "Jane Smith"},
+          {"value": "mike_johnson", "label": "Mike Johnson"},
+          {"value": "unassigned", "label": "Unassigned"}
+        ]
+      },
+      "position": {"x": 0, "y": 376},
+      "size": {"width": 327, "height": 56},
+      "children": [],
+      "parent_id": "task_content"
+    },
+    {
+      "id": "tags_input",
+      "component_id": "tags_input",
+      "name": "Tags Input",
+      "properties": {
+        "label": "Tags",
+        "placeholder": "Add tags",
+        "value": ["work", "urgent"],
+        "required": false,
+        "max_tags": 5,
+        "suggestions": ["work", "personal", "urgent", "meeting", "development", "design", "review"]
+      },
+      "position": {"x": 0, "y": 448},
+      "size": {"width": 327, "height": 72},
+      "children": [],
+      "parent_id": "task_content"
+    },
+    {
+      "id": "task_status",
+      "component_id": "switch_field",
+      "name": "Task Status",
+      "properties": {
+        "label": "Mark as Complete",
+        "checked": false,
+        "required": false
+      },
+      "position": {"x": 0, "y": 536},
+      "size": {"width": 327, "height": 40},
+      "children": [],
+      "parent_id": "task_content"
+    },
+    {
+      "id": "created_info",
+      "component_id": "info_field",
+      "name": "Created Info",
+      "properties": {
+        "label": "Created",
+        "value": "October 1, 2024 by John Doe",
+        "readonly": true
+      },
+      "position": {"x": 0, "y": 592},
+      "size": {"width": 327, "height": 40},
+      "children": [],
+      "parent_id": "task_content"
+    },
+    {
+      "id": "modified_info",
+      "component_id": "info_field",
+      "name": "Modified Info",
+      "properties": {
+        "label": "Last Modified",
+        "value": "October 2, 2024 at 3:45 PM",
+        "readonly": true
+      },
+      "position": {"x": 0, "y": 640},
+      "size": {"width": 327, "height": 40},
+      "children": [],
+      "parent_id": "task_content"
+    },
+    {
+      "id": "save_button",
+      "component_id": "button",
+      "name": "Save Button",
+      "properties": {
+        "variant": "primary",
+        "size": "md",
+        "text": "Save Changes",
+        "full_width": true,
+        "loading": false
+      },
+      "position": {"x": 0, "y": 560},
+      "size": {"width": 327, "height": 48},
+      "children": [],
+      "parent_id": "task_content"
+    },
+    {
+      "id": "cancel_button",
+      "component_id": "button",
+      "name": "Cancel Button",
+      "properties": {
+        "variant": "outline",
+        "size": "md",
+        "text": "Cancel",
+        "full_width": true
+      },
+      "position": {"x": 0, "y": 616},
+      "size": {"width": 327, "height": 48},
+      "children": [],
+      "parent_id": "task_content"
+    }
+  ],
+  "navigation_flows": [
+    {
+      "from_screen_id": "task_detail_screen",
+      "to_screen_id": "home_screen",
+      "trigger": "click",
+      "trigger_element_id": "back_button",
+      "animation_type": "slide_right",
+      "parameters": {
+        "animation_duration": 250,
+        "easing": "ease-out"
+      }
+    },
+    {
+      "from_screen_id": "task_detail_screen",
+      "to_screen_id": "home_screen",
+      "trigger": "click",
+      "trigger_element_id": "save_button",
+      "animation_type": "slide_right",
+      "parameters": {
+        "animation_duration": 250,
+        "easing": "ease-out",
+        "show_success_message": true
+      }
+    },
+    {
+      "from_screen_id": "task_detail_screen",
+      "to_screen_id": "home_screen",
+      "trigger": "click",
+      "trigger_element_id": "cancel_button",
+      "animation_type": "slide_right",
+      "parameters": {
+        "animation_duration": 250,
+        "easing": "ease-out",
+        "confirm_discard": true
+      }
+    },
+    {
+      "from_screen_id": "task_detail_screen",
+      "to_screen_id": "delete_confirm_modal",
+      "trigger": "click",
+      "trigger_element_id": "delete_button",
+      "animation_type": "fade",
+      "parameters": {
+        "animation_duration": 200,
+        "easing": "ease-in-out"
+      }
+    }
+  ],
+  "figma_frame_id": "task_detail_screen",
+  "figma_file_key": "ABcDeFgHiJkLmNoPqRsTuVwXyZ123456",
+  "background_color": "#FFFFFF",
+  "status_bar_style": "default",
+  "created_at": "2024-10-03T10:00:00Z",
+  "updated_at": "2024-10-03T10:00:00Z",
+  "version": "1.0.0",
+  "metadata": {
+    "screen_type": "detail",
+    "total_components": 17,
+    "form_fields": 8,
+    "navigation_destinations": 4,
+    "scrollable_content": true,
+    "editable_content": true,
+    "accessibility_features": ["semantic_html", "keyboard_navigation", "screen_reader_support", "form_validation"],
+    "performance_metrics": {
+      "render_time": "65ms",
+      "interactive_time": "180ms",
+      "layout_shift": 0.01
+    },
+    "form_validation": {
+      "required_fields": ["task_title_input", "priority_selector", "due_date_picker"],
+      "validation_rules": ["title_max_length", "date_future_only", "tags_max_count"],
+      "real_time_validation": true
+    }
+  }
+}

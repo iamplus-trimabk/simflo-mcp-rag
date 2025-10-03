@@ -1,0 +1,918 @@
+{
+  "components": [
+    {
+      "id": "button",
+      "name": "Button",
+      "type": "component",
+      "category": "interactive",
+      "description": "Interactive button component with multiple variants and states",
+      "properties": [
+        {
+          "name": "variant",
+          "type": "string",
+          "default_value": "primary",
+          "required": true,
+          "description": "Button variant style",
+          "allowed_values": ["primary", "secondary", "outline", "ghost", "danger"],
+          "validation": {
+            "pattern": "^(primary|secondary|outline|ghost|danger)$"
+          }
+        },
+        {
+          "name": "size",
+          "type": "string",
+          "default_value": "md",
+          "required": true,
+          "description": "Button size",
+          "allowed_values": ["sm", "md", "lg"],
+          "validation": {
+            "pattern": "^(sm|md|lg)$"
+          }
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "default_value": "",
+          "required": true,
+          "description": "Button text content",
+          "validation": {
+            "min_length": 1,
+            "max_length": 50
+          }
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default_value": false,
+          "required": false,
+          "description": "Disable the button"
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default_value": false,
+          "required": false,
+          "description": "Show loading state"
+        },
+        {
+          "name": "icon_left",
+          "type": "string",
+          "default_value": null,
+          "required": false,
+          "description": "Icon name to display on the left"
+        },
+        {
+          "name": "icon_right",
+          "type": "string",
+          "default_value": null,
+          "required": false,
+          "description": "Icon name to display on the right"
+        },
+        {
+          "name": "full_width",
+          "type": "boolean",
+          "default_value": false,
+          "required": false,
+          "description": "Make button full width"
+        }
+      ],
+      "variants": [
+        {
+          "name": "primary",
+          "properties": {
+            "variant": "primary",
+            "size": "md"
+          },
+          "description": "Primary button with solid background color"
+        },
+        {
+          "name": "secondary",
+          "properties": {
+            "variant": "secondary",
+            "size": "md"
+          },
+          "description": "Secondary button with alternative color"
+        },
+        {
+          "name": "outline",
+          "properties": {
+            "variant": "outline",
+            "size": "md"
+          },
+          "description": "Button with outlined style"
+        },
+        {
+          "name": "ghost",
+          "properties": {
+            "variant": "ghost",
+            "size": "md"
+          },
+          "description": "Minimal button with transparent background"
+        },
+        {
+          "name": "danger",
+          "properties": {
+            "variant": "danger",
+            "size": "md"
+          },
+          "description": "Danger button for destructive actions"
+        }
+      ],
+      "children_component_ids": [],
+      "usage_examples": [
+        {
+          "title": "Submit Form",
+          "description": "Primary submit button for forms",
+          "properties": {
+            "variant": "primary",
+            "size": "md",
+            "text": "Submit",
+            "full_width": true
+          }
+        },
+        {
+          "title": "Cancel Action",
+          "description": "Secondary button for canceling actions",
+          "properties": {
+            "variant": "outline",
+            "size": "md",
+            "text": "Cancel"
+          }
+        },
+        {
+          "title": "Delete Item",
+          "description": "Danger button for destructive actions",
+          "properties": {
+            "variant": "danger",
+            "size": "sm",
+            "text": "Delete",
+            "icon_left": "trash"
+          }
+        }
+      ],
+      "figma_node_id": "component_button_primary",
+      "figma_file_key": "ABcDeFgHiJkLmNoPqRsTuVwXyZ123456",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "id": "input_field",
+      "name": "Input Field",
+      "type": "component",
+      "category": "form",
+      "description": "Text input field component for forms and data entry",
+      "properties": [
+        {
+          "name": "type",
+          "type": "string",
+          "default_value": "text",
+          "required": true,
+          "description": "Input type",
+          "allowed_values": ["text", "email", "password", "number", "tel", "url", "search"],
+          "validation": {
+            "pattern": "^(text|email|password|number|tel|url|search)$"
+          }
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "default_value": "",
+          "required": false,
+          "description": "Placeholder text",
+          "validation": {
+            "max_length": 100
+          }
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "default_value": "",
+          "required": false,
+          "description": "Input value"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default_value": "",
+          "required": false,
+          "description": "Input label",
+          "validation": {
+            "max_length": 50
+          }
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "default_value": null,
+          "required": false,
+          "description": "Error message"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default_value": false,
+          "required": false,
+          "description": "Disable the input"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default_value": false,
+          "required": false,
+          "description": "Mark input as required"
+        },
+        {
+          "name": "size",
+          "type": "string",
+          "default_value": "md",
+          "required": true,
+          "description": "Input size",
+          "allowed_values": ["sm", "md", "lg"]
+        }
+      ],
+      "variants": [
+        {
+          "name": "default",
+          "properties": {
+            "type": "text",
+            "size": "md"
+          },
+          "description": "Standard text input"
+        },
+        {
+          "name": "with_label",
+          "properties": {
+            "type": "text",
+            "size": "md",
+            "label": "Label Text"
+          },
+          "description": "Input with label"
+        },
+        {
+          "name": "with_error",
+          "properties": {
+            "type": "text",
+            "size": "md",
+            "error": "Error message"
+          },
+          "description": "Input with error state"
+        }
+      ],
+      "children_component_ids": [],
+      "usage_examples": [
+        {
+          "title": "Email Input",
+          "description": "Email input field for authentication",
+          "properties": {
+            "type": "email",
+            "label": "Email Address",
+            "placeholder": "Enter your email",
+            "required": true
+          }
+        },
+        {
+          "title": "Password Input",
+          "description": "Password input field",
+          "properties": {
+            "type": "password",
+            "label": "Password",
+            "placeholder": "Enter your password",
+            "required": true
+          }
+        },
+        {
+          "title": "Search Input",
+          "description": "Search input field",
+          "properties": {
+            "type": "search",
+            "placeholder": "Search tasks...",
+            "size": "lg"
+          }
+        }
+      ],
+      "figma_node_id": "component_input_field",
+      "figma_file_key": "ABcDeFgHiJkLmNoPqRsTuVwXyZ123456",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "id": "task_card",
+      "name": "Task Card",
+      "type": "component",
+      "category": "display",
+      "description": "Card component for displaying task information",
+      "properties": [
+        {
+          "name": "title",
+          "type": "string",
+          "default_value": "",
+          "required": true,
+          "description": "Task title",
+          "validation": {
+            "min_length": 1,
+            "max_length": 100
+          }
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "default_value": "",
+          "required": false,
+          "description": "Task description",
+          "validation": {
+            "max_length": 200
+          }
+        },
+        {
+          "name": "priority",
+          "type": "string",
+          "default_value": "medium",
+          "required": false,
+          "description": "Task priority level",
+          "allowed_values": ["low", "medium", "high", "critical"]
+        },
+        {
+          "name": "due_date",
+          "type": "string",
+          "default_value": null,
+          "required": false,
+          "description": "Task due date (ISO format)"
+        },
+        {
+          "name": "completed",
+          "type": "boolean",
+          "default_value": false,
+          "required": false,
+          "description": "Task completion status"
+        },
+        {
+          "name": "assignee",
+          "type": "string",
+          "default_value": null,
+          "required": false,
+          "description": "Task assignee name"
+        },
+        {
+          "name": "tags",
+          "type": "array",
+          "default_value": [],
+          "required": false,
+          "description": "Task tags",
+          "validation": {
+            "max_items": 5
+          }
+        }
+      ],
+      "variants": [
+        {
+          "name": "pending",
+          "properties": {
+            "completed": false,
+            "priority": "medium"
+          },
+          "description": "Pending task card"
+        },
+        {
+          "name": "completed",
+          "properties": {
+            "completed": true
+          },
+          "description": "Completed task card"
+        },
+        {
+          "name": "high_priority",
+          "properties": {
+            "priority": "high",
+            "completed": false
+          },
+          "description": "High priority task card"
+        }
+      ],
+      "children_component_ids": [],
+      "usage_examples": [
+        {
+          "title": "Standard Task",
+          "description": "Regular task card",
+          "properties": {
+            "title": "Complete project proposal",
+            "description": "Finalize the Q4 project proposal and send to client",
+            "priority": "high",
+            "due_date": "2024-10-15",
+            "tags": ["work", "urgent"]
+          }
+        },
+        {
+          "title": "Completed Task",
+          "description": "Completed task card",
+          "properties": {
+            "title": "Team meeting notes",
+            "description": "Document team meeting decisions",
+            "completed": true,
+            "tags": ["meeting"]
+          }
+        }
+      ],
+      "figma_node_id": "component_task_card",
+      "figma_file_key": "ABcDeFgHiJkLmNoPqRsTuVwXyZ123456",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "id": "navigation_bar",
+      "name": "Bottom Navigation Bar",
+      "type": "component",
+      "category": "navigation",
+      "description": "Bottom navigation bar for mobile app navigation",
+      "properties": [
+        {
+          "name": "active_tab",
+          "type": "string",
+          "default_value": "home",
+          "required": true,
+          "description": "Currently active tab",
+          "allowed_values": ["home", "tasks", "add", "calendar", "profile"]
+        },
+        {
+          "name": "show_labels",
+          "type": "boolean",
+          "default_value": true,
+          "required": false,
+          "description": "Show tab labels"
+        },
+        {
+          "name": "badge_counts",
+          "type": "object",
+          "default_value": {},
+          "required": false,
+          "description": "Badge counts for each tab"
+        }
+      ],
+      "variants": [
+        {
+          "name": "with_labels",
+          "properties": {
+            "show_labels": true,
+            "active_tab": "home"
+          },
+          "description": "Navigation with text labels"
+        },
+        {
+          "name": "icons_only",
+          "properties": {
+            "show_labels": false,
+            "active_tab": "home"
+          },
+          "description": "Navigation with icons only"
+        },
+        {
+          "name": "with_badges",
+          "properties": {
+            "show_labels": true,
+            "active_tab": "tasks",
+            "badge_counts": {
+              "tasks": 5,
+              "calendar": 2
+            }
+          },
+          "description": "Navigation with notification badges"
+        }
+      ],
+      "children_component_ids": ["nav_home", "nav_tasks", "nav_add", "nav_calendar", "nav_profile"],
+      "usage_examples": [
+        {
+          "title": "Standard Navigation",
+          "description": "Standard bottom navigation",
+          "properties": {
+            "active_tab": "home",
+            "show_labels": true
+          }
+        },
+        {
+          "title": "With Notifications",
+          "description": "Navigation with notification badges",
+          "properties": {
+            "active_tab": "tasks",
+            "show_labels": true,
+            "badge_counts": {
+              "tasks": 3
+            }
+          }
+        }
+      ],
+      "figma_node_id": "component_navigation_bar",
+      "figma_file_key": "ABcDeFgHiJkLmNoPqRsTuVwXyZ123456",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "id": "modal",
+      "name": "Modal",
+      "type": "component",
+      "category": "layout",
+      "description": "Modal overlay component for dialogs and popups",
+      "properties": [
+        {
+          "name": "title",
+          "type": "string",
+          "default_value": "",
+          "required": false,
+          "description": "Modal title",
+          "validation": {
+            "max_length": 100
+          }
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "default_value": "",
+          "required": false,
+          "description": "Modal content text"
+        },
+        {
+          "name": "show_close_button",
+          "type": "boolean",
+          "default_value": true,
+          "required": false,
+          "description": "Show close button"
+        },
+        {
+          "name": "backdrop_dismissible",
+          "type": "boolean",
+          "default_value": true,
+          "required": false,
+          "description": "Close modal when clicking backdrop"
+        },
+        {
+          "name": "size",
+          "type": "string",
+          "default_value": "md",
+          "required": false,
+          "description": "Modal size",
+          "allowed_values": ["sm", "md", "lg", "xl", "full"]
+        },
+        {
+          "name": "actions",
+          "type": "array",
+          "default_value": [],
+          "required": false,
+          "description": "Modal action buttons"
+        }
+      ],
+      "variants": [
+        {
+          "name": "confirmation",
+          "properties": {
+            "size": "md",
+            "title": "Confirm Action",
+            "actions": [
+              {"text": "Cancel", "variant": "outline"},
+              {"text": "Confirm", "variant": "primary"}
+            ]
+          },
+          "description": "Confirmation modal"
+        },
+        {
+          "name": "alert",
+          "properties": {
+            "size": "sm",
+            "title": "Alert",
+            "actions": [
+              {"text": "OK", "variant": "primary"}
+            ]
+          },
+          "description": "Alert modal"
+        },
+        {
+          "name": "form",
+          "properties": {
+            "size": "lg",
+            "title": "Form Modal",
+            "actions": [
+              {"text": "Cancel", "variant": "outline"},
+              {"text": "Save", "variant": "primary"}
+            ]
+          },
+          "description": "Form modal"
+        }
+      ],
+      "children_component_ids": [],
+      "usage_examples": [
+        {
+          "title": "Delete Confirmation",
+          "description": "Modal for confirming deletion",
+          "properties": {
+            "title": "Delete Task",
+            "content": "Are you sure you want to delete this task? This action cannot be undone.",
+            "actions": [
+              {"text": "Cancel", "variant": "outline"},
+              {"text": "Delete", "variant": "danger"}
+            ]
+          }
+        },
+        {
+          "title": "Add Task Form",
+          "description": "Modal for adding new task",
+          "properties": {
+            "title": "Add New Task",
+            "size": "lg",
+            "actions": [
+              {"text": "Cancel", "variant": "outline"},
+              {"text": "Add Task", "variant": "primary"}
+            ]
+          }
+        }
+      ],
+      "figma_node_id": "component_modal",
+      "figma_file_key": "ABcDeFgHiJkLmNoPqRsTuVwXyZ123456",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "id": "badge",
+      "name": "Badge",
+      "type": "component",
+      "category": "display",
+      "description": "Small badge component for status and labels",
+      "properties": [
+        {
+          "name": "text",
+          "type": "string",
+          "default_value": "",
+          "required": true,
+          "description": "Badge text",
+          "validation": {
+            "min_length": 1,
+            "max_length": 20
+          }
+        },
+        {
+          "name": "variant",
+          "type": "string",
+          "default_value": "default",
+          "required": false,
+          "description": "Badge variant",
+          "allowed_values": ["default", "primary", "success", "warning", "error", "info"]
+        },
+        {
+          "name": "size",
+          "type": "string",
+          "default_value": "sm",
+          "required": false,
+          "description": "Badge size",
+          "allowed_values": ["xs", "sm", "md"]
+        }
+      ],
+      "variants": [
+        {
+          "name": "priority_high",
+          "properties": {
+            "variant": "error",
+            "size": "sm",
+            "text": "High"
+          },
+          "description": "High priority badge"
+        },
+        {
+          "name": "priority_medium",
+          "properties": {
+            "variant": "warning",
+            "size": "sm",
+            "text": "Medium"
+          },
+          "description": "Medium priority badge"
+        },
+        {
+          "name": "priority_low",
+          "properties": {
+            "variant": "success",
+            "size": "sm",
+            "text": "Low"
+          },
+          "description": "Low priority badge"
+        }
+      ],
+      "children_component_ids": [],
+      "usage_examples": [
+        {
+          "title": "Priority Badge",
+          "description": "Task priority indicator",
+          "properties": {
+            "text": "High",
+            "variant": "error",
+            "size": "sm"
+          }
+        },
+        {
+          "title": "Status Badge",
+          "description": "Task status indicator",
+          "properties": {
+            "text": "Completed",
+            "variant": "success",
+            "size": "sm"
+          }
+        }
+      ],
+      "figma_node_id": "component_badge",
+      "figma_file_key": "ABcDeFgHiJkLmNoPqRsTuVwXyZ123456",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    }
+  ],
+  "instances": [
+    {
+      "id": "instance_login_button",
+      "component_id": "button",
+      "name": "Login Button",
+      "properties": {
+        "variant": "primary",
+        "size": "md",
+        "text": "Login",
+        "full_width": true
+      },
+      "position": {"x": 24, "y": 520},
+      "size": {"width": 327, "height": 48},
+      "children": [],
+      "parent_id": "login_screen",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "id": "instance_email_input",
+      "component_id": "input_field",
+      "name": "Email Input",
+      "properties": {
+        "type": "email",
+        "label": "Email Address",
+        "placeholder": "Enter your email",
+        "required": true,
+        "size": "md"
+      },
+      "position": {"x": 24, "y": 368},
+      "size": {"width": 327, "height": 56},
+      "children": [],
+      "parent_id": "login_screen",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "id": "instance_password_input",
+      "component_id": "input_field",
+      "name": "Password Input",
+      "properties": {
+        "type": "password",
+        "label": "Password",
+        "placeholder": "Enter your password",
+        "required": true,
+        "size": "md"
+      },
+      "position": {"x": 24, "y": 440},
+      "size": {"width": 327, "height": 56},
+      "children": [],
+      "parent_id": "login_screen",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "id": "instance_task_card_1",
+      "component_id": "task_card",
+      "name": "Task Card 1",
+      "properties": {
+        "title": "Complete project proposal",
+        "description": "Finalize the Q4 project proposal and send to client for review",
+        "priority": "high",
+        "due_date": "2024-10-15",
+        "completed": false,
+        "tags": ["work", "urgent"]
+      },
+      "position": {"x": 16, "y": 136},
+      "size": {"width": 343, "height": 120},
+      "children": [],
+      "parent_id": "home_screen",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "id": "instance_task_card_2",
+      "component_id": "task_card",
+      "name": "Task Card 2",
+      "properties": {
+        "title": "Team meeting preparation",
+        "description": "Prepare slides for weekly team sync",
+        "priority": "medium",
+        "due_date": "2024-10-04",
+        "completed": false,
+        "tags": ["meeting", "preparation"]
+      },
+      "position": {"x": 16, "y": 272},
+      "size": {"width": 343, "height": 120},
+      "children": [],
+      "parent_id": "home_screen",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "id": "instance_task_card_3",
+      "component_id": "task_card",
+      "name": "Task Card 3",
+      "properties": {
+        "title": "Code review",
+        "description": "Review pull requests from team members",
+        "priority": "low",
+        "due_date": "2024-10-05",
+        "completed": false,
+        "tags": ["development", "review"]
+      },
+      "position": {"x": 16, "y": 408},
+      "size": {"width": 343, "height": 120},
+      "children": [],
+      "parent_id": "home_screen",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "id": "instance_bottom_nav",
+      "component_id": "navigation_bar",
+      "name": "Bottom Navigation",
+      "properties": {
+        "active_tab": "home",
+        "show_labels": true
+      },
+      "position": {"x": 0, "y": 732},
+      "size": {"width": 375, "height": 80},
+      "children": ["nav_home", "nav_tasks", "nav_add", "nav_calendar", "nav_profile"],
+      "parent_id": "home_screen",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "id": "instance_save_button",
+      "component_id": "button",
+      "name": "Save Changes Button",
+      "properties": {
+        "variant": "primary",
+        "size": "md",
+        "text": "Save Changes",
+        "full_width": true
+      },
+      "position": {"x": 24, "y": 560},
+      "size": {"width": 327, "height": 48},
+      "children": [],
+      "parent_id": "task_detail_screen",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    },
+    {
+      "id": "instance_priority_badge_high",
+      "component_id": "badge",
+      "name": "High Priority Badge",
+      "properties": {
+        "text": "High",
+        "variant": "error",
+        "size": "sm"
+      },
+      "position": {"x": 52, "y": 72},
+      "size": {"width": 60, "height": 24},
+      "children": [],
+      "parent_id": "instance_task_card_1",
+      "created_at": "2024-10-03T10:00:00Z",
+      "updated_at": "2024-10-03T10:00:00Z",
+      "version": "1.0.0"
+    }
+  ],
+  "relationships": {
+    "button": ["instance_login_button", "instance_save_button"],
+    "input_field": ["instance_email_input", "instance_password_input"],
+    "task_card": ["instance_task_card_1", "instance_task_card_2", "instance_task_card_3"],
+    "navigation_bar": ["instance_bottom_nav"],
+    "badge": ["instance_priority_badge_high"],
+    "screen_login": ["instance_login_button", "instance_email_input", "instance_password_input"],
+    "screen_home": ["instance_task_card_1", "instance_task_card_2", "instance_task_card_3", "instance_bottom_nav"],
+    "screen_task_detail": ["instance_save_button"],
+    "parent_task_card_1": ["instance_priority_badge_high"]
+  },
+  "created_at": "2024-10-03T10:00:00Z",
+  "updated_at": "2024-10-03T10:00:00Z",
+  "version": "1.0.0",
+  "metadata": {
+    "total_components": 6,
+    "total_instances": 9,
+    "component_categories": ["interactive", "form", "display", "navigation", "layout"],
+    "supported_screens": ["login_screen", "home_screen", "task_detail_screen"],
+    "figma_file_key": "ABcDeFgHiJkLmNoPqRsTuVwXyZ123456",
+    "export_timestamp": "2024-10-03T10:00:00Z"
+  }
+}

@@ -1,0 +1,411 @@
+{
+  "id": "home_screen",
+  "name": "Home Screen",
+  "type": "mobile_app",
+  "layout_grid": {
+    "type": "flex",
+    "columns": null,
+    "gutter_width": 16,
+    "margin": 16,
+    "max_width": 375
+  },
+  "breakpoints": [
+    {
+      "name": "mobile",
+      "min_width": 375,
+      "max_width": 414,
+      "description": "Mobile phone screens"
+    }
+  ],
+  "component_instances": [
+    {
+      "id": "app_header",
+      "component_id": "header_component",
+      "name": "App Header",
+      "properties": {
+        "title": "Today's Tasks",
+        "subtitle": "October 3, 2024",
+        "show_back_button": false,
+        "actions": []
+      },
+      "position": {"x": 0, "y": 0},
+      "size": {"width": 375, "height": 120},
+      "children": ["header_title", "header_date"],
+      "parent_id": null
+    },
+    {
+      "id": "header_title",
+      "component_id": "text_heading",
+      "name": "Header Title",
+      "properties": {
+        "text": "Today's Tasks",
+        "style": "heading-2",
+        "align": "left"
+      },
+      "position": {"x": 24, "y": 68},
+      "size": {"width": 327, "height": 32},
+      "children": [],
+      "parent_id": "app_header"
+    },
+    {
+      "id": "header_date",
+      "component_id": "text_body",
+      "name": "Header Date",
+      "properties": {
+        "text": "October 3, 2024",
+        "style": "body-small",
+        "align": "left"
+      },
+      "position": {"x": 24, "y": 44},
+      "size": {"width": 327, "height": 20},
+      "children": [],
+      "parent_id": "app_header"
+    },
+    {
+      "id": "tasks_list_container",
+      "component_id": "scroll_container",
+      "name": "Tasks List Container",
+      "properties": {
+        "scrollable": true,
+        "padding_horizontal": 0,
+        "padding_vertical": 0,
+        "show_scroll_indicator": true
+      },
+      "position": {"x": 16, "y": 136},
+      "size": {"width": 343, "height": 576},
+      "children": ["task_card_1", "task_card_2", "task_card_3", "empty_state"],
+      "parent_id": null
+    },
+    {
+      "id": "task_card_1",
+      "component_id": "task_card",
+      "name": "Task Card 1",
+      "properties": {
+        "title": "Complete project proposal",
+        "description": "Finalize the Q4 project proposal and send to client for review",
+        "priority": "high",
+        "due_date": "2024-10-15",
+        "completed": false,
+        "tags": ["work", "urgent"],
+        "assignee": "John Doe"
+      },
+      "position": {"x": 0, "y": 0},
+      "size": {"width": 343, "height": 120},
+      "children": ["task_checkbox_1", "priority_badge_1"],
+      "parent_id": "tasks_list_container"
+    },
+    {
+      "id": "task_checkbox_1",
+      "component_id": "checkbox",
+      "name": "Task Checkbox 1",
+      "properties": {
+        "checked": false,
+        "disabled": false
+      },
+      "position": {"x": 16, "y": 16},
+      "size": {"width": 24, "height": 24},
+      "children": [],
+      "parent_id": "task_card_1"
+    },
+    {
+      "id": "priority_badge_1",
+      "component_id": "badge",
+      "name": "High Priority Badge 1",
+      "properties": {
+        "text": "High",
+        "variant": "error",
+        "size": "sm"
+      },
+      "position": {"x": 52, "y": 72},
+      "size": {"width": 60, "height": 24},
+      "children": [],
+      "parent_id": "task_card_1"
+    },
+    {
+      "id": "task_card_2",
+      "component_id": "task_card",
+      "name": "Task Card 2",
+      "properties": {
+        "title": "Team meeting preparation",
+        "description": "Prepare slides for weekly team sync",
+        "priority": "medium",
+        "due_date": "2024-10-04",
+        "completed": false,
+        "tags": ["meeting", "preparation"],
+        "assignee": "Jane Smith"
+      },
+      "position": {"x": 0, "y": 136},
+      "size": {"width": 343, "height": 120},
+      "children": ["task_checkbox_2", "priority_badge_2"],
+      "parent_id": "tasks_list_container"
+    },
+    {
+      "id": "task_checkbox_2",
+      "component_id": "checkbox",
+      "name": "Task Checkbox 2",
+      "properties": {
+        "checked": false,
+        "disabled": false
+      },
+      "position": {"x": 16, "y": 16},
+      "size": {"width": 24, "height": 24},
+      "children": [],
+      "parent_id": "task_card_2"
+    },
+    {
+      "id": "priority_badge_2",
+      "component_id": "badge",
+      "name": "Medium Priority Badge 2",
+      "properties": {
+        "text": "Medium",
+        "variant": "warning",
+        "size": "sm"
+      },
+      "position": {"x": 52, "y": 72},
+      "size": {"width": 70, "height": 24},
+      "children": [],
+      "parent_id": "task_card_2"
+    },
+    {
+      "id": "task_card_3",
+      "component_id": "task_card",
+      "name": "Task Card 3",
+      "properties": {
+        "title": "Code review",
+        "description": "Review pull requests from team members",
+        "priority": "low",
+        "due_date": "2024-10-05",
+        "completed": false,
+        "tags": ["development", "review"],
+        "assignee": "Mike Johnson"
+      },
+      "position": {"x": 0, "y": 272},
+      "size": {"width": 343, "height": 120},
+      "children": ["task_checkbox_3", "priority_badge_3"],
+      "parent_id": "tasks_list_container"
+    },
+    {
+      "id": "task_checkbox_3",
+      "component_id": "checkbox",
+      "name": "Task Checkbox 3",
+      "properties": {
+        "checked": false,
+        "disabled": false
+      },
+      "position": {"x": 16, "y": 16},
+      "size": {"width": 24, "height": 24},
+      "children": [],
+      "parent_id": "task_card_3"
+    },
+    {
+      "id": "priority_badge_3",
+      "component_id": "badge",
+      "name": "Low Priority Badge 3",
+      "properties": {
+        "text": "Low",
+        "variant": "success",
+        "size": "sm"
+      },
+      "position": {"x": 52, "y": 72},
+      "size": {"width": 50, "height": 24},
+      "children": [],
+      "parent_id": "task_card_3"
+    },
+    {
+      "id": "bottom_navigation",
+      "component_id": "navigation_bar",
+      "name": "Bottom Navigation",
+      "properties": {
+        "active_tab": "home",
+        "show_labels": true,
+        "badge_counts": {
+          "tasks": 3,
+          "calendar": 2
+        }
+      },
+      "position": {"x": 0, "y": 732},
+      "size": {"width": 375, "height": 80},
+      "children": ["nav_home", "nav_tasks", "nav_add", "nav_calendar", "nav_profile"],
+      "parent_id": null
+    },
+    {
+      "id": "nav_home",
+      "component_id": "nav_item",
+      "name": "Home Nav Item",
+      "properties": {
+        "icon": "home",
+        "label": "Home",
+        "active": true,
+        "badge_count": 0
+      },
+      "position": {"x": 0, "y": 0},
+      "size": {"width": 75, "height": 80},
+      "children": [],
+      "parent_id": "bottom_navigation"
+    },
+    {
+      "id": "nav_tasks",
+      "component_id": "nav_item",
+      "name": "Tasks Nav Item",
+      "properties": {
+        "icon": "tasks",
+        "label": "Tasks",
+        "active": false,
+        "badge_count": 3
+      },
+      "position": {"x": 75, "y": 0},
+      "size": {"width": 75, "height": 80},
+      "children": [],
+      "parent_id": "bottom_navigation"
+    },
+    {
+      "id": "nav_add",
+      "component_id": "nav_item",
+      "name": "Add Nav Item",
+      "properties": {
+        "icon": "add",
+        "label": "Add",
+        "active": false,
+        "badge_count": 0,
+        "floating": true
+      },
+      "position": {"x": 150, "y": 0},
+      "size": {"width": 75, "height": 80},
+      "children": [],
+      "parent_id": "bottom_navigation"
+    },
+    {
+      "id": "nav_calendar",
+      "component_id": "nav_item",
+      "name": "Calendar Nav Item",
+      "properties": {
+        "icon": "calendar",
+        "label": "Calendar",
+        "active": false,
+        "badge_count": 2
+      },
+      "position": {"x": 225, "y": 0},
+      "size": {"width": 75, "height": 80},
+      "children": [],
+      "parent_id": "bottom_navigation"
+    },
+    {
+      "id": "nav_profile",
+      "component_id": "nav_item",
+      "name": "Profile Nav Item",
+      "properties": {
+        "icon": "profile",
+        "label": "Profile",
+        "active": false,
+        "badge_count": 0
+      },
+      "position": {"x": 300, "y": 0},
+      "size": {"width": 75, "height": 80},
+      "children": [],
+      "parent_id": "bottom_navigation"
+    }
+  ],
+  "navigation_flows": [
+    {
+      "from_screen_id": "home_screen",
+      "to_screen_id": "task_detail_screen",
+      "trigger": "click",
+      "trigger_element_id": "task_card_1",
+      "animation_type": "slide_left",
+      "parameters": {
+        "animation_duration": 250,
+        "easing": "ease-out",
+        "task_id": "task_1"
+      }
+    },
+    {
+      "from_screen_id": "home_screen",
+      "to_screen_id": "task_detail_screen",
+      "trigger": "click",
+      "trigger_element_id": "task_card_2",
+      "animation_type": "slide_left",
+      "parameters": {
+        "animation_duration": 250,
+        "easing": "ease-out",
+        "task_id": "task_2"
+      }
+    },
+    {
+      "from_screen_id": "home_screen",
+      "to_screen_id": "task_detail_screen",
+      "trigger": "click",
+      "trigger_element_id": "task_card_3",
+      "animation_type": "slide_left",
+      "parameters": {
+        "animation_duration": 250,
+        "easing": "ease-out",
+        "task_id": "task_3"
+      }
+    },
+    {
+      "from_screen_id": "home_screen",
+      "to_screen_id": "add_task_screen",
+      "trigger": "click",
+      "trigger_element_id": "nav_add",
+      "animation_type": "slide_up",
+      "parameters": {
+        "animation_duration": 300,
+        "easing": "ease-in-out"
+      }
+    },
+    {
+      "from_screen_id": "home_screen",
+      "to_screen_id": "tasks_screen",
+      "trigger": "click",
+      "trigger_element_id": "nav_tasks",
+      "animation_type": "slide_left",
+      "parameters": {
+        "animation_duration": 250,
+        "easing": "ease-out"
+      }
+    },
+    {
+      "from_screen_id": "home_screen",
+      "to_screen_id": "calendar_screen",
+      "trigger": "click",
+      "trigger_element_id": "nav_calendar",
+      "animation_type": "slide_left",
+      "parameters": {
+        "animation_duration": 250,
+        "easing": "ease-out"
+      }
+    },
+    {
+      "from_screen_id": "home_screen",
+      "to_screen_id": "profile_screen",
+      "trigger": "click",
+      "trigger_element_id": "nav_profile",
+      "animation_type": "slide_left",
+      "parameters": {
+        "animation_duration": 250,
+        "easing": "ease-out"
+      }
+    }
+  ],
+  "figma_frame_id": "home_screen",
+  "figma_file_key": "ABcDeFgHiJkLmNoPqRsTuVwXyZ123456",
+  "background_color": "#F3F4F6",
+  "status_bar_style": "default",
+  "created_at": "2024-10-03T10:00:00Z",
+  "updated_at": "2024-10-03T10:00:00Z",
+  "version": "1.0.0",
+  "metadata": {
+    "screen_type": "main",
+    "total_components": 20,
+    "task_cards": 3,
+    "navigation_destinations": 6,
+    "scrollable_content": true,
+    "bottom_navigation": true,
+    "accessibility_features": ["semantic_html", "keyboard_navigation", "screen_reader_support", "high_contrast"],
+    "performance_metrics": {
+      "render_time": "45ms",
+      "interactive_time": "120ms",
+      "layout_shift": 0.02
+    }
+  }
+}

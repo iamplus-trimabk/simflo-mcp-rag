@@ -1,0 +1,191 @@
+{
+  "id": "login_screen",
+  "name": "Login Screen",
+  "type": "mobile_app",
+  "layout_grid": {
+    "type": "columns",
+    "columns": 12,
+    "gutter_width": 16,
+    "margin": 24,
+    "max_width": 375
+  },
+  "breakpoints": [
+    {
+      "name": "mobile",
+      "min_width": 375,
+      "max_width": 414,
+      "description": "Mobile phone screens"
+    }
+  ],
+  "component_instances": [
+    {
+      "id": "login_logo",
+      "component_id": "logo_component",
+      "name": "App Logo",
+      "properties": {
+        "size": "large",
+        "variant": "primary"
+      },
+      "position": {"x": 137, "y": 120},
+      "size": {"width": 100, "height": 100},
+      "children": [],
+      "parent_id": null
+    },
+    {
+      "id": "login_title",
+      "component_id": "text_heading",
+      "name": "Welcome Back",
+      "properties": {
+        "text": "Welcome Back",
+        "style": "heading-1",
+        "align": "center"
+      },
+      "position": {"x": 24, "y": 260},
+      "size": {"width": 327, "height": 40},
+      "children": [],
+      "parent_id": null
+    },
+    {
+      "id": "login_subtitle",
+      "component_id": "text_body",
+      "name": "Login Subtitle",
+      "properties": {
+        "text": "Login to continue to your tasks",
+        "style": "body-regular",
+        "align": "center"
+      },
+      "position": {"x": 24, "y": 308},
+      "size": {"width": 327, "height": 24},
+      "children": [],
+      "parent_id": null
+    },
+    {
+      "id": "email_input",
+      "component_id": "input_field",
+      "name": "Email Input",
+      "properties": {
+        "type": "email",
+        "label": "Email Address",
+        "placeholder": "Enter your email",
+        "required": true,
+        "size": "md"
+      },
+      "position": {"x": 24, "y": 368},
+      "size": {"width": 327, "height": 56},
+      "children": [],
+      "parent_id": null
+    },
+    {
+      "id": "password_input",
+      "component_id": "input_field",
+      "name": "Password Input",
+      "properties": {
+        "type": "password",
+        "label": "Password",
+        "placeholder": "Enter your password",
+        "required": true,
+        "size": "md"
+      },
+      "position": {"x": 24, "y": 440},
+      "size": {"width": 327, "height": 56},
+      "children": [],
+      "parent_id": null
+    },
+    {
+      "id": "login_button",
+      "component_id": "button",
+      "name": "Login Button",
+      "properties": {
+        "variant": "primary",
+        "size": "md",
+        "text": "Login",
+        "full_width": true,
+        "loading": false
+      },
+      "position": {"x": 24, "y": 520},
+      "size": {"width": 327, "height": 48},
+      "children": [],
+      "parent_id": null
+    },
+    {
+      "id": "forgot_password_link",
+      "component_id": "text_link",
+      "name": "Forgot Password Link",
+      "properties": {
+        "text": "Forgot password?",
+        "style": "body-small",
+        "align": "center",
+        "url": "/forgot-password"
+      },
+      "position": {"x": 24, "y": 588},
+      "size": {"width": 327, "height": 20},
+      "children": [],
+      "parent_id": null
+    },
+    {
+      "id": "signup_link",
+      "component_id": "text_link",
+      "name": "Sign Up Link",
+      "properties": {
+        "text": "Don't have an account? Sign up",
+        "style": "body-small",
+        "align": "center",
+        "url": "/signup"
+      },
+      "position": {"x": 24, "y": 720},
+      "size": {"width": 327, "height": 20},
+      "children": [],
+      "parent_id": null
+    }
+  ],
+  "navigation_flows": [
+    {
+      "from_screen_id": "login_screen",
+      "to_screen_id": "home_screen",
+      "trigger": "click",
+      "trigger_element_id": "login_button",
+      "animation_type": "slide_left",
+      "parameters": {
+        "animation_duration": 300,
+        "easing": "ease-in-out"
+      }
+    },
+    {
+      "from_screen_id": "login_screen",
+      "to_screen_id": "forgot_password_screen",
+      "trigger": "click",
+      "trigger_element_id": "forgot_password_link",
+      "animation_type": "slide_up",
+      "parameters": {
+        "animation_duration": 250,
+        "easing": "ease-out"
+      }
+    },
+    {
+      "from_screen_id": "login_screen",
+      "to_screen_id": "signup_screen",
+      "trigger": "click",
+      "trigger_element_id": "signup_link",
+      "animation_type": "slide_up",
+      "parameters": {
+        "animation_duration": 250,
+        "easing": "ease-out"
+      }
+    }
+  ],
+  "figma_frame_id": "login_screen",
+  "figma_file_key": "ABcDeFgHiJkLmNoPqRsTuVwXyZ123456",
+  "background_color": "#F3F4F6",
+  "status_bar_style": "default",
+  "created_at": "2024-10-03T10:00:00Z",
+  "updated_at": "2024-10-03T10:00:00Z",
+  "version": "1.0.0",
+  "metadata": {
+    "screen_type": "authentication",
+    "total_components": 8,
+    "form_fields": 2,
+    "navigation_destinations": 3,
+    "responsive_design": false,
+    "accessibility_features": ["semantic_html", "keyboard_navigation", "screen_reader_support"]
+  }
+}
