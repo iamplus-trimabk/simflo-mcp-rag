@@ -1,0 +1,64 @@
+{
+  "figma": {
+    "extract_tokens": true,
+    "extract_components": true,
+    "extract_screens": true,
+    "extract_prototypes": true,
+    "include_hidden_layers": false,
+    "max_depth": 10
+  },
+  "components": {
+    "library": "shadcn",
+    "framework": "react",
+    "typescript": true,
+    "generate_stories": true,
+    "generate_tests": true,
+    "user_stories_per_component": 3
+  },
+  "tokens": {
+    "output_format": "tailwind",
+    "include_semantic_tokens": true,
+    "generate_css_variables": true,
+    "generate_typescript_types": true
+  },
+  "pages": {
+    "framework": "react",
+    "router": "react-router",
+    "generate_hooks": true,
+    "include_state_management": true,
+    "generate_error_boundaries": true
+  },
+  "testing": {
+    "framework": "playwright",
+    "generate_e2e": true,
+    "generate_unit": false,
+    "generate_integration": true,
+    "test_scenarios_per_flow": 2,
+    "include_accessibility_tests": true
+  },
+  "rag": {
+    "chunk_size": 1000,
+    "overlap": 200,
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "vector_db": "chromadb",
+    "create_doc_rag": true,
+    "create_code_rag": true,
+    "create_test_rag": true
+  },
+  "ai_assistant": {
+    "enable_code_review": true,
+    "generate_improvements": true,
+    "check_best_practices": true,
+    "suggest_refactoring": true,
+    "include_security_analysis": true
+  },
+  "output": {
+    "root": "./output",
+    "components": "./components",
+    "pages": "./pages",
+    "tests": "./tests",
+    "rag_bases": "./rag-bases",
+    "ai_review": "./ai-review",
+    "demo": "./demo"
+  }
+}

@@ -1,392 +1,335 @@
-# simflo-rag v2: CLI-First RAG Architecture
+# SimFlo Figma-to-RAG Pipeline
 
-**A CLI-first Retrieval-Augmented Generation system that demonstrates how command-line interfaces can provide simplicity, maintainability, and natural composition for RAG systems.**
+**A comprehensive 9-step pipeline that transforms Figma designs into production-ready applications with automated testing and AI-powered code review.**
 
-## 🏗️ Architecture Overview
+## 🎯 Pipeline Overview
 
-### Numbered Component System
+This pipeline takes Figma URLs and converts them into:
+- Design tokens (Tailwind/NativeWind)
+- Component catalog (shadcn/gluestack)
+- Page implementations with navigation
+- Playwright test suites
+- RAG knowledge bases (docs, code, tests)
+- AI-powered code review and improvement
+
+## 🏗️ Pipeline Architecture
 
 ```
-simflo-rag v2/
-├── 00-rag-registry/      # ✅ Registry-based database management
-├── 01-mcp-server/        # ✅ AI assistant integration (12 commands)
-├── 02-rag-builder/       # ✅ Pipeline orchestration
-├── 03-content-collection/ # ✅ Source discovery & acquisition
-└── 04-extractors/        # ✅ Content extraction (11 extractors)
+v2/
+├── figma-analyzer/          # Step 1: Figma URL → design tokens, components, screens
+├── prototype-analyzer/      # Step 2: Prototype flows → interactions & test scenarios
+├── token-converter/         # Step 3: Design tokens → Tailwind/NativeWind definitions
+├── component-generator/     # Step 4: Component catalog → shadcn/gluestack components
+├── page-generator/          # Step 5: Screen specs → page implementations
+├── test-generator/          # Step 6: Test scenarios → Playwright test suites
+├── test-runner/             # Step 7: Execute E2E tests & provide demo
+├── rag-system/              # Step 8: Create doc/code/test RAG knowledge bases
+├── ai-assistant/            # Step 9: AI code review & improvement suggestions
+├── common/                  # Shared utilities and types
+├── tests/                   # Pipeline test suite
+└── docs/                    # Pipeline documentation
 ```
-
-### CLI-First Design Philosophy
-
-- **All component communication via CLI interfaces**
-- **JSON standardization across all components**
-- **Direct module calls eliminate HTTP overhead**
-- **Unix pipeline principles for data flow**
-- **Comprehensive JSON-based testing framework**
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
 ```bash
-# Python 3.8+ required
+# Python 3.8+
 python3 --version
 
-# Git required for content fetching
-git --version
+# Node.js (for component generation and testing)
+node --version
 
-# Required Python packages
-pip install requests
+# Figma API token
+export FIGMA_TOKEN="your_figma_token_here"
 ```
 
 ### Installation
 
 ```bash
-# Clone the repository
+# Clone repository
 git clone <repository-url>
 cd simflo-mcp-rag
 
-# Make CLI scripts executable
-find v2 -name "*.py" -path "*/cli.py" -exec chmod +x {} \;
-find v2 -name "run.py" -exec chmod +x {} \;
+# Install Python dependencies
+pip install -r requirements.txt
 
-# Setup command aliases (one-time setup)
-source commands.sh
+# Install Node.js dependencies (for component generation)
+npm install
 
-# Or add to your shell profile for persistence
-echo 'source $(pwd)/commands.sh' >> ~/.bashrc
-source ~/.bashrc
+# Make scripts executable
+chmod +x v2/*/main.py
 ```
 
-### Basic Usage
+## 📋 Pipeline Steps
 
-#### 1. System Status Check
+### Step 1: Figma Analyzer
+**Input**: Figma URL + Token
+**Output**: Design tokens, component catalog, screen specifications
 
 ```bash
-# Check all component statuses
-rag_registry status
-mcp_server list-registries
-extractors status
-
-# Or use the quick status command
-simflo_status
+python3 v2/figma-analyzer/main.py \
+  --url "https://www.figma.com/file/your-design" \
+  --token $FIGMA_TOKEN \
+  --output ./output/
 ```
 
-#### 2. Component Search (AI Assistant Integration)
+**Generates**:
+- `design-tokens.json` - Colors, typography, spacing, shadows
+- `component-catalog.json` - Component definitions with props
+- `screen-specs/` - Individual screen/page specifications
+
+### Step 2: Prototype Analyzer
+**Input**: Component catalog + Figma prototype links
+**Output**: Interaction flows + test scenarios
 
 ```bash
-# Search for React components
-mcp_server search "react button" --limit 5
-
-# Get detailed component information
-mcp_server get-component button --registry shadcn
+python3 v2/prototype-analyzer/main.py \
+  --catalog ./output/component-catalog.json \
+  --figma-url "https://www.figma.com/file/your-design" \
+  --output ./output/
 ```
 
-#### 3. Content Discovery and Acquisition
+**Generates**:
+- `interaction-flows.json` - Click actions, navigation, data flow
+- `test-scenarios/` - User journey test cases in Markdown
+
+### Step 3: Token Converter
+**Input**: Design tokens
+**Output**: Tailwind/NativeWind definitions
 
 ```bash
-# Discover new component libraries
-content_collection discover \
-  --query "react component library" \
-  --source-type github \
-  --limit 10
-
-# List available source types
-content_collection list-source-types
+python3 v2/token-converter/main.py \
+  --tokens ./output/design-tokens.json \
+  --framework tailwind \
+  --output ./output/tailwind-config.js
 ```
 
-#### 4. Registry Management
+**Supports**:
+- Tailwind CSS configuration
+- NativeWind (React Native) configuration
+- Custom design system generation
+
+### Step 4: Component Generator
+**Input**: Component catalog + design tokens
+**Output**: shadcn/gluestack components
 
 ```bash
-# List all available registries
-rag_registry list
-
-# Search across all registries
-rag_registry search --query "form input" --limit 5
-
-# Get registry information
-rag_registry info --name shadcn
+python3 v2/component-generator/main.py \
+  --catalog ./output/component-catalog.json \
+  --library shadcn \
+  --output ./components/
 ```
 
-#### 5. Content Extraction
+**Generates**:
+- React components with TypeScript
+- Component stories/documentation
+- User stories (2-3 per component)
+
+### Step 5: Page Generator
+**Input**: Screen specifications + components
+**Output**: Complete page implementations
 
 ```bash
-# List available extractors
-extractors list-extractors
-
-# Run specific extractor
-extractors run-extractor shadcn
-
-# Run all extractors
-extractors run-all-extractors
+python3 v2/page-generator/main.py \
+  --screens ./output/screen-specs/ \
+  --components ./components/ \
+  --output ./pages/
 ```
 
-## 📚 Documentation
+**Generates**:
+- React pages with routing
+- Event handlers and hooks
+- User story implementations
 
-### Core Documentation
+### Step 6: Test Generator
+**Input**: Test scenarios + pages
+**Output**: Playwright test suites
 
-- **[CLI-First Architecture Guide](v2/docs/CLI-FIRST_ARCHITECTURE.md)** - Architecture patterns and CLI design
-- **[Component Integration Guide](v2/docs/COMPONENT_INTEGRATION.md)** - Integration patterns and examples
+```bash
+python3 v2/test-generator/main.py \
+  --scenarios ./output/test-scenarios/ \
+  --pages ./pages/ \
+  --output ./tests/
+```
+
+**Generates**:
+- Playwright E2E test files
+- Test data fixtures
+- Test configuration
+
+### Step 7: Test Runner
+**Input**: Test suite
+**Output**: Test results + demo
+
+```bash
+python3 v2/test-runner/main.py \
+  --tests ./tests/ \
+  --demo ./demo/
+```
+
+**Provides**:
+- Automated test execution
+- Test report generation
+- Interactive demo of generated application
+
+### Step 8: RAG System
+**Input**: Docs, code, tests
+**Output**: RAG knowledge bases
+
+```bash
+python3 v2/rag-system/main.py \
+  --docs ./output/ \
+  --code ./components/ ./pages/ \
+  --tests ./tests/ \
+  --output ./rag-bases/
+```
+
+**Creates**:
+- `doc-rag/` - Documentation knowledge base
+- `code-rag/` - Code implementation knowledge base
+- `test-rag/` - Test scenario knowledge base
+
+### Step 9: AI Assistant
+**Input**: RAG bases + code
+**Output**: Code review + improvement suggestions
+
+```bash
+python3 v2/ai-assistant/main.py \
+  --rag-bases ./rag-bases/ \
+  --code ./components/ ./pages/ \
+  --output ./ai-review/
+```
+
+**Provides**:
+- Automated code quality analysis
+- Improvement recommendations
+- Refactoring suggestions
+
+## 🔧 Configuration
+
+### Environment Variables
+
+```bash
+# Figma API
+FIGMA_TOKEN="your_figma_token"
+FIGMA_TEAM_ID="your_team_id"
+
+# Output Configuration
+OUTPUT_ROOT="./output"
+COMPONENT_ROOT="./components"
+PAGE_ROOT="./pages"
+
+# AI Configuration (optional)
+OPENAI_API_KEY="your_openai_key"  # For advanced AI features
+```
+
+### Pipeline Configuration
+
+Create `pipeline-config.json`:
+
+```json
+{
+  "figma": {
+    "extract_tokens": true,
+    "extract_components": true,
+    "extract_screens": true
+  },
+  "components": {
+    "library": "shadcn",
+    "framework": "react",
+    "typescript": true
+  },
+  "testing": {
+    "framework": "playwright",
+    "generate_e2e": true,
+    "generate_unit": false
+  },
+  "rag": {
+    "chunk_size": 1000,
+    "overlap": 200,
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2"
+  }
+}
+```
+
+## 📊 Output Structure
+
+```
+output/
+├── design-tokens.json          # Design system tokens
+├── component-catalog.json      # Component definitions
+├── interaction-flows.json      # User interaction flows
+├── tailwind-config.js          # Tailwind configuration
+├── screen-specs/               # Individual screen specifications
+├── test-scenarios/             # User journey test cases
+├── components/                 # Generated React components
+├── pages/                      # Generated page implementations
+├── tests/                      # Playwright test suites
+├── rag-bases/                  # RAG knowledge bases
+└── ai-review/                  # AI analysis and suggestions
+```
 
 ## 🧪 Testing
 
-### Run All Tests
-
 ```bash
-# Test all components
-python3 v2/core/00-rag-registry/tests/run.py --verbose
-python3 v2/core/01-mcp-server/tests/run.py --verbose
-python3 v2/03-content-collection/tests/run.py --verbose
-python3 v2/04-extractors/tests/run.py --verbose
+# Run all pipeline tests
+python3 -m pytest v2/tests/ -v
 
-# Or use the test executor with aliases
-test_executor v2/core/00-rag-registry/tests/cmd_tests.json
-test_executor v2/core/01-mcp-server/tests/mcp_tests.json
-test_executor v2/03-content-collection/tests/content_collection_tests.json
-test_executor v2/04-extractors/tests/extractor_tests.json
+# Run individual component tests
+python3 -m pytest v2/tests/test_figma_analyzer.py -v
+python3 -m pytest v2/tests/test_component_generator.py -v
+
+# Integration test - full pipeline
+python3 v2/tests/test_full_pipeline.py
 ```
 
-### Test Results Summary
+## 🎯 Use Cases
 
-| Component | Test Cases | Pass Rate | Status |
-|-----------|------------|-----------|--------|
-| 00-rag-registry | 8 tests | 100% | ✅ Complete |
-| 01-mcp-server | 14 tests | 100% | ✅ Complete |
-| 03-content-collection | 8 tests | 62.5% | ✅ Functional |
-| 04-extractors | 8 tests | 100% | ✅ Complete |
+### 1. Rapid Prototyping
+- Design in Figma → Generate working application in minutes
+- Test user flows before development
+- Iterate quickly on designs
 
-### Individual Test Execution
+### 2. Component Library Generation
+- Extract design system from Figma
+- Generate consistent component library
+- Ensure design-to-code alignment
 
-```bash
-# Run specific test file
-test_executor v2/core/01-mcp-server/tests/mcp_tests.json
+### 3. Automated Testing
+- Generate comprehensive E2E tests
+- Test all user journeys from prototypes
+- Validate implementation matches design
 
-# Run with output file
-python3 v2/core/00-rag-registry/tests/run.py --output test_results.json
-```
-
-## 📚 Documentation
-
-### Core Documentation
-
-- **[CLI-First Architecture Guide](v2/docs/CLI-FIRST_ARCHITECTURE.md)** - Comprehensive architecture documentation
-- **[Component Integration Guide](v2/docs/COMPONENT_INTEGRATION.md)** - Integration patterns and examples
-- **[Interactive Presentation](v2/docs/interactive-presentation.html)** - Visual research presentation
-
-### Component Documentation
-
-Each component includes its own `CLAUDE.md` with:
-- Component purpose and responsibilities
-- CLI command reference
-- Integration patterns
-- Test coverage information
-
-## 🔧 Component Reference
-
-### 00-rag-registry: Registry Management
-
-**Purpose:** Registry-based RAG database management with CLI commands
-
-**Key Commands:**
-```bash
-rag_registry list --format json
-rag_registry search --query "button" --limit 5
-rag_registry info --name shadcn
-rag_registry status
-```
-
-### 01-mcp-server: AI Assistant Integration
-
-**Purpose:** AI assistant integration via CLI (12 commands)
-
-**Key Commands:**
-```bash
-mcp_server search "button" --limit 10
-mcp_server get-component dialog --registry shadcn
-mcp_server set-context reactjs --session-id abc123
-mcp_server list-registries
-```
-
-### 02-rag-builder: Pipeline Orchestration
-
-**Purpose:** Pipeline orchestration and RAG construction
-
-**Key Commands:**
-```bash
-rag_builder status
-rag_builder list-profiles
-rag_builder check
-```
-
-### 03-content-collection: Source Discovery
-
-**Purpose:** Source discovery and content acquisition
-
-**Key Commands:**
-```bash
-content_collection discover --query "react components"
-content_collection fetch --sources-file sources.json
-content_collection list-source-types
-content_collection status
-```
-
-### 04-extractors: Content Extraction
-
-**Purpose:** Content extraction from various sources (11 specialized extractors)
-
-**Key Commands:**
-```bash
-extractors list-extractors
-extractors run-extractor shadcn
-extractors run-all-extractors
-extractors status
-```
-
-## 🎯 CLI-First Benefits
-
-### Key Advantages
-
-- **Simplicity**: Direct module calls eliminate HTTP complexity
-- **Testability**: 100% test coverage through simple CLI testing
-- **Natural Composition**: Unix pipeline principles for data flow
-- **Debugging**: Visible command execution and clear error messages
-- **Maintainability**: Loose coupling through stable CLI interfaces
-
-### Design Principles
-
-- **JSON Standardization**: Consistent data exchange format
-- **Direct Module Calls**: No network overhead between components
-- **Unix Philosophy**: Simple, composable tools
-- **Comprehensive Testing**: CLI interfaces enable thorough testing
-
-## 🚀 Command Aliases
-
-### CLI Shortcuts
-
-This project includes a centralized command alias system for easier CLI usage. After setting up the aliases:
-
-```bash
-# Quick status check
-simflo_status
-
-# Component commands
-rag_registry list
-mcp_server search "button" --limit 5
-extractors list-extractors
-content_collection discover --query "react"
-rag_builder status
-
-# Help
-simflo_help
-```
-
-### Setup
-
-One-time setup:
-```bash
-source commands.sh
-```
-
-For persistence (recommended):
-```bash
-echo 'source $(pwd)/commands.sh' >> ~/.bashrc
-source ~/.bashrc
-```
-
-### Alias Reference
-
-| Alias | Command | Purpose |
-|-------|---------|---------|
-| `rag_registry` | Registry management | List, search, manage RAG databases |
-| `mcp_server` | AI assistant integration | Search components, get details |
-| `rag_builder` | Pipeline orchestration | Build and manage RAG pipelines |
-| `content_collection` | Content discovery | Find and acquire content sources |
-| `extractors` | Content extraction | Run extraction processes |
-| `test_executor` | Test execution | Run test suites |
-| `simflo_status` | Quick status | Check all components at once |
-| `simflo_help` | Command help | Show available commands |
-
-## 🛠️ Development Guidelines
-
-### Adding New Components
-
-1. **Create CLI Interface**
-   ```python
-   # Component CLI wrapper pattern
-   def format_output(data, format_type="json", success=True):
-       response = {
-           "success": success,
-           "timestamp": datetime.now().isoformat(),
-           "data": data
-       }
-       return json.dumps(response, indent=2)
-   ```
-
-2. **Implement Standard Commands**
-   - `status` - Component health check
-   - `list` - List available resources
-   - `help` - Command documentation
-
-3. **Add JSON-based Tests**
-   ```json
-   {
-     "test_name": "status_command",
-     "command": "python3 component/cli.py status",
-     "expected_exit_code": 0,
-     "expected_stdout_pattern": ".*success.*true.*"
-   }
-   ```
-
-4. **Update Documentation**
-   - Component CLAUDE.md
-   - Integration guide
-   - CLI reference
-
-### Integration Patterns
-
-```python
-# Standard component communication
-import subprocess
-import json
-
-def call_component(component_path, command, **kwargs):
-    cmd = ['python3', component_path, command]
-    for key, value in kwargs.items():
-        cmd.extend([f'--{key}', str(value)])
-    cmd.extend(['--format', 'json'])
-
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    return json.loads(result.stdout)
-```
+### 4. Documentation Generation
+- Auto-generate documentation from designs
+- Create living documentation that stays in sync
+- Enable AI-powered code assistance
 
 ## 🤝 Contributing
 
 ### Development Workflow
 
 1. **Fork and clone** the repository
-2. **Create feature branch** with descriptive name
-3. **Implement changes** following CLI-first patterns
-4. **Add comprehensive tests** with JSON-based framework
-5. **Update documentation** (CLAUDE.md, integration guides)
-6. **Run full test suite** ensuring 100% pass rate
-7. **Submit pull request** with detailed description
+2. **Create feature branch** for pipeline improvements
+3. **Add tests** for new functionality
+4. **Update documentation** in relevant `CLAUDE.md` files
+5. **Run full test suite** ensuring no regressions
+6. **Submit pull request** with detailed description
 
-### Code Standards
+### Adding New Pipeline Steps
 
-- **Python 3.8+** compatibility
-- **Type hints** for all functions
-- **Docstrings** following Google style
-- **CLI interfaces** with `--format json|table`
-- **JSON output** with standard format
-- **Error handling** with meaningful messages
+1. Create directory in `v2/new-step/`
+2. Add `__init__.py`, `main.py`, `CLAUDE.md`
+3. Implement step with standard input/output interface
+4. Add tests in `v2/tests/`
+5. Update pipeline documentation
 
 ## 📄 License
 
-This project demonstrates CLI-first architecture patterns for RAG systems. See LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-Built to explore CLI-first architectural patterns for RAG (Retrieval-Augmented Generation) systems, focusing on simplicity and maintainability.
+This project demonstrates automated Figma-to-code generation with comprehensive testing and AI assistance. See LICENSE file for details.
 
 ---
 
-**simflo-rag v2** demonstrates how CLI-first architecture can provide effective alternatives for RAG system implementation.
+**SimFlo Figma-to-RAG Pipeline** - Transform designs into production applications with confidence.

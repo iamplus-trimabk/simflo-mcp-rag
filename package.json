@@ -1,0 +1,56 @@
+{
+  "name": "simflo-figma-to-rag-pipeline",
+  "version": "1.0.0",
+  "description": "A comprehensive 9-step pipeline that transforms Figma designs into production-ready applications",
+  "main": "v2/common/utils.js",
+  "scripts": {
+    "test": "python3 -m pytest v2/tests/ -v",
+    "lint": "flake8 v2/ --max-line-length=100",
+    "format": "black v2/",
+    "build": "python3 -m pytest v2/tests/ && npm run lint",
+    "dev": "python3 -m pytest v2/tests/ -v --watch"
+  },
+  "keywords": [
+    "figma",
+    "design-to-code",
+    "react",
+    "component-library",
+    "testing",
+    "rag",
+    "ai",
+    "automation"
+  ],
+  "author": "SimFlo Team",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.0.0",
+    "tailwindcss": "^3.3.0",
+    "playwright": "^1.40.0",
+    "@playwright/test": "^1.40.0",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-toast": "^1.1.5",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "tailwind-merge": "^2.0.0",
+    "lucide-react": "^0.292.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/node": "^20.0.0",
+    "eslint": "^8.50.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "prettier": "^3.0.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "python": ">=3.8.0"
+  }
+}

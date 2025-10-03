@@ -70,13 +70,6 @@ pids
 coverage/
 .nyc_output
 
-# BMAD Framework (optional - remove if you want to version control these)
-.bmad-core/
-.claude/
-
-# Vector database (optional - can be large)
-chroma_db/
-
 # Temporary files
 *.tmp
 *.temp
@@ -93,8 +86,45 @@ playwright/.cache/
 .env.test.local
 .env.production.local
 
-# Content repositories (downloaded via GitHub CLI)
-content/github/
+# Figma Pipeline Specific
+output/
+components/
+pages/
+tests/
+demo/
+rag-bases/
+ai-review/
+screen-specs/
+test-scenarios/
 
-# Large registry files that exceed GitHub size limits
-v2/core/00-rag-registry/registries/microsoft-playwright/
+# Figma credentials
+.figma-token
+
+# AI Model caches
+.vector-cache/
+.embeddings-cache/
+
+# Component library build artifacts
+shadcn-components/
+gluestack-components/
+
+# Design system outputs
+tailwind-config.js
+nativewind-config.js
+
+# Test artifacts
+playwright-test-results/
+e2e-test-results/
+test-screenshots/
+
+# Documentation build
+docs/build/
+docs/.vitepress/dist/
+
+# Pipeline configuration overrides
+pipeline-config.local.json
+config.local.json
+
+# Large generated files
+*.generated.json
+*.large.json
