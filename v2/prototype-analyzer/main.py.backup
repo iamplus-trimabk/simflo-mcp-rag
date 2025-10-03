@@ -9,236 +9,19 @@ Author: SimFlo Pipeline Team
 Version: 1.0.0
 """
 
-try:
-    from common.validation import SchemaValidator
-    from common.schemas import (
-        ComponentCatalog, ComponentInstance, ComponentDefinition,
-        ScreenSet, ScreenSpecification, NavigationRelationship,
-        TestScenario, TestStep, TestAction, TestDataRequirement,
-        PipelineStepResult
-    )
-except ImportError:
-    # Fallback classes for testing without full module structure
-    from dataclasses import dataclass, asdict
-    from typing import List, Dict, Any, Optional
-    from enum import Enum
-
-    class ComponentCategory(Enum):
-        INTERACTIVE = "interactive"
-        FORM = "form"
-        LAYOUT = "layout"
-        NAVIGATION = "navigation"
-        DISPLAY = "display"
-
-    @dataclass
-    class ComponentInstance:
-        id: str
-        name: str
-        component_id: str
-        properties: Dict[str, Any]
-        position: Dict[str, Any]
-        size: Dict[str, Any]
-
-    @dataclass
-    class ComponentDefinition:
-        id: str
-        name: str
-        category: str
-        properties: Dict[str, Any]
-        variants: List[Dict[str, Any]]
-
-    @dataclass
-    class ComponentCatalog:
-        components: List[ComponentDefinition]
-        instances: List[ComponentInstance]
-        metadata: Dict[str, Any]
-
-    @dataclass
-    class NavigationRelationship:
-        from_screen: str
-        to_screen: str
-        trigger: str
-        type: str
-
-    @dataclass
-    class ScreenSpecification:
-        id: str
-        name: str
-        type: str
-        size: Dict[str, Any]
-        components: List[ComponentInstance]
-        navigation: List[NavigationRelationship] = None
-        navigation_flows: List[Dict[str, Any]] = None
-
-        def __post_init__(self):
-            if self.navigation is None:
-                self.navigation = []
-            if self.navigation_flows is None:
-                self.navigation_flows = []
-
-        @property
-        def component_instances(self):
-            """Alias for components field for compatibility."""
-            return self.components
-
-    @dataclass
-    class ScreenSet:
-        screens: List[ScreenSpecification]
-        metadata: Dict[str, Any]
-
-        def get_screen_by_id(self, screen_id: str) -> Optional[ScreenSpecification]:
-            """Get screen by ID."""
-            for screen in self.screens:
-                if screen.id == screen_id:
-                    return screen
-            return None
-
-    @dataclass
-    class TestDataRequirement:
-        data_type: Optional[str] = None
-        value: Optional[Any] = None
-        description: Optional[str] = None
-        is_sensitive: bool = False
-        type: Optional[str] = None
-        data: Optional[Any] = None
-        sensitive: Optional[bool] = None
-
-        def __post_init__(self):
-            if self.data_type is None:
-                self.data_type = "string"
-            if self.value is None:
-                self.value = ""
-            if self.description is None:
-                self.description = "Test data"
-            if self.type is None:
-                self.type = self.data_type
-            if self.data is None:
-                self.data = self.value
-            if self.sensitive is None:
-                self.sensitive = self.is_sensitive
-
-    @dataclass
-    class TestAction:
-        action_type: str
-        target: str
-        value: Optional[str] = None
-        description: Optional[str] = None
-        parameters: Optional[Dict[str, Any]] = None
-        timeout: Optional[int] = None
-
-        def __post_init__(self):
-            if self.parameters is None:
-                self.parameters = {}
-            if self.timeout is None:
-                self.timeout = 5000
-
-    @dataclass
-    class TestStep:
-        id: Optional[str] = None
-        action: Optional[str] = None
-        target: Optional[str] = None
-        expected_result: Optional[str] = None
-        test_data: Optional[Dict[str, Any]] = None
-        step_number: Optional[int] = None
-        description: Optional[str] = None
-        actions: Optional[List[Any]] = None
-        validations: Optional[List[Any]] = None
-        preconditions: Optional[List[str]] = None
-        postconditions: Optional[List[str]] = None
-
-        def __post_init__(self):
-            if self.step_number is None:
-                self.step_number = 1
-            if self.description is None:
-                self.description = ""
-            if self.actions is None:
-                self.actions = []
-            if self.validations is None:
-                self.validations = []
-            if self.preconditions is None:
-                self.preconditions = []
-            if self.postconditions is None:
-                self.postconditions = []
-            if self.id is None:
-                self.id = f"step_{self.step_number}"
-            if self.action is None:
-                self.action = "unknown"
-            if self.target is None:
-                self.target = "unknown"
-            if self.expected_result is None:
-                self.expected_result = "Action completed"
-
-    @dataclass
-    class TestScenario:
-        id: str
-        name: Optional[str] = None
-        description: Optional[str] = None
-        type: Optional[str] = None
-        steps: Optional[List[TestStep]] = None
-        preconditions: Optional[List[str]] = None
-        success_criteria: Optional[List[str]] = None
-        test_data: Optional[Dict[str, Any]] = None
-        category: Optional[str] = None
-        priority: Optional[str] = None
-        tags: Optional[List[str]] = None
-        estimated_duration: Optional[int] = None
-        dependencies: Optional[List[str]] = None
-
-        def __post_init__(self):
-            if self.name is None:
-                self.name = f"Test Scenario {self.id}"
-            if self.description is None:
-                self.description = "Test scenario description"
-            if self.type is None:
-                self.type = "functional"
-            if self.steps is None:
-                self.steps = []
-            if self.preconditions is None:
-                self.preconditions = []
-            if self.success_criteria is None:
-                self.success_criteria = []
-            if self.category is None:
-                self.category = "functional"
-            if self.priority is None:
-                self.priority = "medium"
-            if self.tags is None:
-                self.tags = []
-            if self.estimated_duration is None:
-                self.estimated_duration = 60
-            if self.dependencies is None:
-                self.dependencies = []
-
-    @dataclass
-    class PipelineStepResult:
-        step_name: str
-        success: bool
-        output_files: List[str]
-        metadata: Dict[str, Any]
-        errors: List[str] = None
-
-    class SchemaValidator:
-        @staticmethod
-        def validate_component_catalog(data: Dict[str, Any]) -> bool:
-            return True
-
-        @staticmethod
-        def validate_screen_set(data: Dict[str, Any]) -> bool:
-            return True
-
-        @staticmethod
-        def validate(data: Dict[str, Any], schema_name: str):
-            """Fallback validation method"""
-            class ValidationResult:
-                def __init__(self, is_valid: bool, errors: List[str]):
-                    self.valid = is_valid
-                    self.errors = errors
-            return ValidationResult(True, [])
+from common.validation import SchemaValidator
+from common.schemas import (
+    ComponentCatalog, ComponentInstance, ComponentDefinition,
+    ScreenSet, ScreenSpecification, NavigationRelationship,
+    TestScenario, TestStep, TestAction, TestDataRequirement,
+    PipelineStepResult
+)
 import json
 import logging
 import argparse
 import sys
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Tuple, Optional, Set
 from datetime import datetime
 from dataclasses import dataclass
 from enum import Enum
@@ -325,12 +108,10 @@ class InteractionFlowAnalyzer:
         # Add navigation relationships
         for screen in self.screen_set.screens:
             for nav_flow in screen.navigation_flows:
-                if isinstance(nav_flow, dict):
-                    to_screen_id = nav_flow.get('to_screen_id')
-                    if to_screen_id and to_screen_id != "unknown":
-                        if to_screen_id not in graph:
-                            graph[to_screen_id] = []
-                        graph[screen.id].append(to_screen_id)
+                if nav_flow.to_screen_id and nav_flow.to_screen_id != "unknown":
+                    if nav_flow.to_screen_id not in graph:
+                        graph[nav_flow.to_screen_id] = []
+                    graph[screen.id].append(nav_flow.to_screen_id)
 
         # Add logical navigation flows based on common patterns
         self._add_logical_navigation_flows(graph)
@@ -339,6 +120,7 @@ class InteractionFlowAnalyzer:
 
     def _add_logical_navigation_flows(self, graph: Dict[str, List[str]]):
         """Add logical navigation flows based on screen types and components."""
+        screen_map = {screen.id: screen for screen in self.screen_set.screens}
 
         # Login to Home flow
         if "login_screen" in graph and "home_screen" in graph:
@@ -386,9 +168,7 @@ class InteractionFlowAnalyzer:
 
         return interactions
 
-    def _analyze_interactive_component(
-              self, component: ComponentDefinition
-          ) -> List[Dict[str, Any]]:
+    def _analyze_interactive_component(self, component: ComponentDefinition) -> List[Dict[str, Any]]:
         """Analyze interactive component (buttons, etc.)."""
         interactions = []
 
@@ -483,11 +263,11 @@ class InteractionFlowAnalyzer:
 
         # Find form components on login screen
         email_inputs = [inst for inst in login_screen.component_instances
-                        if "email" in inst.name.lower()]
+                       if "email" in inst.name.lower()]
         password_inputs = [inst for inst in login_screen.component_instances
-                           if "password" in inst.name.lower()]
+                          if "password" in inst.name.lower()]
         login_buttons = [inst for inst in login_screen.component_instances
-                         if "login" in inst.name.lower()]
+                        if "login" in inst.name.lower()]
 
         if not email_inputs or not password_inputs or not login_buttons:
             return None
@@ -534,17 +314,14 @@ class InteractionFlowAnalyzer:
             home_screen = self.screen_set.get_screen_by_id("home_screen")
             if home_screen:
                 task_cards = [inst for inst in home_screen.component_instances
-                              if "task" in inst.name.lower() and "card" in inst.name.lower()]
+                            if "task" in inst.name.lower() and "card" in inst.name.lower()]
 
                 if task_cards:
                     interactions = [
                         {
                             "type": InteractionType.TAP.value,
                             "target": task_cards[0].id,
-                            "description": (
-                                f"Tap on task: "
-                                f"{task_cards[0].properties.get('title', 'Task')}"
-                            ),
+                            "description": f"Tap on task: {task_cards[0].properties.get('title', 'Task')}",
                             "parameters": {}
                         }
                     ]
@@ -598,7 +375,7 @@ class InteractionFlowAnalyzer:
         home_screen = self.screen_set.get_screen_by_id("home_screen")
         if home_screen:
             nav_elements = [inst for inst in home_screen.component_instances
-                            if "navigation" in inst.name.lower()]
+                          if "navigation" in inst.name.lower()]
 
             for nav_element in nav_elements:
                 interactions = [
@@ -632,9 +409,9 @@ class InteractionFlowAnalyzer:
         task_detail_screen = self.screen_set.get_screen_by_id("task_detail_screen")
         if task_detail_screen:
             input_fields = [inst for inst in task_detail_screen.component_instances
-                            if "input" in inst.component_id.lower()]
+                          if "input" in inst.component_id.lower()]
             save_buttons = [inst for inst in task_detail_screen.component_instances
-                            if "save" in inst.name.lower()]
+                          if "save" in inst.name.lower()]
 
             if input_fields and save_buttons:
                 interactions = [
@@ -705,28 +482,21 @@ class TestScenarioGenerator:
 
         for i, interaction in enumerate(flow.interactions, 1):
             step = TestStep(
-                id=f"step_{i}",
-                action=interaction["type"],
-                target=interaction.get('target', 'unknown'),
-                expected_result=interaction.get("expected_outcome", "Action completed"),
                 step_number=i,
                 description=interaction["description"],
                 actions=[
                     TestAction(
                         action_type=interaction["type"],
-                        target={"type": "element",
-                                "selector": f"#{interaction.get('target', 'unknown')}"}
+                        target={"type": "element", "selector": f"#{interaction.get('target', 'unknown')}"}
                         if interaction.get('target') else {"type": "screen"},
                         parameters=interaction.get("parameters", {}),
                         description=interaction["description"],
                         timeout=5000
                     )
                 ],
-                validations=self._create_validations_for_interaction(
-                    interaction, i == len(flow.interactions)),
+                validations=self._create_validations_for_interaction(interaction, i == len(flow.interactions)),
                 preconditions=self._create_preconditions_for_step(flow, i),
-                postconditions=self._create_postconditions_for_step(
-                    interaction, i == len(flow.interactions))
+                postconditions=self._create_postconditions_for_step(interaction, i == len(flow.interactions))
             )
             steps.append(step)
 
@@ -1373,9 +1143,7 @@ class TestScenarioGenerator:
             estimated_duration=45
         )
 
-    def _create_validations_for_interaction(
-              self, interaction: Dict[str, Any], is_final: bool
-          ) -> List[TestAction]:
+    def _create_validations_for_interaction(self, interaction: Dict[str, Any], is_final: bool) -> List[TestAction]:
         """Create validation actions for an interaction."""
         validations = []
 
@@ -1421,9 +1189,7 @@ class TestScenarioGenerator:
 
         return preconditions
 
-    def _create_postconditions_for_step(
-              self, interaction: Dict[str, Any], is_final: bool
-          ) -> List[str]:
+    def _create_postconditions_for_step(self, interaction: Dict[str, Any], is_final: bool) -> List[str]:
         """Create postconditions for a test step."""
         postconditions = []
 
@@ -1481,7 +1247,7 @@ class PrototypeAnalyzer:
         self.end_time = None
 
     def analyze_prototype(self, component_catalog_path: str, screen_set_path: str,
-                          output_dir: str) -> PrototypeAnalysisResult:
+                         output_dir: str) -> PrototypeAnalysisResult:
         """Analyze prototype and generate interaction flows and test scenarios."""
         self.start_time = datetime.now()
         logger.info(f"Starting prototype analysis for component catalog: {component_catalog_path}")
@@ -1583,41 +1349,7 @@ class PrototypeAnalyzer:
             else:
                 logger.warning(f"Component catalog validation warnings: {validation_result.errors}")
 
-        # Extract relevant fields for fallback dataclass
-        components_data = data.get('components', [])
-        instances_data = data.get('instances', [])
-        metadata = data.get('metadata', {})
-
-        # Convert component data
-        components = []
-        for comp_data in components_data:
-            component = ComponentDefinition(
-                id=comp_data.get('id', ''),
-                name=comp_data.get('name', ''),
-                category=comp_data.get('category', ''),
-                properties=comp_data.get('properties', {}),
-                variants=comp_data.get('variants', [])
-            )
-            components.append(component)
-
-        # Convert instance data
-        instances = []
-        for inst_data in instances_data:
-            instance = ComponentInstance(
-                id=inst_data.get('id', ''),
-                name=inst_data.get('name', ''),
-                component_id=inst_data.get('component_id', ''),
-                properties=inst_data.get('properties', {}),
-                position=inst_data.get('position', {}),
-                size=inst_data.get('size', {})
-            )
-            instances.append(instance)
-
-        return ComponentCatalog(
-            components=components,
-            instances=instances,
-            metadata=metadata
-        )
+        return ComponentCatalog(**data)
 
     def _load_screen_set(self, file_path: str) -> ScreenSet:
         """Load screen set from JSON file."""
@@ -1638,52 +1370,7 @@ class PrototypeAnalyzer:
             else:
                 logger.warning(f"Screen set validation warnings: {validation_result.errors}")
 
-        # Extract relevant fields for fallback dataclass
-        screens_data = data.get('screens', [])
-        metadata = data.get('metadata', {})
-
-        # Convert screen data
-        screens = []
-        for screen_data in screens_data:
-            # Convert component instances
-            components = []
-            for comp_data in screen_data.get('components', []):
-                component = ComponentInstance(
-                    id=comp_data.get('id', ''),
-                    name=comp_data.get('name', ''),
-                    component_id=comp_data.get('component_id', ''),
-                    properties=comp_data.get('properties', {}),
-                    position=comp_data.get('position', {}),
-                    size=comp_data.get('size', {})
-                )
-                components.append(component)
-
-            # Convert navigation relationships
-            navigation = []
-            for nav_data in screen_data.get('navigation', []):
-                nav_relation = NavigationRelationship(
-                    from_screen=nav_data.get('from_screen', ''),
-                    to_screen=nav_data.get('to_screen', ''),
-                    trigger=nav_data.get('trigger', ''),
-                    type=nav_data.get('type', '')
-                )
-                navigation.append(nav_relation)
-
-            screen = ScreenSpecification(
-                id=screen_data.get('id', ''),
-                name=screen_data.get('name', ''),
-                type=screen_data.get('type', ''),
-                size=screen_data.get('size', {}),
-                components=components,
-                navigation=navigation,
-                navigation_flows=screen_data.get('navigation_flows', [])
-            )
-            screens.append(screen)
-
-        return ScreenSet(
-            screens=screens,
-            metadata=metadata
-        )
+        return ScreenSet(**data)
 
     def _validate_inputs(self, component_catalog: ComponentCatalog, screen_set: ScreenSet):
         """Validate input data consistency."""
@@ -1705,10 +1392,8 @@ class PrototypeAnalyzer:
         screen_ids = {screen.id for screen in screen_set.screens}
         for screen in screen_set.screens:
             for nav_flow in screen.navigation_flows:
-                if isinstance(nav_flow, dict):
-                    to_screen_id = nav_flow.get('to_screen_id')
-                    if to_screen_id and to_screen_id not in screen_ids:
-                        logger.warning(f"Navigation to unknown screen: {to_screen_id}")
+                if nav_flow.to_screen_id and nav_flow.to_screen_id not in screen_ids:
+                    logger.warning(f"Navigation to unknown screen: {nav_flow.to_screen_id}")
 
     def _create_user_journeys_mapping(self, flows: List[InteractionFlow]) -> Dict[str, List[str]]:
         """Create mapping of user journey types to flow IDs."""
@@ -1757,7 +1442,7 @@ class PrototypeAnalyzer:
         test_suite_data = {
             "name": "E2E Test Suite",
             "description": "End-to-end test scenarios generated from prototype analysis",
-            "scenarios": [asdict(scenario) for scenario in result.test_scenarios],
+            "scenarios": [scenario.dict() for scenario in result.test_scenarios],
             "configuration": {
                 "base_url": "http://localhost:3000",
                 "timeout": 30000,
@@ -1936,10 +1621,8 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python v2/prototype-analyzer/main.py --catalog ./output/component-catalog.json \\
-    --screens ./output/screen-set.json --output ./output/
-  python v2/prototype-analyzer/main.py -c component-catalog.json \\
-    -s screen-set.json -o ./output/ --strict --verbose
+  python v2/prototype-analyzer/main.py --catalog ./output/component-catalog.json --screens ./output/screen-set.json --output ./output/
+  python v2/prototype-analyzer/main.py -c component-catalog.json -s screen-set.json -o ./output/ --strict --verbose
         """
     )
 
@@ -2018,15 +1701,15 @@ Examples:
                 logger.warning(f"  - {warning}")
 
         # Report success
-        logger.info(" Prototype analysis completed successfully!")
-        logger.info(f"= Generated {len(result.interaction_flows)} interaction flows")
-        logger.info(f"> Generated {len(result.test_scenarios)} test scenarios")
-        logger.info(f"=  Created navigation graph with {len(result.navigation_graph)} screens")
-        logger.info(f"  Processing time: {result.processing_time:.2f} seconds")
+        logger.info(" Prototype analysis completed successfully!")
+        logger.info(f"=Ê Generated {len(result.interaction_flows)} interaction flows")
+        logger.info(f">ê Generated {len(result.test_scenarios)} test scenarios")
+        logger.info(f"=ú  Created navigation graph with {len(result.navigation_graph)} screens")
+        logger.info(f"ñ  Processing time: {result.processing_time:.2f} seconds")
 
         # Show summary by user journey type
         if result.user_journeys:
-            logger.info("User journeys by type:")
+            logger.info("=Ë User journeys by type:")
             for journey_type, flow_ids in result.user_journeys.items():
                 logger.info(f"  - {journey_type}: {len(flow_ids)} flows")
 
