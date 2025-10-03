@@ -1,0 +1,34 @@
+{
+  "generation_info": {
+    "timestamp": "2025-10-04T02:10:17.494091",
+    "page_type": "react_page",
+    "routing_library": "react_router",
+    "state_management": "react_context",
+    "config": {
+      "include_typescript": true,
+      "include_responsive": true,
+      "include_error_boundaries": true,
+      "include_loading_states": true,
+      "include_accessibility": true
+    }
+  },
+  "processing_stats": {
+    "screens_processed": 3,
+    "pages_generated": 3,
+    "hooks_generated": 3,
+    "contexts_generated": 1,
+    "routes_generated": 2,
+    "error_boundaries_generated": 1,
+    "total_files_created": 19,
+    "navigation_flows_processed": 14,
+    "component_instances_processed": 44,
+    "forms_processed": 2,
+    "responsive_layouts": 0
+  },
+  "screens_summary": {
+    "total": 3,
+    "navigation_flows": 14,
+    "component_instances": 44,
+    "forms_detected": 2
+  }
+}
