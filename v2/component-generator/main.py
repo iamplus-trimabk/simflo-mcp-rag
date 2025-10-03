@@ -29,6 +29,10 @@ current_dir = Path(__file__).parent
 v2_dir = current_dir.parent
 sys.path.insert(0, str(v2_dir))
 
+# Also add the project root to path
+project_root = v2_dir.parent
+sys.path.insert(0, str(project_root))
+
 
 # Configure logging
 logging.basicConfig(
@@ -147,7 +151,7 @@ class ComponentGenerator:
 
         try:
             self.design_tokens = validate_and_load(Path(tokens_path), DesignTokenSet)
-            logger.info(f"Successfully loaded design tokens")
+            logger.info("Successfully loaded design tokens")
         except FileNotFoundError:
             raise CustomValidationError(f"Design tokens file not found: {tokens_path}")
         except json.JSONDecodeError as e:
@@ -287,7 +291,8 @@ class ComponentGenerator:
 
     def _generate_inline_interface(self, component: ComponentDefinition) -> str:
         """Generate TypeScript interface inline in component file."""
-        interface_name = f"{component.name}Props"
+        valid_name = self._get_valid_typescript_identifier(component.name)
+        interface_name = f"{valid_name}Props"
 
         # Base interface properties
         properties = []
@@ -313,29 +318,54 @@ class ComponentGenerator:
     def _generate_component_implementation(self, component: ComponentDefinition) -> str:
         """Generate the main component implementation."""
         component_name = component.name
+        valid_name = self._get_valid_typescript_identifier(component.name)
 
         # Function signature
         signature = f"const {component_name} = React.forwardRef<"
 
         # Determine ref type based on component category
         ref_type = self._get_ref_type(component)
-        signature += f"{ref_type}, {component_name}Props>"
+        signature += f"{ref_type}, {valid_name}Props>"
 
-        signature += f">(({component_name}Props) => {{"
+        # Get destructured props for the function signature
+        props_destructuring = self._get_props_destructuring_list(component)
+        signature += f">(({props_destructuring}) => {{"
 
         # Component body
         body = self._generate_component_body(component)
 
         return f"{signature}\n{body}\n}});\n\n"
 
+    def _get_props_destructuring_list(self, component: ComponentDefinition) -> str:
+        """Get the list of props to destructure in the function signature."""
+        props = []
+
+        # Common props
+        props.extend([
+            "className",
+            "children"
+        ])
+
+        # Component-specific props with defaults
+        for prop in component.properties:
+            if prop.default_value is not None:
+                props.append(f"{prop.name} = {self._format_default_value(prop)}")
+            else:
+                props.append(prop.name)
+
+        # Add accessibility attributes
+        if self.config.include_accessibility:
+            props.extend([
+                "ariaLabel",
+                "ariaLabelledby",
+                "ariaDescribedby"
+            ])
+
+        return ", ".join(props)
+
     def _generate_component_body(self, component: ComponentDefinition) -> str:
         """Generate the component body implementation."""
         lines = []
-
-        # Destructure props
-        props_destructuring = self._generate_props_destructuring(component)
-        if props_destructuring:
-            lines.append(props_destructuring)
 
         # Generate component variants (CVA for shadcn)
         if self.config.library == ComponentLibrary.SHADCN and component.variants:
@@ -376,6 +406,14 @@ class ComponentGenerator:
             else:
                 props.append(prop.name)
 
+        # Add accessibility attributes
+        if self.config.include_accessibility:
+            props.extend([
+                "ariaLabel",
+                "ariaLabelledby",
+                "ariaDescribedby"
+            ])
+
         return f"const {{{', '.join(props)}}} = props;"
 
     def _generate_cva_definition(self, component: ComponentDefinition) -> str:
@@ -394,7 +432,8 @@ class ComponentGenerator:
         if not variant_configs:
             return ""
 
-        cva_name = f"{component.name.lower()}Variants"
+        valid_name = self._get_valid_typescript_identifier(component.name)
+        cva_name = f"{valid_name.lower()}Variants"
         return (
             f"const {cva_name} = cva(\n"
             f"  '{base_classes}',\n"
@@ -474,10 +513,11 @@ class ComponentGenerator:
 
         # Dynamic classes from variants
         if self.config.library == ComponentLibrary.SHADCN and component.variants:
-            class_names.append(f"{component.name.lower()}Variants({{")
-            variant_names = [v.name for v in component.variants]
-            class_names.append(", ".join(variant_names))
-            class_names.append("})")
+            valid_name = self._get_valid_typescript_identifier(component.name)
+            variant_entries = []
+            for variant in component.variants:
+                variant_entries.append(f"{variant.name}: {variant.name}")
+            class_names.append(f"{valid_name.lower()}Variants({{{', '.join(variant_entries)}}})")
 
         # User-provided className
         class_names.append("className")
@@ -544,7 +584,8 @@ class ComponentGenerator:
 
     def _generate_interface_file(self, component: ComponentDefinition) -> str:
         """Generate separate TypeScript interface file."""
-        interface_name = f"{component.name}Props"
+        valid_name = self._get_valid_typescript_identifier(component.name)
+        interface_name = f"{valid_name}Props"
 
         # Imports
         imports = [
@@ -582,7 +623,7 @@ class ComponentGenerator:
 
     def _generate_story_file(self, component: ComponentDefinition) -> str:
         """Generate Storybook story file."""
-        story_name = component.name
+        # story_name = component.name
 
         # Imports
         imports = [
@@ -615,7 +656,7 @@ class ComponentGenerator:
         meta += "\n".join(arg_types) + "\n },\n};"
 
         # Default export
-        default_export = f"export default meta;\n"
+        default_export = "export default meta;\n"
 
         # Template
         template = (
@@ -659,12 +700,12 @@ class ComponentGenerator:
             {
                 "title": f"As a developer, I want to customize the {component.name}",
                 "scenario": f"When I pass different props to the {component.name}",
-                "acceptance": f"The component should render correctly with different configurations"
+                "acceptance": "The component should render correctly with different configurations"
             },
             {
                 "title": f"As an accessibility user, I want the {component.name} to be accessible",
                 "scenario": f"When I use assistive technologies with the {component.name}",
-                "acceptance": f"The component should have proper ARIA attributes and keyboard navigation"
+                "acceptance": "The component should have proper ARIA attributes and keyboard navigation"
             }
         ]
 
@@ -700,6 +741,20 @@ class ComponentGenerator:
         )
 
         return header + "\n\n".join(stories)
+
+    def _get_valid_typescript_identifier(self, name: str) -> str:
+        """Convert a name to a valid TypeScript identifier."""
+        # Remove spaces and special characters, capitalize first letter of each word
+        import re
+        # Replace spaces and special chars with nothing
+        cleaned = re.sub(r'[^a-zA-Z0-9]', '', name)
+        # Ensure it starts with a letter
+        if cleaned and cleaned[0].isdigit():
+            cleaned = f'Component{cleaned}'
+        # Ensure it's not empty
+        if not cleaned:
+            cleaned = 'Component'
+        return cleaned
 
     def _map_property_type(self, prop: ComponentProperty) -> str:
         """Map component property type to TypeScript type."""
@@ -787,7 +842,7 @@ class ComponentGenerator:
             "boolean": "'boolean'",
             "array": "'object'",
             "object": "'object'",
-            "enum": f"'select'" if prop.allowed_values else "'text'"
+            "enum": "'select'" if prop.allowed_values else "'text'"
         }
         return control_mapping.get(prop.type, "'text'")
 
