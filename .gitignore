@@ -95,3 +95,6 @@ playwright/.cache/
 
 # Content repositories (downloaded via GitHub CLI)
 content/github/
+
+# Large registry files that exceed GitHub size limits
+v2/core/00-rag-registry/registries/microsoft-playwright/
