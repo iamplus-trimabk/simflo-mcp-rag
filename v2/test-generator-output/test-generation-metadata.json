@@ -1,0 +1,103 @@
+{
+  "generated_at": "2025-10-04T15:05:20.060769",
+  "config": {
+    "framework": "TestFramework.PLAYWRIGHT",
+    "test_types": [
+      "TestType.E2E",
+      "TestType.INTEGRATION",
+      "TestType.COMPONENT"
+    ],
+    "browsers": [
+      "BrowserType.CHROMIUM",
+      "BrowserType.FIREFOX",
+      "BrowserType.WEBKIT"
+    ],
+    "devices": [
+      "DeviceType.DESKTOP",
+      "DeviceType.MOBILE",
+      "DeviceType.TABLET"
+    ],
+    "output_directory": "test-generator-output/",
+    "tests_directory": "test-generator-output//tests/",
+    "fixtures_directory": "test-generator-output//tests/fixtures/",
+    "utils_directory": "test-generator-output//tests/utils/",
+    "pages_directory": "test-generator-output//tests/pages/",
+    "reports_directory": "test-generator-output//test-results/",
+    "include_visual_testing": true,
+    "include_accessibility_testing": true,
+    "include_mobile_testing": true,
+    "include_performance_testing": false,
+    "include_api_mocking": true,
+    "use_typescript": true,
+    "use_page_object_model": true,
+    "generate_data_driven_tests": true,
+    "generate_error_scenarios": true,
+    "parallel_execution": true,
+    "retry_failed_tests": 2,
+    "timeout": 30000,
+    "screenshot_on_failure": true,
+    "video_on_failure": true,
+    "trace_on_failure": true,
+    "custom_templates": null,
+    "indent_size": 2,
+    "base_url": "http://localhost:3000",
+    "test_environment": "test"
+  },
+  "processing_stats": {
+    "scenarios_processed": 2,
+    "tests_generated": 2,
+    "page_objects_generated": 0,
+    "fixtures_generated": 0,
+    "utilities_generated": 5,
+    "visual_tests_generated": 2,
+    "accessibility_tests_generated": 2,
+    "mobile_tests_generated": 2,
+    "total_files_created": 0,
+    "tests_by_category": {
+      "navigation": 1,
+      "authentication": 1
+    },
+    "tests_by_priority": {
+      "high": 1,
+      "critical": 1
+    },
+    "estimated_test_duration": 75
+  },
+  "generated_files": {
+    "playwright.config.ts": "test-generator-output/playwright.config.ts",
+    "tsconfig.json": "test-generator-output/tsconfig.json",
+    "BasePage.ts": "test-generator-output/tests/pages/BasePage.ts",
+    "users.json": "test-generator-output/tests/fixtures/users.json",
+    "endpoints.json": "test-generator-output/tests/fixtures/endpoints.json",
+    "responses.json": "test-generator-output/tests/fixtures/responses.json",
+    "testHelpers.ts": "test-generator-output/tests/utils/testHelpers.ts",
+    "apiMocks.ts": "test-generator-output/tests/utils/apiMocks.ts",
+    "accessibility.ts": "test-generator-output/tests/utils/accessibility.ts",
+    "visualTesting.ts": "test-generator-output/tests/utils/visualTesting.ts",
+    "dataGenerator.ts": "test-generator-output/tests/utils/dataGenerator.ts",
+    "dashboard_navigation.spec.ts": "test-generator-output/tests/dashboard_navigation.spec.ts",
+    "dashboard_navigation-visual.spec.ts": "test-generator-output/tests/dashboard_navigation-visual.spec.ts",
+    "dashboard_navigation-accessibility.spec.ts": "test-generator-output/tests/dashboard_navigation-accessibility.spec.ts",
+    "dashboard_navigation-mobile.spec.ts": "test-generator-output/tests/dashboard_navigation-mobile.spec.ts",
+    "user_authentication_flow.spec.ts": "test-generator-output/tests/user_authentication_flow.spec.ts",
+    "user_authentication_flow-visual.spec.ts": "test-generator-output/tests/user_authentication_flow-visual.spec.ts",
+    "user_authentication_flow-accessibility.spec.ts": "test-generator-output/tests/user_authentication_flow-accessibility.spec.ts",
+    "user_authentication_flow-mobile.spec.ts": "test-generator-output/tests/user_authentication_flow-mobile.spec.ts",
+    "package-scripts.json": "test-generator-output/package-scripts.json",
+    ".github/workflows/tests.yml": "test-generator-output/.github/workflows/tests.yml",
+    "report-config.json": "test-generator-output/report-config.json"
+  },
+  "test_suite_info": {
+    "name": "Generated Test Suite",
+    "description": "Test scenarios generated from prototype analyzer",
+    "scenario_count": 2,
+    "categories": [
+      "navigation",
+      "authentication"
+    ],
+    "priorities": [
+      "high",
+      "critical"
+    ]
+  }
+}

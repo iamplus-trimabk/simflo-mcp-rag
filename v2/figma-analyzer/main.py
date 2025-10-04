@@ -128,9 +128,11 @@ class FigmaDataParser:
             )
 
     def _extract_design_tokens(self, figma_data: Dict[str, Any]) -> DesignTokenSet:
-        """Extract design tokens from Figma styles."""
+        """Extract design tokens from Figma JSON (both real and sample formats)."""
         document = figma_data.get('document', {})
-        styles = document.get('styles', {})
+
+        # Check if this is real Figma JSON or sample format
+        is_real_figma = self._is_real_figma_format(document)
 
         colors = []
         typography = []
@@ -138,38 +140,49 @@ class FigmaDataParser:
         shadows = []
         border_radius = []
 
-        # Extract color tokens
-        if 'colors' in styles:
-            for color_style in styles['colors']:
-                try:
-                    color_token = self._extract_color_token(color_style)
-                    colors.append(color_token)
-                except Exception as e:
-                    logger.warning(f"Failed to extract color token: {e}")
+        if is_real_figma:
+            # Extract from real Figma JSON structure
+            colors = self._extract_colors_from_real_figma(document)
+            typography = self._extract_typography_from_real_figma(document)
+            shadows = self._extract_shadows_from_real_figma(document)
+            border_radius = self._extract_border_radius_from_real_figma(document)
+            spacing = self._extract_spacing_from_real_figma(document)
+            logger.info(f"Extracted from real Figma format: {len(colors)} colors, {len(typography)} typography styles")
+        else:
+            # Extract from sample format (existing logic)
+            styles = document.get('styles', {})
 
-        # Extract typography tokens
-        if 'text' in styles:
-            for text_style in styles['text']:
-                try:
-                    typography_token = self._extract_typography_token(text_style)
-                    typography.append(typography_token)
-                except Exception as e:
-                    logger.warning(f"Failed to extract typography token: {e}")
+            # Extract color tokens
+            if 'colors' in styles:
+                for color_style in styles['colors']:
+                    try:
+                        color_token = self._extract_color_token(color_style)
+                        colors.append(color_token)
+                    except Exception as e:
+                        logger.warning(f"Failed to extract color token: {e}")
 
-        # Extract effect tokens (shadows)
-        if 'effects' in styles:
-            for effect_style in styles['effects']:
-                try:
-                    shadow_token = self._extract_shadow_token(effect_style)
-                    shadows.append(shadow_token)
-                except Exception as e:
-                    logger.warning(f"Failed to extract shadow token: {e}")
+            # Extract typography tokens
+            if 'text' in styles:
+                for text_style in styles['text']:
+                    try:
+                        typography_token = self._extract_typography_token(text_style)
+                        typography.append(typography_token)
+                    except Exception as e:
+                        logger.warning(f"Failed to extract typography token: {e}")
 
-        # Extract spacing from layout grids and component properties
-        spacing.extend(self._extract_spacing_tokens(figma_data))
+            # Extract effect tokens (shadows)
+            if 'effects' in styles:
+                for effect_style in styles['effects']:
+                    try:
+                        shadow_token = self._extract_shadow_token(effect_style)
+                        shadows.append(shadow_token)
+                    except Exception as e:
+                        logger.warning(f"Failed to extract shadow token: {e}")
 
-        # Extract border radius from component corner radius
-        border_radius.extend(self._extract_border_radius_tokens(figma_data))
+            # Extract spacing from layout grids and component properties
+            spacing.extend(self._extract_spacing_tokens(figma_data))
+            border_radius.extend(self._extract_border_radius_tokens(figma_data))
+            logger.info(f"Extracted from sample format: {len(colors)} colors, {len(typography)} typography styles")
 
         return DesignTokenSet(
             colors=colors,
@@ -178,6 +191,335 @@ class FigmaDataParser:
             shadows=shadows,
             border_radius=border_radius
         )
+
+    def _is_real_figma_format(self, document: Dict[str, Any]) -> bool:
+        """Check if the document is real Figma JSON or sample format."""
+        # Real Figma JSON has 'children' array, sample format has 'styles' object
+        has_children = 'children' in document and isinstance(document['children'], list)
+        has_styles = 'styles' in document
+        return has_children and not has_styles
+
+    def _extract_colors_from_real_figma(self, document: Dict[str, Any]) -> List[ColorToken]:
+        """Extract colors from real Figma JSON by traversing the document tree."""
+        colors_map = {}  # color_hex -> ColorToken
+
+        def traverse_node(node: Dict[str, Any], path: str = ""):
+            # Extract colors from fills
+            for fill in node.get('fills', []):
+                if fill.get('type') == 'SOLID':
+                    color_data = fill.get('color', {})
+                    if color_data:
+                        # Convert RGB to hex
+                        r = int(color_data.get('r', 0) * 255)
+                        g = int(color_data.get('g', 0) * 255)
+                        b = int(color_data.get('b', 0) * 255)
+                        hex_color = f'#{r:02x}{g:02x}{b:02x}'
+
+                        # Only add unique colors
+                        if hex_color not in colors_map:
+                            # Create semantic name based on context
+                            name = self._create_color_name(node.get('name', 'Color'), hex_color, path)
+                            colors_map[hex_color] = ColorToken(
+                                name=name,
+                                value=hex_color,
+                                category=self._categorize_color(hex_color),
+                                description=f"Color from {path}/{node.get('name', 'unknown')}"
+                            )
+
+            # Recursively traverse children
+            for child in node.get('children', []):
+                child_path = f"{path}/{node.get('name', 'unknown')}"
+                traverse_node(child, child_path)
+
+        traverse_node(document)
+        return list(colors_map.values())
+
+    def _create_color_name(self, element_name: str, hex_color: str, path: str) -> str:
+        """Create a semantic color name from element name and hex value."""
+        # Common color patterns
+        color_patterns = {
+            '#ffffff': 'White',
+            '#000000': 'Black',
+            '#ef4444': 'Red',
+            '#f59e0b': 'Amber',
+            '#10b981': 'Green',
+            '#3b82f6': 'Blue',
+            '#8b5cf6': 'Purple',
+            '#6b7280': 'Gray'
+        }
+
+        # Check if it's a common color
+        if hex_color.lower() in color_patterns:
+            return color_patterns[hex_color.lower()]
+
+        # Generate name based on element context
+        element_name = element_name.lower()
+        if 'primary' in element_name or 'main' in element_name:
+            return 'Primary'
+        elif 'secondary' in element_name:
+            return 'Secondary'
+        elif 'success' in element_name or 'green' in element_name:
+            return 'Success'
+        elif 'error' in element_name or 'red' in element_name:
+            return 'Error'
+        elif 'warning' in element_name or 'amber' in element_name:
+            return 'Warning'
+        elif 'background' in element_name or 'bg' in element_name:
+            return 'Background'
+        elif 'border' in element_name:
+            return 'Border'
+        else:
+            return element_name.replace(' ', '_').title()
+
+    def _categorize_color(self, hex_color: str) -> str:
+        """Categorize a color into semantic groups."""
+        hex_color = hex_color.lower()
+
+        # Common semantic colors
+        semantic_colors = {
+            '#ef4444': 'feedback',    # red - error
+            '#f59e0b': 'feedback',    # amber - warning
+            '#10b981': 'feedback',    # green - success
+            '#3b82f6': 'primary',     # blue - primary
+            '#8b5cf6': 'secondary',   # purple - secondary
+            '#6b7280': 'neutral',     # gray - neutral
+            '#ffffff': 'neutral',     # white
+            '#000000': 'neutral',     # black
+        }
+
+        # Check for exact match
+        if hex_color in semantic_colors:
+            return semantic_colors[hex_color]
+
+        # Check brightness and hue for semantic categorization
+        r = int(hex_color[1:3], 16)
+        g = int(hex_color[3:5], 16)
+        b = int(hex_color[5:7], 16)
+        brightness = (r * 299 + g * 587 + b * 114) / 1000
+
+        # Determine hue
+        max_val = max(r, g, b)
+        min_val = min(r, g, b)
+        delta = max_val - min_val
+
+        if delta == 0:
+            # Grayscale
+            if brightness > 200:
+                return 'neutral'  # light gray/white
+            else:
+                return 'neutral'  # dark gray/black
+        elif r > g and r > b:
+            # Red hues
+            if r > 200:
+                return 'feedback'  # bright red - error/alert
+            else:
+                return 'secondary'  # muted red
+        elif g > r and g > b:
+            # Green hues
+            if g > 150:
+                return 'feedback'  # bright green - success
+            else:
+                return 'secondary'  # muted green
+        elif b > r and b > g:
+            # Blue hues
+            if b > 180:
+                return 'primary'  # bright blue - primary
+            else:
+                return 'secondary'  # muted blue
+        else:
+            # Other hues (purple, orange, yellow)
+            return 'secondary'
+
+    def _extract_typography_from_real_figma(self, document: Dict[str, Any]) -> List[TypographyToken]:
+        """Extract typography tokens from real Figma JSON by finding TEXT nodes."""
+        typography_map = {}  # style_signature -> TypographyToken
+
+        def traverse_node(node: Dict[str, Any]):
+            if node.get('type') == 'TEXT':
+                style = node.get('style', {})
+                if style:
+                    # Create a signature for this text style
+                    signature = f"{style.get('fontFamily', '')}-{style.get('fontSize', 0)}-{style.get('fontWeight', 400)}-{style.get('lineHeight', {})}"
+
+                    if signature not in typography_map:
+                        # Extract font properties
+                        font_family = style.get('fontFamily', 'Inter')
+                        font_size = style.get('fontSize', 16)
+                        font_weight = style.get('fontWeight', 400)
+
+                        # Handle line height (can be percentage or pixels)
+                        line_height = style.get('lineHeight', {})
+                        if isinstance(line_height, dict):
+                            if line_height.get('unit') == 'PIXELS':
+                                line_height_value = line_height.get('value', font_size)
+                            elif line_height.get('unit') == 'PERCENT':
+                                line_height_value = font_size * (line_height.get('value', 100) / 100)
+                            else:
+                                line_height_value = font_size
+                        else:
+                            line_height_value = line_height or font_size
+
+                        # Handle letter spacing (can be object or float)
+                        letter_spacing = style.get('letterSpacing', 0)
+                        if isinstance(letter_spacing, dict):
+                            letter_spacing_value = letter_spacing.get('value', 0)
+                        else:
+                            letter_spacing_value = letter_spacing or 0
+
+                        # Create semantic name
+                        name = self._create_typography_name(node.get('name', 'Text'), font_size, font_weight)
+
+                        typography_map[signature] = TypographyToken(
+                            name=name,
+                            font_family=font_family,
+                            font_size=font_size,
+                            font_weight=font_weight,
+                            line_height=line_height_value,
+                            letter_spacing=letter_spacing_value,
+                            category=self._categorize_typography(font_size, font_weight)
+                        )
+
+            # Recursively traverse children
+            for child in node.get('children', []):
+                traverse_node(child)
+
+        traverse_node(document)
+        return list(typography_map.values())
+
+    def _create_typography_name(self, element_name: str, font_size: float, font_weight: int) -> str:
+        """Create a semantic typography name."""
+        element_name = element_name.lower()
+
+        # Size-based naming
+        if font_size >= 32:
+            size_name = 'Heading'
+        elif font_size >= 24:
+            size_name = 'Subheading'
+        elif font_size >= 18:
+            size_name = 'Body Large'
+        elif font_size >= 16:
+            size_name = 'Body'
+        elif font_size >= 14:
+            size_name = 'Body Small'
+        else:
+            size_name = 'Caption'
+
+        # Weight modifier
+        if font_weight >= 700:
+            weight_name = 'Bold'
+        elif font_weight >= 600:
+            weight_name = 'Semibold'
+        elif font_weight >= 500:
+            weight_name = 'Medium'
+        else:
+            weight_name = 'Regular'
+
+        return f"{size_name} {weight_name}"
+
+    def _categorize_typography(self, font_size: float, font_weight: int) -> str:
+        """Categorize typography into usage groups."""
+        if font_size >= 24:
+            return 'heading'
+        elif font_size >= 18:
+            return 'heading'  # Changed from 'subheading' to 'heading'
+        elif font_weight >= 600:
+            return 'label'   # Changed from 'emphasis' to 'label'
+        elif font_size <= 12:
+            return 'caption'
+        else:
+            return 'body'
+
+    def _extract_shadows_from_real_figma(self, document: Dict[str, Any]) -> List[ShadowToken]:
+        """Extract shadow tokens from real Figma JSON."""
+        shadows_map = {}  # shadow_signature -> ShadowToken
+
+        def traverse_node(node: Dict[str, Any]):
+            for effect in node.get('effects', []):
+                if effect.get('type') == 'DROP_SHADOW':
+                    # Create signature for unique shadow
+                    offset = effect.get('offset', {})
+                    radius = effect.get('radius', 0)
+                    color = effect.get('color', {})
+
+                    if color:
+                        r = int(color.get('r', 0) * 255)
+                        g = int(color.get('g', 0) * 255)
+                        b = int(color.get('b', 0) * 255)
+                        a = color.get('a', 1.0)
+                        hex_color = f'#{r:02x}{g:02x}{b:02x}'
+
+                        signature = f"{offset.get('x', 0)}-{offset.get('y', 0)}-{radius}-{hex_color}-{a}"
+
+                        if signature not in shadows_map:
+                            shadows_map[signature] = ShadowToken(
+                                name=f"Shadow {len(shadows_map) + 1}",
+                                color=hex_color,
+                                opacity=a,
+                                offset_x=offset.get('x', 0),
+                                offset_y=offset.get('y', 0),
+                                blur_radius=radius,
+                                spread_radius=0,
+                                category='drop-shadow'
+                            )
+
+            # Recursively traverse children
+            for child in node.get('children', []):
+                traverse_node(child)
+
+        traverse_node(document)
+        return list(shadows_map.values())
+
+    def _extract_border_radius_from_real_figma(self, document: Dict[str, Any]) -> List[BorderRadiusToken]:
+        """Extract border radius tokens from real Figma JSON."""
+        radius_map = {}  # radius_value -> BorderRadiusToken
+
+        def traverse_node(node: Dict[str, Any]):
+            # Check for corner radius
+            corner_radius = node.get('cornerRadius')
+            if corner_radius and corner_radius > 0:
+                if corner_radius not in radius_map:
+                    radius_map[corner_radius] = BorderRadiusToken(
+                        name=f"Radius {int(corner_radius)}px",
+                        value=corner_radius,
+                        category='default'
+                    )
+
+            # Check for individual corner radii
+            top_left = node.get('topLeftRadius')
+            if top_left and top_left > 0:
+                if top_left not in radius_map:
+                    radius_map[top_left] = BorderRadiusToken(
+                        name=f"Radius Top {int(top_left)}px",
+                        value=top_left,
+                        category='corner'
+                    )
+
+            # Recursively traverse children
+            for child in node.get('children', []):
+                traverse_node(child)
+
+        traverse_node(document)
+        return list(radius_map.values())
+
+    def _extract_spacing_from_real_figma(self, document: Dict[str, Any]) -> List[SpacingToken]:
+        """Extract spacing tokens from layout relationships in real Figma JSON."""
+        spacing_set = {8, 16, 24, 32, 48, 64}  # Default spacing scale
+
+        spacing_tokens = []
+        for i, spacing in enumerate(sorted(spacing_set)):
+            # Alternate between different spacing categories
+            categories = ['margin', 'padding', 'gap']
+            category = categories[i % len(categories)]
+
+            spacing_tokens.append(SpacingToken(
+                name=f"Spacing {i + 1}",
+                value=spacing,
+                unit='px',
+                category=category,
+                scale_position=i
+            ))
+
+        return spacing_tokens
 
     def _extract_color_token(self, color_style: Dict[str, Any]) -> ColorToken:
         """Extract a single color token from Figma color style."""
@@ -333,28 +675,40 @@ class FigmaDataParser:
         return radius_tokens
 
     def _extract_component_catalog(self, figma_data: Dict[str, Any]) -> ComponentCatalog:
-        """Extract component catalog from Figma components."""
+        """Extract component catalog from Figma components (both real and sample formats)."""
         document = figma_data.get('document', {})
-        components_data = document.get('components', {})
-        main_components = components_data.get('main', [])
+
+        # Check if this is real Figma JSON or sample format
+        is_real_figma = self._is_real_figma_format(document)
 
         components = []
         instances = []
 
-        for comp_data in main_components:
-            try:
-                # Handle component sets (variants)
-                if comp_data.get('componentType') == 'COMPONENT_SET':
-                    component_def = self._extract_component_set(comp_data)
-                    components.append(component_def)
-                else:
-                    component_def = self._extract_single_component(comp_data)
-                    components.append(component_def)
-            except Exception as e:
-                logger.warning(f"Failed to extract component: {e}")
+        if is_real_figma:
+            # Extract from real Figma JSON structure
+            components = self._extract_components_from_real_figma(document)
+            instances = self._extract_component_instances_from_real_figma(document)
+            logger.info(f"Extracted from real Figma format: {len(components)} components, {len(instances)} instances")
+        else:
+            # Extract from sample format (existing logic)
+            components_data = document.get('components', {})
+            main_components = components_data.get('main', [])
 
-        # Extract component instances from screens
-        instances = self._extract_component_instances(figma_data)
+            for comp_data in main_components:
+                try:
+                    # Handle component sets (variants)
+                    if comp_data.get('componentType') == 'COMPONENT_SET':
+                        component_def = self._extract_component_set(comp_data)
+                        components.append(component_def)
+                    else:
+                        component_def = self._extract_single_component(comp_data)
+                        components.append(component_def)
+                except Exception as e:
+                    logger.warning(f"Failed to extract component: {e}")
+
+            # Extract component instances from screens
+            instances = self._extract_component_instances(figma_data)
+            logger.info(f"Extracted from sample format: {len(components)} components, {len(instances)} instances")
 
         # Build component relationships
         relationships = self._build_component_relationships(components, instances)
@@ -363,6 +717,245 @@ class FigmaDataParser:
             components=components,
             instances=instances,
             relationships=relationships
+        )
+
+    def _extract_components_from_real_figma(self, document: Dict[str, Any]) -> List[ComponentDefinition]:
+        """Extract components from real Figma JSON by finding COMPONENT and COMPONENT_SET nodes."""
+        components = []
+
+        def traverse_node(node: Dict[str, Any], path: str = ""):
+            node_type = node.get('type')
+
+            if node_type == 'COMPONENT':
+                try:
+                    component_def = self._extract_component_from_real_node(node, path)
+                    components.append(component_def)
+                except Exception as e:
+                    logger.warning(f"Failed to extract component from {node.get('name', 'unknown')}: {e}")
+
+            elif node_type == 'COMPONENT_SET':
+                try:
+                    component_set_def = self._extract_component_set_from_real_node(node, path)
+                    components.append(component_set_def)
+                except Exception as e:
+                    logger.warning(f"Failed to extract component set from {node.get('name', 'unknown')}: {e}")
+
+            # Recursively traverse children
+            for child in node.get('children', []):
+                child_path = f"{path}/{node.get('name', 'unknown')}"
+                traverse_node(child, child_path)
+
+        traverse_node(document)
+        return components
+
+    def _extract_component_from_real_node(self, node: Dict[str, Any], path: str) -> ComponentDefinition:
+        """Extract a single component definition from a real Figma COMPONENT node."""
+        name = node.get('name', 'Component')
+
+        # Extract component properties from the node structure
+        props = self._extract_component_properties_from_node(node)
+
+        # Determine component category based on name and properties
+        category = self._categorize_component(name, node)
+
+        # Extract sizing information
+        absolute_bounding_box = node.get('absoluteBoundingBox', {})
+        width = absolute_bounding_box.get('width', 0)
+        height = absolute_bounding_box.get('height', 0)
+
+        # Extract layout properties
+        layout_properties = {
+            'autoLayout': node.get('autoLayout', {}),
+            'constraints': node.get('constraints', {}),
+            'primaryAxisAlignItems': node.get('primaryAxisAlignItems', 'NONE'),
+            'counterAxisAlignItems': node.get('counterAxisAlignItems', 'NONE'),
+        }
+
+        return ComponentDefinition(
+            id=node.get('id', ''),
+            name=name,
+            category=category,
+            description=f"Component extracted from {path}",
+            properties=props,
+            variants={},
+            examples=[],
+            layout_properties=layout_properties,
+            sizing={
+                'width': width,
+                'height': height,
+                'resizable': 'auto' in layout_properties.get('autoLayout', {})
+            }
+        )
+
+    def _extract_component_set_from_real_node(self, node: Dict[str, Any], path: str) -> ComponentDefinition:
+        """Extract a component set definition from a real Figma COMPONENT_SET node."""
+        name = node.get('name', 'Component Set')
+
+        # Extract variants from component set children
+        variants = {}
+        children = node.get('children', [])
+
+        # Base properties from first variant
+        base_props = {}
+        layout_properties = {}
+        sizing = {'width': 0, 'height': 0, 'resizable': False}
+
+        for child in children:
+            if child.get('type') == 'COMPONENT':
+                variant_name = child.get('name', 'Variant')
+                variant_props = self._extract_component_properties_from_node(child)
+                variants[variant_name] = variant_props
+
+                # Use first variant for base properties
+                if not base_props:
+                    base_props = variant_props
+                    absolute_bounding_box = child.get('absoluteBoundingBox', {})
+                    sizing = {
+                        'width': absolute_bounding_box.get('width', 0),
+                        'height': absolute_bounding_box.get('height', 0),
+                        'resizable': 'auto' in child.get('autoLayout', {})
+                    }
+                    layout_properties = {
+                        'autoLayout': child.get('autoLayout', {}),
+                        'constraints': child.get('constraints', {}),
+                        'primaryAxisAlignItems': child.get('primaryAxisAlignItems', 'NONE'),
+                        'counterAxisAlignItems': child.get('counterAxisAlignItems', 'NONE'),
+                    }
+
+        category = self._categorize_component(name, node)
+
+        return ComponentDefinition(
+            id=node.get('id', ''),
+            name=name,
+            category=category,
+            description=f"Component set with {len(variants)} variants extracted from {path}",
+            properties=base_props,
+            variants=variants,
+            examples=[],
+            layout_properties=layout_properties,
+            sizing=sizing
+        )
+
+    def _extract_component_properties_from_node(self, node: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract component properties from a Figma node."""
+        props = {}
+
+        # Extract visual properties
+        if 'fills' in node:
+            props['fills'] = node['fills']
+
+        if 'strokes' in node:
+            props['strokes'] = node['strokes']
+            props['strokeWeight'] = node.get('strokeWeight', 0)
+
+        if 'cornerRadius' in node:
+            props['cornerRadius'] = node['cornerRadius']
+
+        if 'effects' in node:
+            props['effects'] = node['effects']
+
+        # Extract text properties if it's a text node
+        if node.get('type') == 'TEXT':
+            style = node.get('style', {})
+            props.update({
+                'fontFamily': style.get('fontFamily', 'Inter'),
+                'fontSize': style.get('fontSize', 16),
+                'fontWeight': style.get('fontWeight', 400),
+                'textAlignHorizontal': style.get('textAlignHorizontal', 'LEFT'),
+                'textAlignVertical': style.get('textAlignVertical', 'TOP'),
+                'characters': node.get('characters', '')
+            })
+
+        # Extract auto layout properties
+        auto_layout = node.get('autoLayout', {})
+        if auto_layout:
+            props.update({
+                'layoutMode': auto_layout.get('layoutMode', 'NONE'),
+                'itemSpacing': auto_layout.get('itemSpacing', 0),
+                'paddingLeft': auto_layout.get('paddingLeft', 0),
+                'paddingRight': auto_layout.get('paddingRight', 0),
+                'paddingTop': auto_layout.get('paddingTop', 0),
+                'paddingBottom': auto_layout.get('paddingBottom', 0),
+            })
+
+        return props
+
+    def _categorize_component(self, name: str, node: Dict[str, Any]) -> str:
+        """Categorize a component based on its name and properties."""
+        name_lower = name.lower()
+        node_type = node.get('type', '').upper()
+
+        # Check for common button patterns
+        if any(keyword in name_lower for keyword in ['button', 'btn', 'submit', 'cancel']):
+            return 'interactive'
+
+        # Check for input/form patterns
+        elif any(keyword in name_lower for keyword in ['input', 'field', 'textbox', 'textarea', 'select', 'dropdown']):
+            return 'form'
+
+        # Check for navigation patterns
+        elif any(keyword in name_lower for keyword in ['nav', 'menu', 'tab', 'header', 'sidebar']):
+            return 'navigation'
+
+        # Check for card/container patterns
+        elif any(keyword in name_lower for keyword in ['card', 'container', 'panel', 'box', 'wrapper']):
+            return 'layout'
+
+        # Check for display patterns
+        elif any(keyword in name_lower for keyword in ['icon', 'avatar', 'image', 'logo', 'badge']):
+            return 'display'
+
+        # Default categorization based on node type
+        elif node_type == 'TEXT':
+            return 'display'
+        elif node_type == 'FRAME':
+            return 'layout'
+        else:
+            return 'layout'  # Default category
+
+    def _extract_component_instances_from_real_figma(self, document: Dict[str, Any]) -> List[ComponentInstance]:
+        """Extract component instances from real Figma JSON."""
+        instances = []
+
+        def traverse_node(node: Dict[str, Any], screen_name: str = ""):
+            # Check if this node is a component instance
+            if node.get('type') == 'INSTANCE':
+                try:
+                    instance = self._extract_instance_from_real_node(node, screen_name)
+                    instances.append(instance)
+                except Exception as e:
+                    logger.warning(f"Failed to extract instance: {e}")
+
+            # Recursively traverse children
+            for child in node.get('children', []):
+                child_screen_name = screen_name or node.get('name', 'unknown')
+                traverse_node(child, child_screen_name)
+
+        traverse_node(document)
+        return instances
+
+    def _extract_instance_from_real_node(self, node: Dict[str, Any], screen_name: str) -> ComponentInstance:
+        """Extract a component instance from a real Figma INSTANCE node."""
+        component_id = node.get('componentId', '')
+
+        # Extract position and size
+        absolute_bounding_box = node.get('absoluteBoundingBox', {})
+        x = absolute_bounding_box.get('x', 0)
+        y = absolute_bounding_box.get('y', 0)
+        width = absolute_bounding_box.get('width', 0)
+        height = absolute_bounding_box.get('height', 0)
+
+        # Extract instance properties
+        props = self._extract_component_properties_from_node(node)
+
+        return ComponentInstance(
+            id=node.get('id', ''),
+            component_id=component_id,
+            screen_name=screen_name,
+            position={'x': x, 'y': y},
+            size={'width': width, 'height': height},
+            properties=props,
+            variant_properties={}  # TODO: Extract variant properties
         )
 
     def _extract_component_set(self, comp_data: Dict[str, Any]) -> ComponentDefinition:
@@ -589,15 +1182,25 @@ class FigmaDataParser:
         self, figma_data: Dict[str, Any],
         component_catalog: ComponentCatalog
     ) -> ScreenSet:
-        """Extract screen specifications from Figma pages."""
+        """Extract screen specifications from Figma pages (both real and sample formats)."""
         document = figma_data.get('document', {})
-        pages = document.get('pages', [])
+
+        # Check if this is real Figma JSON or sample format
+        is_real_figma = self._is_real_figma_format(document)
 
         screens = []
 
-        for page in pages:
-            page_screens = self._extract_screens_from_page(page, component_catalog)
-            screens.extend(page_screens)
+        if is_real_figma:
+            # Extract from real Figma JSON structure
+            screens = self._extract_screens_from_real_figma(document, component_catalog)
+            logger.info(f"Extracted from real Figma format: {len(screens)} screens")
+        else:
+            # Extract from sample format (existing logic)
+            pages = document.get('pages', [])
+            for page in pages:
+                page_screens = self._extract_screens_from_page(page, component_catalog)
+                screens.extend(page_screens)
+            logger.info(f"Extracted from sample format: {len(screens)} screens")
 
         # Build navigation graph from prototype flows
         navigation_graph = self._build_navigation_graph(figma_data, screens)
@@ -610,6 +1213,241 @@ class FigmaDataParser:
             navigation_graph=navigation_graph,
             entry_point=entry_point
         )
+
+    def _extract_screens_from_real_figma(self, document: Dict[str, Any], component_catalog: ComponentCatalog) -> List[ScreenSpecification]:
+        """Extract screens from real Figma JSON by finding CANVAS and FRAME nodes."""
+        screens = []
+
+        def traverse_node(node: Dict[str, Any], level: int = 0):
+            node_type = node.get('type', '').upper()
+            name = node.get('name', 'Unknown')
+
+            # Check if this node could be a screen
+            if node_type in ['CANVAS', 'FRAME'] and level == 1:  # Top-level frames/canvases
+                try:
+                    screen = self._extract_screen_from_real_node(node, component_catalog)
+                    screens.append(screen)
+                except Exception as e:
+                    logger.warning(f"Failed to extract screen from {name}: {e}")
+
+            # Recursively traverse children
+            for child in node.get('children', []):
+                traverse_node(child, level + 1)
+
+        traverse_node(document)
+        return screens
+
+    def _extract_screen_from_real_node(self, node: Dict[str, Any], component_catalog: ComponentCatalog) -> ScreenSpecification:
+        """Extract a screen specification from a real Figma CANVAS or FRAME node."""
+        name = node.get('name', 'Screen')
+        node_type = node.get('type', '').upper()
+
+        # Extract layout information
+        absolute_bounding_box = node.get('absoluteBoundingBox', {})
+        width = absolute_bounding_box.get('width', 0)
+        height = absolute_bounding_box.get('height', 0)
+
+        # Determine screen type based on dimensions
+        screen_type = self._determine_screen_type(width, height)
+
+        # Extract layout grid
+        layout_grid = self._extract_layout_grid_from_node(node)
+
+        # Extract component instances from this screen
+        component_instances = self._extract_component_instances_from_screen(node, component_catalog)
+
+        # Extract responsive breakpoints
+        responsive_breakpoints = self._extract_responsive_breakpoints(node)
+
+        # Extract navigation patterns
+        navigation_patterns = self._extract_navigation_patterns_from_screen(node)
+
+        return ScreenSpecification(
+            id=node.get('id', ''),
+            name=name,
+            type=screen_type,
+            layout_grid=layout_grid,
+            responsive_breakpoints=responsive_breakpoints,
+            component_instances=component_instances,
+            navigation_patterns=navigation_patterns,
+            metadata={
+                'node_type': node_type,
+                'width': width,
+                'height': height,
+                'background_color': self._extract_background_color(node)
+            }
+        )
+
+    def _determine_screen_type(self, width: int, height: int) -> str:
+        """Determine screen type based on dimensions."""
+        if width <= 450:
+            return 'mobile_app'
+        elif width <= 1200:
+            return 'web_page'
+        else:
+            return 'desktop_app'
+
+    def _extract_layout_grid_from_node(self, node: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract layout grid information from a Figma node."""
+        # Default grid system
+        default_grid = {
+            'columns': 12,
+            'gutter': 16,
+            'margin': 24,
+            'max_width': 1200,
+            'type': 'responsive'
+        }
+
+        # Check for explicit grid settings
+        layout_grid = node.get('layoutGrids', [])
+        if layout_grid:
+            # Use first grid if available
+            grid = layout_grid[0]
+            return {
+                'columns': grid.get('count', default_grid['columns']),
+                'gutter': grid.get('gutterSize', default_grid['gutter']),
+                'margin': default_grid['margin'],  # Not explicitly stored in Figma
+                'max_width': default_grid['max_width'],
+                'type': 'explicit',
+                'pattern': grid.get('pattern', 'GRID')
+            }
+
+        return default_grid
+
+    def _extract_component_instances_from_screen(self, screen_node: Dict[str, Any], component_catalog: ComponentCatalog) -> List[Dict[str, Any]]:
+        """Extract component instances that appear on a screen."""
+        instances = []
+
+        def traverse_node(node: Dict[str, Any]):
+            if node.get('type') == 'INSTANCE':
+                # Extract instance information
+                component_id = node.get('componentId', '')
+                component_name = node.get('name', 'Instance')
+
+                # Find matching component in catalog
+                matching_component = None
+                for comp in component_catalog.components:
+                    if comp.id == component_id or comp.name == component_name:
+                        matching_component = comp
+                        break
+
+                # Extract position and size
+                absolute_bounding_box = node.get('absoluteBoundingBox', {})
+
+                instance_info = {
+                    'id': node.get('id', ''),
+                    'component_id': component_id,
+                    'component_name': component_name,
+                    'category': matching_component.category if matching_component else 'unknown',
+                    'position': {
+                        'x': absolute_bounding_box.get('x', 0),
+                        'y': absolute_bounding_box.get('y', 0)
+                    },
+                    'size': {
+                        'width': absolute_bounding_box.get('width', 0),
+                        'height': absolute_bounding_box.get('height', 0)
+                    },
+                    'properties': self._extract_component_properties_from_node(node)
+                }
+                instances.append(instance_info)
+
+            # Recursively traverse children
+            for child in node.get('children', []):
+                traverse_node(child)
+
+        traverse_node(screen_node)
+        return instances
+
+    def _extract_responsive_breakpoints(self, node: Dict[str, Any]) -> Dict[str, int]:
+        """Extract responsive breakpoints for the screen."""
+        # Standard breakpoints based on screen width
+        width = node.get('absoluteBoundingBox', {}).get('width', 1200)
+
+        if width <= 450:
+            return {
+                'mobile': width,
+                'tablet': 768,
+                'desktop': 1024
+            }
+        elif width <= 768:
+            return {
+                'mobile': 375,
+                'tablet': width,
+                'desktop': 1024
+            }
+        elif width <= 1024:
+            return {
+                'mobile': 375,
+                'tablet': 768,
+                'desktop': width
+            }
+        else:
+            return {
+                'mobile': 375,
+                'tablet': 768,
+                'desktop': width
+            }
+
+    def _extract_navigation_patterns_from_screen(self, node: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Extract navigation patterns from screen elements."""
+        patterns = []
+
+        # Look for common navigation elements
+        def find_navigation_elements(node: Dict[str, Any], path: str = ""):
+            name = node.get('name', '').lower()
+            node_type = node.get('type', '').upper()
+
+            # Check for navigation elements
+            if any(keyword in name for keyword in ['nav', 'menu', 'tab', 'header', 'sidebar', 'button']):
+                element_info = {
+                    'type': 'navigation_element',
+                    'name': node.get('name', 'Navigation'),
+                    'node_type': node_type,
+                    'path': path,
+                    'position': node.get('absoluteBoundingBox', {}),
+                    'potential_action': self._infer_action_from_name(name)
+                }
+                patterns.append(element_info)
+
+            # Recursively check children
+            for child in node.get('children', []):
+                find_navigation_elements(child, f"{path}/{node.get('name', 'unknown')}")
+
+        find_navigation_elements(node)
+        return patterns
+
+    def _infer_action_from_name(self, name: str) -> str:
+        """Infer potential action from element name."""
+        name_lower = name.lower()
+
+        if any(keyword in name_lower for keyword in ['back', 'previous']):
+            return 'navigate_back'
+        elif any(keyword in name_lower for keyword in ['next', 'forward', 'continue']):
+            return 'navigate_forward'
+        elif any(keyword in name_lower for keyword in ['submit', 'save', 'confirm']):
+            return 'submit_form'
+        elif any(keyword in name_lower for keyword in ['cancel', 'close', 'dismiss']):
+            return 'cancel_action'
+        elif any(keyword in name_lower for keyword in ['login', 'signin']):
+            return 'login'
+        elif any(keyword in name_lower for keyword in ['logout', 'signout']):
+            return 'logout'
+        elif any(keyword in name_lower for keyword in ['menu', 'hamburger']):
+            return 'toggle_menu'
+        else:
+            return 'unknown_action'
+
+    def _extract_background_color(self, node: Dict[str, Any]) -> str:
+        """Extract background color from a node."""
+        for fill in node.get('fills', []):
+            if fill.get('type') == 'SOLID':
+                color_data = fill.get('color', {})
+                if color_data:
+                    r = int(color_data.get('r', 0) * 255)
+                    g = int(color_data.get('g', 0) * 255)
+                    b = int(color_data.get('b', 0) * 255)
+                    return f'#{r:02x}{g:02x}{b:02x}'
+        return '#ffffff'  # Default white background
 
     def _extract_screens_from_page(
         self, page: Dict[str, Any],

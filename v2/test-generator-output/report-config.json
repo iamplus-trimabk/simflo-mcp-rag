@@ -1,0 +1,41 @@
+{
+  "reporter": [
+    [
+      "html"
+    ],
+    [
+      "json",
+      {
+        "outputFile": "test-results/results.json"
+      }
+    ],
+    [
+      "junit",
+      {
+        "outputFile": "test-results/results.xml"
+      }
+    ],
+    [
+      "line"
+    ]
+  ],
+  "report_config": {
+    "output_folder": "playwright-report",
+    "open_browser": "never",
+    "host": "localhost",
+    "port": 9323
+  },
+  "screenshots": {
+    "mode": "only-on-failure",
+    "path": "test-results/screenshots",
+    "full_page": true
+  },
+  "videos": {
+    "mode": "retain-on-failure",
+    "path": "test-results/videos"
+  },
+  "traces": {
+    "mode": "retain-on-failure",
+    "path": "test-results/traces"
+  }
+}

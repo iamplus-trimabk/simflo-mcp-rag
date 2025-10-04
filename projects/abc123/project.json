@@ -1,0 +1,11 @@
+{
+  "project_id": "abc123",
+  "name": "abc123",
+  "created_at": "2025-10-04T19:45:37Z",
+  "version": "1.0.0",
+  "pipeline": {
+    "status": "failed_at_step_2",
+    "last_run": "2025-10-04T19:49:17Z",
+    "steps_completed": 1
+  }
+}

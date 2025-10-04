@@ -1,0 +1,11 @@
+{
+  "project_id": "login-test",
+  "name": "login-test",
+  "created_at": "2025-10-04T19:58:10Z",
+  "version": "1.0.0",
+  "pipeline": {
+    "status": "failed_at_step_2",
+    "last_run": "2025-10-04T21:26:03Z",
+    "steps_completed": 1
+  }
+}

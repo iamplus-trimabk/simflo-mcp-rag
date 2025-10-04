@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report",
+    "test:visual": "playwright test --grep=Visual",
+    "test:accessibility": "playwright test --grep=Accessibility",
+    "test:mobile": "playwright test --grep=Mobile",
+    "test:update": "playwright test --update-snapshots",
+    "test:install": "playwright install",
+    "test:codegen": "playwright codegen"
+  }
+}

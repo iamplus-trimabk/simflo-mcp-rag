@@ -1,0 +1,313 @@
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.App-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.App-header h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.App-header p {
+  margin: 0;
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+main {
+  flex: 1;
+  padding: 2rem 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #e2e8f0;
+  overflow-x: auto;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  color: #64748b;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab-button:hover {
+  color: #475569;
+  background-color: #f1f5f9;
+}
+
+.tab-button.active {
+  color: #667eea;
+  border-bottom-color: #667eea;
+}
+
+.tab-content {
+  min-height: 400px;
+}
+
+.showcase h2 {
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.showcase p {
+  color: #64748b;
+  margin-bottom: 2rem;
+}
+
+.component-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.component-card {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.component-card h3 {
+  margin: 0 0 1rem 0;
+  color: #1e293b;
+}
+
+.component-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.code-sample {
+  background: #1e293b;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.code-sample h3 {
+  color: #f1f5f9;
+  margin: 0 0 1rem 0;
+}
+
+.code-sample pre {
+  margin: 0;
+  color: #e2e8f0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.pipeline-steps {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.step {
+  display: flex;
+  align-items: start;
+  gap: 1rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+}
+
+.step-number {
+  background: #667eea;
+  color: white;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.step-content h4 {
+  margin: 0 0 0.5rem 0;
+  color: #1e293b;
+}
+
+.step-content p {
+  margin: 0;
+  color: #64748b;
+}
+
+footer {
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  padding: 2rem 0;
+  text-align: center;
+  color: #64748b;
+}
+
+/* Component Styles */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+.btn-primary:hover {
+  background: #5a67d8;
+  border-color: #5a67d8;
+}
+
+.btn-secondary {
+  background: #64748b;
+  color: white;
+  border-color: #64748b;
+}
+
+.btn-secondary:hover {
+  background: #475569;
+  border-color: #475569;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #667eea;
+  border-color: #667eea;
+}
+
+.btn-outline:hover {
+  background: #667eea;
+  color: white;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #64748b;
+  border-color: #e2e8f0;
+}
+
+.btn-ghost:hover {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.card {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.card h4 {
+  margin: 0 0 0.75rem 0;
+  color: #1e293b;
+}
+
+.card p {
+  margin: 0 0 1rem 0;
+  color: #64748b;
+}
+
+.input {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.badge-default {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.badge-success {
+  background: #10b981;
+  color: white;
+}
+
+.badge-warning {
+  background: #f59e0b;
+  color: white;
+}
+
+.badge-error {
+  background: #ef4444;
+  color: white;
+}
+
+.badge-info {
+  background: #3b82f6;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .App-header h1 {
+    font-size: 2rem;
+  }
+
+  .component-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs {
+    overflow-x: auto;
+  }
+}

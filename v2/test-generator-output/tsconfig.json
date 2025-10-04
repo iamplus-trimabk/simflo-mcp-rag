@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": ["node", "playwright"],
+    "esModuleInterop": True,
+    "allowSyntheticDefaultImports": True,
+    "strict": True,
+    "skipLibCheck": True,
+    "forceConsistentCasingInFileNames": True,
+    "resolveJsonModule": True,
+    "isolatedModules": True,
+    "noEmit": True,
+    "declaration": True,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/tests/*": ["./tests/*"],
+      "@/pages/*": ["./tests/pages/*"],
+      "@/fixtures/*": ["./tests/fixtures/*"],
+      "@/utils/*": ["./tests/utils/*"]
+    }
+  },
+  "include": [
+    "tests/**/*",
+    "types/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test-results"
+  ]
+}

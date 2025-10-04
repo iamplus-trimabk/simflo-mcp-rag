@@ -1,0 +1,476 @@
+{
+  "execution_info": {
+    "pipeline_step": "test-runner",
+    "step_number": 7,
+    "executed_at": "2025-10-04T15:05:45.188322",
+    "execution_mode": "simulation",
+    "version": "1.0.0"
+  },
+  "configuration": {
+    "mode": "TestExecutionMode.SIMULATION",
+    "browsers": [
+      "BrowserType.CHROMIUM",
+      "BrowserType.FIREFOX",
+      "BrowserType.WEBKIT"
+    ],
+    "output_directory": "integration-test-output/",
+    "test_directory": "test-generator-output/tests/",
+    "demo_directory": "integration-test-output//demo/",
+    "report_directory": "integration-test-output//test-results/",
+    "screenshots_directory": "integration-test-output//test-results/screenshots/",
+    "videos_directory": "integration-test-output//test-results/videos/",
+    "traces_directory": "integration-test-output//test-results/traces/",
+    "coverage_directory": "integration-test-output//coverage/",
+    "parallel_execution": true,
+    "max_workers": 4,
+    "timeout": 30000,
+    "retry_failed": 2,
+    "screenshot_on_failure": true,
+    "video_on_failure": true,
+    "trace_on_failure": true,
+    "report_formats": [
+      "ReportFormat.HTML",
+      "ReportFormat.JSON"
+    ],
+    "generate_coverage": true,
+    "generate_performance_metrics": true,
+    "include_screenshots_in_report": true,
+    "demo_config": {
+      "title": "SimFlo Application Demo",
+      "description": "Interactive demo of generated components and pages",
+      "theme": "light",
+      "layout": "sidebar",
+      "show_code": true,
+      "show_tests": true,
+      "show_screenshots": true,
+      "interactive_mode": true,
+      "auto_start_demo": false,
+      "demo_port": 8080,
+      "base_url": "http://localhost:8080",
+      "include_playground": true,
+      "include_documentation": true
+    },
+    "generate_demo": true,
+    "simulation_duration_multiplier": 0.1,
+    "simulate_failures": false,
+    "failure_rate": 0.1
+  },
+  "test_suite_results": {
+    "suite_name": "Generated Test Suite",
+    "total_tests": 8,
+    "passed_tests": 8,
+    "failed_tests": 0,
+    "skipped_tests": 0,
+    "timeout_tests": 0,
+    "error_tests": 0,
+    "total_duration": 10.5,
+    "started_at": "2025-10-04 15:05:34.616079",
+    "completed_at": "2025-10-04 15:05:45.186329",
+    "test_results": [
+      {
+        "test_id": "user_authentication_flow-mobile",
+        "test_name": "User_Authentication_Flow Mobile",
+        "status": "TestStatus.PASSED",
+        "duration": 1.5,
+        "error_message": null,
+        "screenshots": [
+          "integration-test-output/test-results/screenshots/user_authentication_flow-mobile-user_authentication_flow-mobile-1759570536.png"
+        ],
+        "video_path": null,
+        "trace_path": null,
+        "browser_type": "chromium",
+        "viewport": [
+          1920,
+          1080
+        ],
+        "started_at": "2025-10-04 15:05:34.616095",
+        "completed_at": "2025-10-04 15:05:36.116569",
+        "retry_count": 0,
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Test step 1",
+            "status": "passed",
+            "duration": 0.5
+          },
+          {
+            "step_number": 2,
+            "description": "Test step 2",
+            "status": "passed",
+            "duration": 0.5
+          },
+          {
+            "step_number": 3,
+            "description": "Test step 3",
+            "status": "passed",
+            "duration": 0.5
+          }
+        ]
+      },
+      {
+        "test_id": "user_authentication_flow-visual",
+        "test_name": "User_Authentication_Flow Visual",
+        "status": "TestStatus.PASSED",
+        "duration": 1.0,
+        "error_message": null,
+        "screenshots": [
+          "integration-test-output/test-results/screenshots/user_authentication_flow-visual-user_authentication_flow-visual-1759570537.png"
+        ],
+        "video_path": null,
+        "trace_path": null,
+        "browser_type": "chromium",
+        "viewport": [
+          1920,
+          1080
+        ],
+        "started_at": "2025-10-04 15:05:36.147907",
+        "completed_at": "2025-10-04 15:05:37.152971",
+        "retry_count": 0,
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Test step 1",
+            "status": "passed",
+            "duration": 0.5
+          },
+          {
+            "step_number": 2,
+            "description": "Test step 2",
+            "status": "passed",
+            "duration": 0.5
+          }
+        ]
+      },
+      {
+        "test_id": "dashboard_navigation",
+        "test_name": "Dashboard_Navigation",
+        "status": "TestStatus.PASSED",
+        "duration": 0.5,
+        "error_message": null,
+        "screenshots": [
+          "integration-test-output/test-results/screenshots/dashboard_navigation-dashboard_navigation-1759570537.png"
+        ],
+        "video_path": null,
+        "trace_path": null,
+        "browser_type": "chromium",
+        "viewport": [
+          1920,
+          1080
+        ],
+        "started_at": "2025-10-04 15:05:37.155778",
+        "completed_at": "2025-10-04 15:05:37.660140",
+        "retry_count": 0,
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Test step 1",
+            "status": "passed",
+            "duration": 0.5
+          }
+        ]
+      },
+      {
+        "test_id": "dashboard_navigation-visual",
+        "test_name": "Dashboard_Navigation Visual",
+        "status": "TestStatus.PASSED",
+        "duration": 1.0,
+        "error_message": null,
+        "screenshots": [
+          "integration-test-output/test-results/screenshots/dashboard_navigation-visual-dashboard_navigation-visual-1759570538.png"
+        ],
+        "video_path": null,
+        "trace_path": null,
+        "browser_type": "chromium",
+        "viewport": [
+          1920,
+          1080
+        ],
+        "started_at": "2025-10-04 15:05:37.661962",
+        "completed_at": "2025-10-04 15:05:38.666998",
+        "retry_count": 0,
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Test step 1",
+            "status": "passed",
+            "duration": 0.5
+          },
+          {
+            "step_number": 2,
+            "description": "Test step 2",
+            "status": "passed",
+            "duration": 0.5
+          }
+        ]
+      },
+      {
+        "test_id": "dashboard_navigation-mobile",
+        "test_name": "Dashboard_Navigation Mobile",
+        "status": "TestStatus.PASSED",
+        "duration": 1.5,
+        "error_message": null,
+        "screenshots": [
+          "integration-test-output/test-results/screenshots/dashboard_navigation-mobile-dashboard_navigation-mobile-1759570540.png"
+        ],
+        "video_path": null,
+        "trace_path": null,
+        "browser_type": "webkit",
+        "viewport": [
+          1920,
+          1080
+        ],
+        "started_at": "2025-10-04 15:05:38.668064",
+        "completed_at": "2025-10-04 15:05:40.173117",
+        "retry_count": 0,
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Test step 1",
+            "status": "passed",
+            "duration": 0.5
+          },
+          {
+            "step_number": 2,
+            "description": "Test step 2",
+            "status": "passed",
+            "duration": 0.5
+          },
+          {
+            "step_number": 3,
+            "description": "Test step 3",
+            "status": "passed",
+            "duration": 0.5
+          }
+        ]
+      },
+      {
+        "test_id": "user_authentication_flow-accessibility",
+        "test_name": "User_Authentication_Flow Accessibility",
+        "status": "TestStatus.PASSED",
+        "duration": 2.0,
+        "error_message": null,
+        "screenshots": [
+          "integration-test-output/test-results/screenshots/user_authentication_flow-accessibility-user_authentication_flow-accessibility-1759570542.png"
+        ],
+        "video_path": null,
+        "trace_path": null,
+        "browser_type": "firefox",
+        "viewport": [
+          1920,
+          1080
+        ],
+        "started_at": "2025-10-04 15:05:40.174900",
+        "completed_at": "2025-10-04 15:05:42.177503",
+        "retry_count": 0,
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Test step 1",
+            "status": "passed",
+            "duration": 0.5
+          },
+          {
+            "step_number": 2,
+            "description": "Test step 2",
+            "status": "passed",
+            "duration": 0.5
+          },
+          {
+            "step_number": 3,
+            "description": "Test step 3",
+            "status": "passed",
+            "duration": 0.5
+          },
+          {
+            "step_number": 4,
+            "description": "Test step 4",
+            "status": "passed",
+            "duration": 0.5
+          }
+        ]
+      },
+      {
+        "test_id": "dashboard_navigation-accessibility",
+        "test_name": "Dashboard_Navigation Accessibility",
+        "status": "TestStatus.PASSED",
+        "duration": 2.0,
+        "error_message": null,
+        "screenshots": [
+          "integration-test-output/test-results/screenshots/dashboard_navigation-accessibility-dashboard_navigation-accessibility-1759570544.png"
+        ],
+        "video_path": null,
+        "trace_path": null,
+        "browser_type": "webkit",
+        "viewport": [
+          1920,
+          1080
+        ],
+        "started_at": "2025-10-04 15:05:42.178471",
+        "completed_at": "2025-10-04 15:05:44.179086",
+        "retry_count": 0,
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Test step 1",
+            "status": "passed",
+            "duration": 0.5
+          },
+          {
+            "step_number": 2,
+            "description": "Test step 2",
+            "status": "passed",
+            "duration": 0.5
+          },
+          {
+            "step_number": 3,
+            "description": "Test step 3",
+            "status": "passed",
+            "duration": 0.5
+          },
+          {
+            "step_number": 4,
+            "description": "Test step 4",
+            "status": "passed",
+            "duration": 0.5
+          }
+        ]
+      },
+      {
+        "test_id": "user_authentication_flow",
+        "test_name": "User_Authentication_Flow",
+        "status": "TestStatus.PASSED",
+        "duration": 1.0,
+        "error_message": null,
+        "screenshots": [
+          "integration-test-output/test-results/screenshots/user_authentication_flow-user_authentication_flow-1759570545.png"
+        ],
+        "video_path": null,
+        "trace_path": null,
+        "browser_type": "webkit",
+        "viewport": [
+          1920,
+          1080
+        ],
+        "started_at": "2025-10-04 15:05:44.181586",
+        "completed_at": "2025-10-04 15:05:45.185677",
+        "retry_count": 0,
+        "steps": [
+          {
+            "step_number": 1,
+            "description": "Test step 1",
+            "status": "passed",
+            "duration": 0.5
+          },
+          {
+            "step_number": 2,
+            "description": "Test step 2",
+            "status": "passed",
+            "duration": 0.5
+          }
+        ]
+      }
+    ],
+    "browser_results": {
+      "chromium": {
+        "passed": 4,
+        "failed": 0,
+        "total": 4
+      },
+      "webkit": {
+        "passed": 3,
+        "failed": 0,
+        "total": 3
+      },
+      "firefox": {
+        "passed": 1,
+        "failed": 0,
+        "total": 1
+      }
+    },
+    "coverage_data": null,
+    "performance_metrics": null
+  },
+  "execution_stats": {
+    "total_tests": 8,
+    "executed_tests": 8,
+    "passed_tests": 8,
+    "failed_tests": 0,
+    "skipped_tests": 0,
+    "timeout_tests": 0,
+    "error_tests": 0,
+    "total_duration": 10.5,
+    "average_test_duration": 1.3125,
+    "browser_results": {
+      "chromium": {
+        "passed": 4,
+        "failed": 0,
+        "total": 4
+      },
+      "webkit": {
+        "passed": 3,
+        "failed": 0,
+        "total": 3
+      },
+      "firefox": {
+        "passed": 1,
+        "failed": 0,
+        "total": 1
+      }
+    },
+    "tests_by_category": {},
+    "tests_by_priority": {},
+    "coverage_generated": true,
+    "demo_generated": true,
+    "reports_generated": [
+      "html",
+      "json",
+      "summary"
+    ]
+  },
+  "generated_files": {
+    "html": "integration-test-output/test-results/report.html",
+    "json": "integration-test-output/test-results/report.json",
+    "summary": "integration-test-output/test-results/summary.md",
+    "index.html": "integration-test-output/demo/index.html",
+    "styles.css": "integration-test-output/demo/styles.css",
+    "app.js": "integration-test-output/demo/app.js",
+    "server.js": "integration-test-output/demo/server.js",
+    "package.json": "integration-test-output/demo/package.json",
+    "coverage": "integration-test-output/coverage/coverage.json",
+    "validation": {
+      "validation_passed": true,
+      "validation_errors": [],
+      "validation_warnings": [],
+      "quality_metrics": {
+        "success_rate": 100.0,
+        "average_duration": 1.3125,
+        "test_stability": 100.0,
+        "coverage_adequacy": 85.0,
+        "flakiness_score": 0
+      },
+      "recommendations": [
+        "Test suite is performing well! Consider adding more edge case tests."
+      ]
+    }
+  },
+  "validation_results": {
+    "validation_passed": true,
+    "validation_errors": [],
+    "validation_warnings": [],
+    "quality_metrics": {
+      "success_rate": 100.0,
+      "average_duration": 1.3125,
+      "test_stability": 100.0,
+      "coverage_adequacy": 85.0,
+      "flakiness_score": 0
+    },
+    "recommendations": [
+      "Test suite is performing well! Consider adding more edge case tests."
+    ]
+  },
+  "system_info": {
+    "platform": "darwin",
+    "python_version": "3.12.6 (v3.12.6:a4a2d2b0d85, Sep  6 2024, 16:08:03) [Clang 13.0.0 (clang-1300.0.29.30)]",
+    "working_directory": "/Users/tbardale/v2/simflo-mcp-rag/v2"
+  }
+}
