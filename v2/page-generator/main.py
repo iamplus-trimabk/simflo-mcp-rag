@@ -464,7 +464,8 @@ class PageGenerator:
         page_name = self._get_page_component_name(screen)
 
         # Function signature
-        signature = f"const {page_name}: React.FC<{page_name}Props> = ({{{self._generate_props_destructuring(screen)}}}) => {{"
+        props = self._generate_props_destructuring(screen)
+        signature = f"const {page_name}: React.FC<{page_name}Props> = ({{{props}}}) => {{"
 
         # Component body
         body_lines = []
@@ -476,8 +477,8 @@ class PageGenerator:
 
         # Form hook if needed
         if self._page_has_forms(screen):
-            body_lines.append(
-                "  const {{ formData, formErrors, isSubmitting, handleFormChange, handleFormSubmit }} = use{page_name}Form();")
+            body_lines.append("  const {{ formData, formErrors, isSubmitting, handleFormChange, handleFormSubmit }} "
+                              "= use{page_name}Form();")
 
         # Loading state
         if self.config.include_loading_states:
@@ -603,7 +604,8 @@ class PageGenerator:
 
         return jsx_lines
 
-    def _generate_component_jsx(self, instance: ComponentInstance, all_instances: List[ComponentInstance], indent_level: int = 0) -> str:
+    def _generate_component_jsx(self, instance: ComponentInstance, all_instances: List[ComponentInstance],
+                                indent_level: int = 0) -> str:
         """Generate JSX for a single component instance."""
         component = self.component_catalog.get_component_by_id(instance.component_id)
         if not component:
@@ -985,7 +987,7 @@ export const {hook_name} = (): {hook_name}Return => {{
         # Import page components
         for screen in self.screen_set.screens:
             page_name = self._get_page_component_name(screen)
-            page_path = f"../pages/{screen.name}"
+            # page_path = f"../pages/{screen.name}"
             imports.append(f"import {page_name} from '@/pages/{screen.name}';")
 
         routes = []
@@ -1248,9 +1250,12 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
           <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-6">
-            <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+            <div className="flex items-center justify-center w-12 h-12 mx-auto "
+                              "bg-red-100 rounded-full mb-4">
               <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5
+                      L13.732 4c-.77-.833-1.964-.833-2.732 0 L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
               </svg>
             </div>
 
@@ -1455,7 +1460,9 @@ export default ErrorBoundary;
             if file_path.endswith('.tsx') or file_path.endswith('.ts'):
                 if not content.strip():
                     errors.append(f"Empty file: {file_path}")
-                elif 'export default' not in content and 'export interface' not in content and 'export const' not in content:
+                elif ('export default' not in content and
+                      'export interface' not in content and
+                      'export const' not in content):
                     errors.append(f"Missing export in: {file_path}")
 
         return len(errors) == 0, errors
@@ -1700,4 +1707,3 @@ def main():
 
 if __name__ == "__main__":
     exit(main())
-
