@@ -2,8 +2,8 @@
 """
 Test Generator - Step 6 of SimFlo Figma-to-RAG Pipeline
 
-Generates comprehensive Playwright E2E test suites from test scenarios and page implementations.
-Supports TypeScript, Page Object Model, test data fixtures, visual regression testing,
+Generates comprehensive Playwright E2E test suites from test scenarios and page
+implementations. Supports TypeScript, Page Object Model, test data fixtures, visual regression testing,
 accessibility testing, mobile device testing, and comprehensive test reporting.
 
 Author: SimFlo Pipeline Team
@@ -33,16 +33,15 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 try:
-    from common.validation import validate_and_load, CustomValidationError
+    # from common.validation import validate_and_load, CustomValidationError
     from common.schemas import (
         TestScenario, TestSuite, TestStep, TestAction, TestDataRequirement,
-        ScreenSpecification, ComponentCatalog, ComponentDefinition, ComponentInstance,
-        NavigationRelationship, DesignTokenSet, ComponentProperty
+        ScreenSpecification, ComponentCatalog, ComponentDefinition, ComponentInstance
     )
 except ImportError as e:
     logger.warning(f"Could not import from common module: {e}")
     # Define fallback schemas for testing
-    from pydantic import BaseModel, Field
+    from pydantic import BaseModel
 
     class TestAction(BaseModel):
         action_type: str
@@ -183,7 +182,10 @@ class TestGenerationConfig:
         if self.test_types is None:
             self.test_types = [TestType.E2E, TestType.INTEGRATION, TestType.COMPONENT]
         if self.browsers is None:
-            self.browsers = [BrowserType.CHROMIUM, BrowserType.FIREFOX, BrowserType.WEBKIT]
+            self.browsers = [
+                BrowserType.CHROMIUM,
+                BrowserType.FIREFOX,
+                BrowserType.WEBKIT]
         if self.devices is None:
             self.devices = [DeviceType.DESKTOP, DeviceType.MOBILE, DeviceType.TABLET]
 
@@ -232,7 +234,8 @@ class TestGenerator:
 
         scenarios_dir = Path(scenarios_path)
         if not scenarios_dir.exists():
-            raise FileNotFoundError(f"Test scenarios directory not found: {scenarios_path}")
+            raise FileNotFoundError(
+                f"Test scenarios directory not found: {scenarios_path}")
 
         scenarios = []
 
@@ -366,7 +369,8 @@ class TestGenerator:
                     data_type = line.split("**Type**:")[1].split("**")[0].strip()
                     description = ""
                     if "**Description**:" in line:
-                        description = line.split("**Description**:")[1].split("**")[0].strip()
+                        description = line.split(
+                            "**Description**:")[1].split("**")[0].strip()
 
                     test_data.append(TestDataRequirement(
                         type=data_type,
@@ -465,7 +469,8 @@ class TestGenerator:
                     self.screen_specifications.append(screen)
                     logger.info(f"Loaded screen specification: {screen.name}")
             except Exception as e:
-                logger.error(f"Error loading screen specification from {json_file}: {e}")
+                logger.error(
+                    f"Error loading screen specification from {json_file}: {e}")
 
         logger.info(f"Loaded {len(self.screen_specifications)} screen specifications")
 
@@ -481,7 +486,8 @@ class TestGenerator:
         try:
             data = json.loads(catalog_file.read_text())
             self.component_catalog = ComponentCatalog(**data)
-            logger.info(f"Loaded component catalog with {len(self.component_catalog.components)} components")
+            logger.info(
+                f"Loaded component catalog with {len(self.component_catalog.components)} components")
         except Exception as e:
             logger.error(f"Error loading component catalog: {e}")
 
@@ -599,7 +605,6 @@ export default defineConfig({{
       name: 'webkit',
       use: {{ ...devices['Desktop Safari'] }},
     }},
-    {{#if include_mobile_testing}}
     {{
       name: 'Mobile Chrome',
       use: {{ ...devices['Pixel 5'] }},
@@ -608,7 +613,6 @@ export default defineConfig({{
       name: 'Mobile Safari',
       use: {{ ...devices['iPhone 12'] }},
     }},
-    {{/if}}
   ],
   webServer: {{
     command: 'npm start',
@@ -673,7 +677,8 @@ export default defineConfig({{
         # Generate page objects for each screen
         for screen in self.screen_specifications:
             page_object = self._generate_screen_page_object(screen)
-            page_object_path = Path(self.config.pages_directory) / f"{screen.id.title()}Page.ts"
+            page_object_path = Path(self.config.pages_directory) / \
+                f"{screen.id.title()}Page.ts"
             page_object_path.write_text(page_object, encoding='utf-8')
             page_objects[f"{screen.id.title()}Page.ts"] = str(page_object_path)
             self.processing_stats["page_objects_generated"] += 1
@@ -828,7 +833,7 @@ export class {class_name} extends BasePage {{
       // Check for key elements that indicate page is loaded
       return await this.isVisible('body');
     }} catch (error) {{
-      return False;
+      return false;
     }}
   }}
 
@@ -868,7 +873,8 @@ export class {class_name} extends BasePage {{
 
         return "\n".join(elements_code)
 
-    def _generate_page_methods(self, screen: ScreenSpecification, elements: List[Dict[str, str]]) -> str:
+    def _generate_page_methods(self, screen: ScreenSpecification,
+                               elements: List[Dict[str, str]]) -> str:
         """Generate page-specific methods."""
         methods = []
 
@@ -876,7 +882,9 @@ export class {class_name} extends BasePage {{
         if elements:
             init_code = "  // Initialize elements in constructor\n"
             for element in elements:
-                init_code += f"  this.{element['name']} = this.page.locator('{element['selector']}');\n"
+                init_code += f"  this.{
+                    element['name']} = this.page.locator('{
+                    element['selector']}');\n"
             methods.append(init_code)
 
         # Generate navigation methods based on flows
@@ -922,7 +930,8 @@ export class {class_name} extends BasePage {{
             for scenario in self.test_suite.scenarios:
                 if scenario.test_data:
                     fixture_data = self._generate_scenario_fixture(scenario)
-                    fixture_path = Path(self.config.fixtures_directory) / f"{scenario.id}.json"
+                    fixture_path = Path(
+                        self.config.fixtures_directory) / f"{scenario.id}.json"
                     fixture_path.write_text(fixture_data, encoding='utf-8')
                     fixtures[f"{scenario.id}.json"] = str(fixture_path)
                     self.processing_stats["fixtures_generated"] += 1
@@ -1083,7 +1092,7 @@ export class TestHelpers {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     await page.screenshot({
       path: `test-results/screenshots/${name}-${timestamp}.png`,
-      fullPage: True
+      fullPage: true
     });
   }
 
@@ -1093,9 +1102,9 @@ export class TestHelpers {
   static async isElementVisible(page: Page, selector: string): Promise<boolean> {
     try {
       await page.waitForSelector(selector, { state: 'visible', timeout: 5000 });
-      return True;
+      return true;
     } catch {
-      return False;
+      return false;
     }
   }
 
@@ -2037,7 +2046,8 @@ export class DataGenerator {
         # Generate visual tests if enabled
         if self.config.include_visual_testing:
             visual_test = self._generate_visual_test_file(scenario)
-            visual_test_path = Path(self.config.tests_directory) / f"{scenario.id}-visual.spec.ts"
+            visual_test_path = Path(self.config.tests_directory) / \
+                f"{scenario.id}-visual.spec.ts"
             visual_test_path.write_text(visual_test, encoding='utf-8')
             test_files[f"{scenario.id}-visual.spec.ts"] = str(visual_test_path)
             self.processing_stats["visual_tests_generated"] += 1
@@ -2045,15 +2055,18 @@ export class DataGenerator {
         # Generate accessibility tests if enabled
         if self.config.include_accessibility_testing:
             accessibility_test = self._generate_accessibility_test_file(scenario)
-            accessibility_test_path = Path(self.config.tests_directory) / f"{scenario.id}-accessibility.spec.ts"
+            accessibility_test_path = Path(
+                self.config.tests_directory) / f"{scenario.id}-accessibility.spec.ts"
             accessibility_test_path.write_text(accessibility_test, encoding='utf-8')
-            test_files[f"{scenario.id}-accessibility.spec.ts"] = str(accessibility_test_path)
+            test_files[f"{scenario.id}-accessibility.spec.ts"] = str(
+                accessibility_test_path)
             self.processing_stats["accessibility_tests_generated"] += 1
 
         # Generate mobile tests if enabled
         if self.config.include_mobile_testing:
             mobile_test = self._generate_mobile_test_file(scenario)
-            mobile_test_path = Path(self.config.tests_directory) / f"{scenario.id}-mobile.spec.ts"
+            mobile_test_path = Path(self.config.tests_directory) / \
+                f"{scenario.id}-mobile.spec.ts"
             mobile_test_path.write_text(mobile_test, encoding='utf-8')
             test_files[f"{scenario.id}-mobile.spec.ts"] = str(mobile_test_path)
             self.processing_stats["mobile_tests_generated"] += 1
@@ -2085,7 +2098,7 @@ export class DataGenerator {
             ])
 
         test_description = scenario.description or scenario.name
-        test_tags = scenario.tags or []
+        # test_tags = scenario.tags or []
 
         # Generate test steps
         test_steps = []
@@ -2109,9 +2122,11 @@ export class DataGenerator {
 
         return test_content
 
-    def _generate_test_describe(self, scenario: TestScenario, test_steps: List[str]) -> str:
+    def _generate_test_describe(self, scenario: TestScenario,
+                                test_steps: List[str]) -> str:
         """Generate test describe block."""
-        tags_str = ", ".join([f"'{tag}'" for tag in scenario.tags]) if scenario.tags else ""
+        tags_str = ", ".join(
+            [f"'{tag}'" for tag in scenario.tags]) if scenario.tags else ""
 
         return f'''test.describe('{scenario.name}', {{ tag: [{tags_str}] }}, () => {{
   test.beforeEach(async ({{ page }}) => {{
@@ -2133,7 +2148,7 @@ export class DataGenerator {
     def _generate_api_mocks_for_scenario(self, scenario: TestScenario) -> str:
         """Generate API mocking code for scenario."""
         if not self.config.include_api_mocking:
-          return "// API mocking disabled"
+            return "// API mocking disabled"
 
         mocks = []
 
@@ -2478,7 +2493,8 @@ test.describe('Mobile Tests - {scenario.name}', () => {{
 
         # Generate GitHub Actions workflow
         github_workflow = self._generate_github_workflow()
-        workflow_path = Path(self.config.output_directory) / ".github" / "workflows" / "tests.yml"
+        workflow_path = Path(self.config.output_directory) / \
+            ".github" / "workflows" / "tests.yml"
         workflow_path.parent.mkdir(parents=True, exist_ok=True)
         workflow_path.write_text(github_workflow, encoding='utf-8')
         runner_files[".github/workflows/tests.yml"] = str(workflow_path)
@@ -2652,8 +2668,14 @@ jobs:
             }
         }
 
-        metadata_path = Path(self.config.output_directory) / "test-generation-metadata.json"
-        metadata_path.write_text(json.dumps(metadata, indent=2, default=str), encoding='utf-8')
+        metadata_path = Path(self.config.output_directory) / \
+            "test-generation-metadata.json"
+        metadata_path.write_text(
+            json.dumps(
+                metadata,
+                indent=2,
+                default=str),
+            encoding='utf-8')
         logger.info(f"Saved generation metadata to: {metadata_path}")
 
     def generate_metadata(self) -> Dict[str, Any]:
@@ -2683,7 +2705,11 @@ Examples:
   python3 main.py --scenarios examples/sample-test-scenarios/ --output ./output/
 
   # Generate tests with custom configuration
-  python3 main.py --scenarios examples/sample-test-scenarios/ --screens examples/sample-screen-specs/ --catalog examples/sample-component-catalog.json --output ./output/ --framework playwright --include-visual --include-accessibility
+  python3 main.py --scenarios examples/sample-test-scenarios/ \\
+    --screens examples/sample-screen-specs/ \\
+    --catalog examples/sample-component-catalog.json \\
+    --output ./output/ --framework playwright \\
+    --include-visual --include-accessibility
 
   # Dry run to preview generation
   python3 main.py --scenarios examples/sample-test-scenarios/ --output ./output/ --dry-run --verbose
@@ -2721,101 +2747,101 @@ Examples:
     )
     parser.add_argument(
         "--typescript",
-        action="store_True",
+        action="store_true",
         default=True,
         help="Generate TypeScript tests (default: True)"
     )
     parser.add_argument(
         "--javascript",
-        action="store_True",
+        action="store_true",
         help="Generate JavaScript tests instead of TypeScript"
     )
 
     # Feature arguments
     parser.add_argument(
         "--include-visual",
-        action="store_True",
+        action="store_true",
         default=True,
         help="Include visual regression tests (default: True)"
     )
     parser.add_argument(
         "--exclude-visual",
-        action="store_True",
+        action="store_true",
         help="Exclude visual regression tests"
     )
     parser.add_argument(
         "--include-accessibility",
-        action="store_True",
+        action="store_true",
         default=True,
         help="Include accessibility tests (default: True)"
     )
     parser.add_argument(
         "--exclude-accessibility",
-        action="store_True",
+        action="store_true",
         help="Exclude accessibility tests"
     )
     parser.add_argument(
         "--include-mobile",
-        action="store_True",
+        action="store_true",
         default=True,
         help="Include mobile device tests (default: True)"
     )
     parser.add_argument(
         "--exclude-mobile",
-        action="store_True",
+        action="store_true",
         help="Exclude mobile device tests"
     )
     parser.add_argument(
         "--include-performance",
-        action="store_True",
+        action="store_true",
         help="Include performance tests"
     )
     parser.add_argument(
         "--include-api-mocks",
-        action="store_True",
+        action="store_true",
         default=True,
         help="Include API mocking utilities (default: True)"
     )
     parser.add_argument(
         "--exclude-api-mocks",
-        action="store_True",
+        action="store_true",
         help="Exclude API mocking utilities"
     )
 
     # Architecture arguments
     parser.add_argument(
         "--page-object-model",
-        action="store_True",
+        action="store_true",
         default=True,
         help="Use Page Object Model (default: True)"
     )
     parser.add_argument(
         "--no-page-object-model",
-        action="store_True",
+        action="store_true",
         help="Don't use Page Object Model"
     )
     parser.add_argument(
         "--data-driven",
-        action="store_True",
+        action="store_true",
         default=True,
         help="Generate data-driven tests (default: True)"
     )
     parser.add_argument(
         "--no-data-driven",
-        action="store_True",
+        action="store_true",
         help="Don't generate data-driven tests"
     )
 
     # Test execution arguments
     parser.add_argument(
         "--parallel",
-        action="store_True",
+        action="store_true",
         default=True,
         help="Enable parallel test execution (default: True)"
     )
     parser.add_argument(
         "--no-parallel",
-        action="store_True",
+        action="store_true",
         help="Disable parallel test execution"
     )
     parser.add_argument(
@@ -2866,12 +2892,12 @@ Examples:
     # Other arguments
     parser.add_argument(
         "--dry-run",
-        action="store_True",
+        action="store_true",
         help="Preview what would be generated without creating files"
     )
     parser.add_argument(
         "--verbose",
-        action="store_True",
+        action="store_true",
         help="Enable verbose logging"
     )
     parser.add_argument(
@@ -2939,15 +2965,16 @@ Examples:
         # Generate tests
         if args.dry_run:
             logger.info("DRY RUN: Would generate the following:")
-            logger.info(f"- {len(generator.test_suite.scenarios) if generator.test_suite else 0} test scenarios")
-            logger.info(f"- Playwright configuration")
-            logger.info(f"- TypeScript configuration")
-            logger.info(f"- Page Object Models")
-            logger.info(f"- Test data fixtures")
-            logger.info(f"- Test utilities")
-            logger.info(f"- Visual regression tests")
-            logger.info(f"- Accessibility tests")
-            logger.info(f"- Mobile device tests")
+            logger.info(
+                f"- {len(generator.test_suite.scenarios) if generator.test_suite and generator.test_suite.scenarios else 0} test scenarios")
+            logger.info("- Playwright configuration")
+            logger.info("- TypeScript configuration")
+            logger.info("- Page Object Models")
+            logger.info("- Test data fixtures")
+            logger.info("- Test utilities")
+            logger.info("- Visual regression tests")
+            logger.info("- Accessibility tests")
+            logger.info("- Mobile device tests")
             logger.info("Use --no-dry-run to actually generate files.")
             return
 
@@ -2958,9 +2985,15 @@ Examples:
         metadata = generator.generate_metadata()
         logger.info("Test generation completed successfully!")
         logger.info(f"Generated {len(generated_files)} files in {args.output}")
-        logger.info(f"Processed {metadata['processing_stats']['scenarios_processed']} test scenarios")
-        logger.info(f"Generated {metadata['processing_stats']['tests_generated']} test files")
-        logger.info(f"Estimated test duration: {metadata['processing_stats']['estimated_test_duration']} seconds")
+        logger.info(
+            f"Processed {
+                metadata['processing_stats']['scenarios_processed']} test scenarios")
+        logger.info(
+            f"Generated {
+                metadata['processing_stats']['tests_generated']} test files")
+        logger.info(
+            f"Estimated test duration: {
+                metadata['processing_stats']['estimated_test_duration']} seconds")
 
     except Exception as e:
         logger.error(f"Error during test generation: {e}")
